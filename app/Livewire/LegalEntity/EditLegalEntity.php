@@ -151,18 +151,14 @@ class EditLegalEntity extends LegalEntity
     private function prepareOwnerData(Employee $owner): array
     {
         $ownerData = $owner->party->toArray() ?? [];
-        $partyUsers = $owner->party->users()->get();
 
         $ownerData['phones'] = $owner->party->phones->toArray() ?? [];
         $ownerData['documents'] = $this->prepareDocumentsData($owner->party->documents->toArray());
         $ownerData['position'] = $owner->position;
         $ownerData['employee_uuid'] = $owner->uuid;
         $ownerData['employee_id'] = $owner->id;
-
-        // Return or email user logined (if it has OWNER role) or first email attached to the employee with OWNER role
-        $ownerData['email'] = $partyUsers
-            ->where('email', Auth::user()->email)
-            ->first()?->email ?? $partyUsers->first()?->email;
+        $ownerData['email'] = $owner->user->email;
+        $ownerData['party_id'] = $owner->partyId;
 
         // TODO: remove it when all other entity will use the same date format
         $ownerData['birthDate'] = convertToAppDateFormat($ownerData['birthDate']);
@@ -197,6 +193,7 @@ class EditLegalEntity extends LegalEntity
         }
 
         $this->legalEntityForm->allFieldsValidate();
+        $ownerPartyId = Arr::pull($this->legalEntityForm->owner, 'party_id') ?? null;
 
         if ($this->getErrorBag()->isNotEmpty()) {
             $this->dispatchBrowserEvent('scroll-to-error');
@@ -208,6 +205,11 @@ class EditLegalEntity extends LegalEntity
         }
 
         $data = $result['request'];
+
+        $data['owner']['working_experience'] = $this->legalEntityForm->owner['workingExperience'] ?? null;
+        $data['owner']['about_myself'] = $this->legalEntityForm->owner['aboutMyself'] ?? null;
+        $data['owner']['party_id'] = $ownerPartyId;
+
         $response = $this->filterUnprovidedFields($result['response'], $data);
 
         try {
