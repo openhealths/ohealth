@@ -124,8 +124,7 @@
                                                          style="display: none"
                                                          class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50 p-2 border border-gray-100"
                                                     >
-                                                        <template
-                                                            x-if="method.type === '{{ AuthenticationMethod::OTP->value }}'">
+                                                        <template x-if="method.type === '{{ AuthenticationMethod::OTP->value }}'">
                                                             <button type="button"
                                                                     @click="open = false"
                                                                     wire:click.prevent="selectAuthMethod(method.uuid, method.type, {{ AuthStep::CHANGE_PHONE_INITIAL }})"
@@ -165,16 +164,25 @@
                                                     </div>
                                                 </div>
 
-                                                <button class="button-primary whitespace-nowrap"
-                                                        @click="selectedMethod = method.id || method.uuid; localStep = {{ AuthStep::ASK_OTP_PERMISSION }}"
-                                                >
-                                                    {{ __('forms.select') }}
-                                                </button>
+                                                <template x-if="method.type === '{{ AuthenticationMethod::OTP->value }}'">
+                                                    <button class="button-primary whitespace-nowrap"
+                                                            @click="selectedMethod = method.id || method.uuid; localStep = {{ AuthStep::ASK_OTP_PERMISSION }}"
+                                                    >
+                                                        {{ __('forms.select') }}
+                                                    </button>
+                                                </template>
+
+                                                <template x-if="method.type !== '{{ AuthenticationMethod::OTP->value }}'">
+                                                    <button class="button-primary whitespace-nowrap"
+                                                            wire:click.prevent="update"
+                                                    >
+                                                        {{ __('forms.select') }}
+                                                    </button>
+                                                </template>
                                             </div>
                                         </div>
 
-                                        <template
-                                            x-if="method.type !== '{{ AuthenticationMethod::THIRD_PERSON->value}}'">
+                                        <template x-if="method.type !== '{{ AuthenticationMethod::THIRD_PERSON->value}}'">
                                             <div>
                                                 <p class="default-p">Назва методу автентифікації:
                                                     <span x-text="method.alias || '-'"></span>
@@ -199,8 +207,7 @@
                                                 </div>
                                             </template>
 
-                                            <template
-                                                x-if="method.type === '{{ AuthenticationMethod::THIRD_PERSON->value }}'">
+                                            <template x-if="method.type === '{{ AuthenticationMethod::THIRD_PERSON->value }}'">
                                                 <div class="space-y-4">
                                                     <div class="form-row-2">
                                                         <div class="form-group">
