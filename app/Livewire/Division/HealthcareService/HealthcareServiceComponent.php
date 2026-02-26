@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire\Division\HealthcareService;
+
+use App\Classes\eHealth\EHealth;
+use App\Classes\eHealth\EHealthResponse;
+use App\Exceptions\EHealth\EHealthResponseException;
+use App\Exceptions\EHealth\EHealthValidationException;
+use App\Livewire\Division\Forms\HealthcareServiceForm as Form;
+use App\Models\Division;
+use App\Models\LegalEntity;
+use App\Traits\FormTrait;
+use App\Traits\WorkTimeUtilities;
+use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
+use Livewire\Component;
+
+class HealthcareServiceComponent extends Component
+{
+    use FormTrait;
+    use WorkTimeUtilities;
+
+    public Form $form;
+
+    public string $divisionName;
+
+    public int $divisionId;
+
+    public Collection $licenses;
+
+    public bool $working = false;
+
+    /**
+     * Used to indicate is it edit page, if so update DB row instead of create new one.
+     *
+     * @var int|null
+     */
+    #[Locked]
+    public ?int $healthcareServiceId = null;
+
+    /**
+     * Is in view mode.
+     *
+     * @var bool
+     */
+    public bool $isDisabled = false;
+
+    protected array $dictionaryNames = [
+        'HEALTHCARE_SERVICE_CATEGORIES',
+        'SPECIALITY_TYPE',
+        'PROVIDING_CONDITION',
+        'HEALTHCARE_SERVICE_PHARMACY_DRUGS_TYPES'
+    ];
+
+    public function baseMount(LegalEntity $legalEntity, Division $division): void
+    {
+        $this->getDictionary();
+
+        $this->dictionaries['HEALTHCARE_SERVICE_CATEGORIES'] = $this->getDictionariesFields(
+            config('ehealth.healthcare_service_' . strtolower(legalEntity()->type->name) . '_categories', []),
+            'HEALTHCARE_SERVICE_CATEGORIES'
+        );
+        $this->dictionaries['PROVIDING_CONDITION'] = $this->getDictionariesFields(
+            config('ehealth.legal_entity_' . strtolower(legalEntity()->type->name) . '_providing_conditions', []),
+            'PROVIDING_CONDITION'
+        );
+
+        $this->divisionName = $division->name;
+        $this->form->divisionId = $division->uuid;
+        $this->divisionId = $division->id;
+
+        $this->licenses = $legalEntity->licenses()->get(['id', 'uuid', 'type']);
+    }
+
+    /**
+     * Validate form, if valid return validated data.
+     *
+     * @return array|false
+     */
+    protected function validateForm(): array|false
+    {
+        try {
+            return $this->form->doValidation();
+        } catch (ValidationException $exception) {
+            Session::flash('error', $exception->validator->errors()->first());
+            $this->setErrorBag($exception->validator->getMessageBag());
+
+            return false;
+        }
+    }
+
+    /**
+     * Send a request to the API; if successful, return it; otherwise, show and log errors.
+     *
+     * @param  array  $validated
+     * @return EHealthResponse|PromiseInterface|null
+     */
+    protected function createInEHealth(array $validated): EHealthResponse|PromiseInterface|null
+    {
+        try {
+            return EHealth::healthcareService()->create($this->form->formatForApi($validated));
+        } catch (ConnectionException $exception) {
+            $this->logConnectionError($exception, 'Error connecting when creating a healthcare service');
+            Session::flash('error', "Виникла помилка. Відсутній зв'язок із ЕСОЗ.");
+
+            return null;
+        } catch (EHealthValidationException|EHealthResponseException $exception) {
+            $this->logEHealthException($exception, 'Error when creating a healthcare service');
+
+            if ($exception instanceof EHealthValidationException) {
+                Session::flash('error', $exception->getFormattedMessage());
+            } else {
+                Session::flash('error', 'Помилка від ЕСОЗ: ' . $exception->getMessage());
+            }
+
+            return null;
+        }
+    }
+}

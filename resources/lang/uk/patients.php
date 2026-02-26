@@ -1,0 +1,414 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Patients Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are for various messages related to patients,
+    | e.g., patient search, patient-related API request messages, etc.,
+    |
+    */
+
+    // Used not once.
+    'patients' => 'Пацієнти',
+    'patient_legal_representative' => 'Законний представник пацієнта',
+    'add_patient' => 'Новий пацієнт',
+    'start_interacting' => 'Розпочати взаємодію',
+    'nobody_found' => 'Нікого не знайдено',
+    'try_change_search_parameters' => 'Спробуйте змінити параметри пошуку',
+    'contact_data' => 'Контактні дані',
+    'priority' => 'Пріоритет',
+    'icpc-2_status_code' => 'Код стану за ICPC-2',
+    'code_and_name' => 'Код та назва',
+    'diagnoses' => 'Діагнози',
+    'date' => 'Дата',
+    'observation' => 'Обстеження',
+    'information_source' => 'Джерело інформації',
+    'other_source' => 'Інше джерело',
+    'performer' => 'Виконавець',
+    'source_link' => 'Посилання на джерело',
+    'body_part' => 'Частина тіла',
+    'diagnostic_reports' => 'Діагностичні звіти',
+    'notes' => 'Нотатки',
+    'author' => 'Автор',
+    'conclusion' => 'Заключення',
+    'patient_birth_date' => 'Дата народження пацієнта',
+    'patient_full_name' => 'ПІБ пацієнта',
+    'resend_again_in_seconds' => 'Відправити ще раз (через',
+    'seconds_short' => 'с)',
+
+    'relation_type' => [
+        'primary' => 'Основний',
+        'secondary' => 'Не основний'
+    ],
+    'authentication_method' => [
+        'otp' => 'через СМС',
+        'offline' => 'через документи',
+        'third_person' => 'через третю особу'
+    ],
+    'documents' => [
+        'UNZR' => 'УНЗР',
+        'BIRTH_CERTIFICATE' => 'Свідоцтво про народження',
+        'BIRTH_CERTIFICATE_FOREIGN' => 'Свідоцтво про народження іноземного зразку',
+        'CHILD_BIRTH_CERTIFICATE' => 'Свідоцтво про народження дитини',
+        'CHILD_BIRTH_CERTIFICATE_FOREIGN' => 'Свідоцтво про народження дитини іноземного зразку',
+        'COMPLEMENTARY_PROTECTION_CERTIFICATE' => 'Посвідчення особи, яка потребує додаткового захисту',
+        'COURT_DECISION_DIVORCE' => 'Рішення суду про розірвання шлюбу',
+        'COURT_DECISION_LEGAL_CAPACITY' => 'Рішення суду про надання особі повної цивільної дієздатності',
+        'DIVORCE_CERTIFICATE' => 'Свідоцтво про розірвання шлюбу',
+        'EMPLOYMENT_CONTRACT' => 'Трудовий договір',
+        'GUARDIANSHIP_DECISION_LEGAL_CAPACITY' => 'Рішення органу опіки та піклування про надання особі повної цивільної дієздатності',
+        'LEGAL_CAPACITY_DOCUMENT' => 'Документ про набуття повної цивільної дієздатності',
+        'MARRIAGE_CERTIFICATE' => 'Свідоцтво про шлюб',
+        'NATIONAL_ID' => 'Біометричний паспорт громадянина України',
+        'PASSPORT' => 'Паспорт',
+        'PERMANENT_RESIDENCE_PERMIT' => 'Посвідка на постійне проживання в Україні',
+        'REFUGEE_CERTIFICATE' => 'Посвідчення біженця',
+        'STATE_REGISTER_EXTRACT' => 'Виписка або витяг з Єдиного державного реєстру юридичних осіб, фізичних осіб – підприємців та громадських формувань',
+        'TEMPORARY_CERTIFICATE' => 'Посвідка на тимчасове проживання',
+        'TEMPORARY_PASSPORT' => 'Тимчасове посвідчення громадянина України',
+        'CONFIDANT_CERTIFICATE' => 'Посвідчення опікуна',
+        'COURT_DECISION' => 'Рішення суду',
+        'DOCUMENT' => 'Документ'
+    ],
+    'encounter_create' => 'Створення медичного запису',
+    'save_to_application' => 'Зберегти в заявки',
+
+    // patient search
+    'patient_search' => 'Пошук пацієнта',
+    'patient_filter' => 'Фільтр пацієнтів',
+    'search' => 'Шукати',
+    'male' => 'Чоловік',
+    'female' => 'Жінка',
+    'all' => 'Всі',
+    'birth_certificate' => 'Свідоцтво',
+    'applications' => 'Заявки',
+    'continue_registration' => 'Продовжити реєстрацію',
+    'view_record' => 'Переглянути карту',
+    'create_diagnostic_report' => 'Створити діагностичний звіт',
+    'sign_declaration' => 'Укласти декларацію',
+    'create_procedure' => 'Створити процедуру',
+
+    // Create patient
+    'patient_information' => 'Інформація про пацієнта',
+    'unzr' => 'УНЗР',
+    'identity_document' => 'Документ, що засвідчує особу',
+    'rnokpp_not_found' => 'РНОКПП/ІПН відсутній',
+    'secret' => 'Кодове слово',
+    'emergency_contact' => 'Контакт для екстреного зв’язку',
+    'incapacitated' => 'Недієздатний пацієнт або дитина до 14 років',
+    'search_for_confidant' => 'Шукати представника',
+    'confidant_person_documents_relationship' => 'Документи, що підтверджують законність представництва',
+    'alias' => 'Роль',
+    'leaflet' => "Пам’ятка",
+    'informed' => "інформація з пам'ятки повідомлена пацієнту",
+    'reject' => 'Відхилити заявку',
+    'print_leaflet_for_patient' => "Роздрукувати пам'ятку для ознайомлення пацієнтом",
+    'print_leaflet' => "Надрукувати пам'ятку",
+
+    'status' => [
+        // PERSON_VERIFICATION_STATUSES
+        'changes_needed' => 'Неуспішно верифіковано (потребує змін)',
+        'in_review' => 'На опрацюванні',
+        'not_verified' => 'Не верифіковано',
+        'verification_needed' => 'Потребує верифікації',
+        'verification_not_needed' => 'Не потребує верифікації',
+        'verified' => 'Верифіковано',
+
+        // Statuses that related to person
+        'draft' => 'Чернетка',
+        'new' => 'Новий',
+        'approved' => 'Підтверджений',
+        'signed' => 'Підписаний',
+        'cancelled' => 'Скасований',
+        'completed' => 'Завершений',
+        'expired' => 'Прострочений',
+        'rejected' => 'Відхилений'
+    ],
+
+    'source' => [
+        'local' => 'Локальні',
+        'ehealth' => 'ЕСОЗ'
+    ],
+
+    // patient-data
+    'patient_data' => 'Дані пацієнта',
+    'verification_in_eHealth' => 'Верифікація в ЕСОЗ',
+    'update_status' => 'Оновити статус',
+    'passport_data' => 'Паспортні дані',
+    'confidant_person_not_exist' => 'Законний представник не був вказаний.',
+    'add_legal_representative' => 'Додати законного представника',
+    'edit_legal_representative' => 'Редагувати законного представника',
+    'age_insufficient_for_legal_representative' => 'Вік персони недостатній для набуття статусу законного представника',
+    'representative' => 'Представник',
+    'representative_description' => 'Після заповнення документа, додайте представника до запису пацієнта.',
+    'add_representative' => 'Додати представника',
+    'authentication_methods' => 'Методи автентифікації',
+
+    // Confidant persons
+    'confidant_persons' => 'Законні представники',
+    'sync_confidant_persons' => 'Синхронізувати дані про законних представників ЕСОЗ',
+    'relationship_active_to' => "Дата, до якої зв'язок активний",
+    'relationship_confirmation_document' => "Документ підтвердження зв'язку",
+    'deactivate_relationship' => "Деактивувати зв'язок",
+    'activate_relationship' => "Активувати зв'язок",
+    'relationship_terminated' => "Зв'язок з представником розірвано",
+    'no_available_confidants' => 'Немає доступних законних представників',
+    'new_confidant_person' => 'Новий законний представник',
+    'all_confidants_have_auth' => 'Усі законні представники вже мають методи автентифікації або відсутні у системі',
+
+    // Requests section
+    'confidant_relationship_requests' => "Запити на створення зв'язків із законним представником",
+    'sync_requests' => 'Синхронізувати дані про запити',
+    'channel' => 'Канал',
+    'cancel_request' => 'Скасувати запит',
+    'mis_system' => 'МІС',
+
+    // Summary record
+    'summary' => 'Зведені дані',
+    'get_access_to_medical_data' => 'Отримати доступ до медичних даних',
+
+    // Episodes record
+    'episodes' => 'Епізоди',
+
+    // Diagnoses record
+
+    // Observations record
+
+    // Encounter
+    'interaction' => 'Взаємодія',
+    'main_data' => 'Основні дані',
+    'reasons_for_visit' => 'Причини звернення',
+    'vaccinations' => 'Вакцинації',
+    'prescriptions' => 'Рецепти',
+    'referrals' => 'Направлення',
+    'medical_reports' => 'Медичні висновки',
+    'procedures' => 'Процедури',
+    'treatment_plans' => 'Плани лікування',
+    'clinical_impressions' => 'Клінічні оцінки',
+
+    // Main data
+    'referral_available' => 'Є направлення',
+    'referral_number' => 'Номер направлення',
+    'search_for_referral' => 'Шукати направлення',
+    'interaction_class' => 'Клас взаємодії',
+    'interaction_type' => 'Тип взаємодії',
+    'existing_episode' => 'Існуючий епізод',
+    'new_episode' => 'Новий епізод',
+    'episode_name' => 'Назва епізоду',
+    'episode_type' => 'Тип епізоду',
+
+    // Reasons
+    'reason_for_visit' => 'Причина звернення',
+
+    // Diagnoses
+    'icd-10' => 'МКХ-10',
+    'clinical_status' => 'Клінічний статус',
+    'verification_status' => 'Статус верифікації',
+    'entry_date' => 'Дата внесення',
+    'entry_time' => 'Час внесення',
+    'severity_of_the_condition' => 'Ступінь тяжкості стану',
+    'primary_source' => 'Первинне джерело',
+    'new_primary_diagnose' => "Ви вказали новий основний діагноз.<br> Підтвердження дії змінить основний діагноз епізоду медичної допомоги!",
+    'duplicate_code_warning' => 'Такий код вже існує',
+
+    // Evidences
+    'evidence_conditions' => 'Докази - стани',
+    'evidence_observations' => 'Докази - медичні стани',
+    'condition' => 'Стан',
+
+    // Additional data
+    'additional_data' => 'Додаткові дані',
+    'period_start' => 'Час початку',
+    'period_end' => 'Час закінчення',
+
+    // Immunizations
+    'immunizations' => 'Вакцинації',
+    'immunization' => 'Вакцинація',
+    'dosage' => 'Дозування',
+    'execution_state' => 'Стан проведення',
+    'reason' => 'Причина',
+    'has_it_been_done' => 'Чи була проведена',
+    'reasons' => 'Причини',
+    'data' => 'Дані',
+    'time' => 'Час',
+    'manufacturer' => 'Виробник',
+    'lot_number' => 'Серія',
+    'expiration_date' => 'Дата закінчення придатності',
+    'amount_of_injected' => 'Кількість введеної',
+    'measurement_units' => 'Одиниці виміру',
+    'input_route' => 'Шлях введення',
+    'vaccination_protocol' => 'Протокол імунізації',
+    'dose_sequence' => 'Порядковий номер дози',
+    'immunization_series' => 'Етап імунізації',
+    'target_diseases' => 'Протидія загрозам',
+    'protocol_author' => 'Автор протоколу',
+    'series_of_doses_by_protocol' => 'Кількість доз по протоколу',
+    'protocol_description' => 'Опис протоколу',
+
+    // Diagnostic reports
+    'diagnostic_report' => 'Діагностичний звіт',
+    'conclusion_code' => 'Код заключення(за МКХ-10АМ)',
+    'requisition_type' => 'Тип направлення',
+    'electronic' => 'Електронне',
+    'paper' => 'Паперове',
+    'edrpou_of_the_issuing_institution' => 'ЄДРПОУ закладу, що виписав',
+    'name_of_the_institution_that_issued_it' => 'Найменування закладу, що виписав',
+    'the_doctor_who_interpreted_the_results' => 'Лікар, що інтерпретував результати',
+    'full_name_of_the_doctor_who_interpreted_the_results' => 'ПІБ лікаря, що інтерпретував результати',
+    'doctor_submitting_a_report_to_the_system' => 'Лікар, що передає в систему звіт',
+    'reception_start_date_and_time' => 'Дата та час початку прийому',
+    'reception_end_date_and_time' => 'Дата та час завершення прийому',
+
+    // Observations
+    'code' => 'Код',
+    'value' => 'Значення',
+    'coding_system' => 'Система кодувань',
+    'loinc_observation_dictionary' => 'Довідник спостережень LOINC',
+    'icf_dictionary_condition_patient' => 'Довідник станів пацієнта МКФ',
+    'components' => 'Компоненти',
+    'extent_or_magnitude_of_impairment' => 'Обсяг або величина порушення',
+    'interpretation' => 'Інтерпретація',
+    'nature_of_change_in_body_structure' => 'Природа змін у структурах організму',
+    'anatomical_localization' => 'Анатомічна локалізація',
+    'performance' => 'Виконання',
+    'capacity' => 'Здатність',
+    'barrier_or_facilitator' => 'Величина та вид впливу',
+    'observation_method' => 'Метод спостереження',
+    'interpretation_of_observation' => 'Інтерпретація спостереження',
+    'date_and_time_of_receiving_the_indicators' => 'Дата та час отримання показників',
+    'date_and_time_of_entry' => 'Дата та час внесення',
+
+    // Procedures
+    'procedure' => 'Процедура',
+    'outcome_result' => 'Результат проведення',
+    'doctor_who_performed' => 'Лікар, що виконав',
+    'procedure_start_date_and_time' => 'Дата та час початку процедури',
+    'procedure_end_date_and_time' => 'Дата та час завершення процедури',
+    'reason_for_performing' => 'Причина проведення',
+    'episode' => 'Епізод',
+    'active' => 'діючий',
+    'added' => 'Додано',
+    'rehabilitation_aids' => 'Допоміжні засоби реабілітації',
+    'complications_arising_during_the_procedure' => 'Ускладнення, що виникли під час процедури',
+
+    // Clinical impressions
+    'clinical_impression' => 'Клінічна оцінка',
+    'set_of_rule_engines' => 'Набір механізмів правил',
+    'previous_clinical_impression' => 'Попередня клінічна оцінка',
+    'appropriate_patient_assessment' => 'Відповідна оцінка стану пацієнта',
+    'what_was_identified' => 'Що було ідентифіковано',
+    'supporting_medical_information' => 'Підтверджуючі медичні дані',
+    'medical_records_type' => 'тип медичних записів',
+    'employee_who_created' => 'Співробітник, який створив',
+    'description' => 'Опис',
+    'medical_record' => 'медичний запис',
+
+    // Auth methods
+    'change' => 'Змінити',
+    'change_phone_number' => 'Змінити номер телефона',
+    'change_method_to_sms' => 'Замінити метод на СМС',
+    'change_method_alias' => 'Змінити назву методу',
+    'deactivate_method' => 'Деактивувати метод',
+    'ended_at' => 'Кінцевий строк дії методу автентифікації',
+    'confidant_full_name' => 'Прізвище та ініціали законного представника',
+    'changing_sms_method' => 'Зміна методу автентифікації через СМС',
+    'please_clarify_phone_number' => 'Уточніть, будь ласка, про наявність доступу до даного номеру телефона у пацієнта',
+    'back_authentication_methods' => 'Назад до методів автентифікації',
+    'no_access' => 'Доступу немає',
+    'available_access' => 'Наявний доступ',
+    'please_check_patient_number' => 'Перевірте, будь ласка, з пацієнтом (його законним представником) наявність доступу до даного номеру',
+    'code_sms' => 'Код з СМС',
+    'to_authentication_methods' => 'До методів автентифікації',
+    'if_patient_not_phone_authentication' => 'У разі відсутності доступу до номеру телефона :phoneNumber пацієнту необхідно звернутись до НСЗУ для скидання його методу автентифікації.',
+    'enter_new_phone' => 'Введіть будь ласка новий номер телефону',
+    'enter_a_new_phone_number' => 'Введіть новий номер телефону',
+    'authentication_SMS' => 'Автентифікація через СМС',
+    'method_name' => 'Назва методу',
+    'update_method_alias' => 'Оновлення назви методу автентифікації',
+    'load_person_documents' => 'Завантажте будь ласка документи пацієнта',
+    'new_alias_method' => 'Введіть будь ласка нову назву методу автентифікації',
+    'add_authentication_method' => 'Додати метод автентифікації',
+    'authentication_from_SMS' => 'Автентифікація через СМС',
+    'adding_authentication_method_SMS' => 'Додавання методу автентифікації - через СМС',
+    'authentication_method_name' => 'Назва методу автентифікації',
+    'authentication_through_documents' => 'Автентифікація через документи',
+    'file_not_selected' => 'Файл не обрано',
+    'select_file' => 'Вибрати файл',
+    'the_size_uploaded_file' => 'Розмір завантажуваного файлу не більше 10МБ у форматі jpeg',
+    'send_files' => 'Відправити файли',
+    'add_authentication_documents' => 'Додати документи',
+    'auth_through_another_person' => 'Автентифікація через іншу особу',
+    'medical_worker_confirmation' => 'Ви, як медичний працівник закладу охорони здоров\'я:',
+    'confirm_identity' => 'Підтверджуєте, що пацієнта як особу ідентифіковано;',
+    'confirm_legal_representative' => 'Підтверджуєте, що повідомили законному представнику пацієнта мету та підстави обробки персональних даних;',
+    'confirm_verification' => 'Підтверджуєте перевірку повноважень представника пацієнта (у разі надання даних про законного представника).',
+    'leaflet_description' => 'Надайте копії законному представнику пацієнта, від імені пацієнта, для якого створюєте запис в електронній системі охорони здоров\'я.',
+    'leaflet_description_full' => 'Надаючи код законний представник пацієнта, від імені пацієнта, для якого створюється запис в електронній системі охорони здоров\'я:
+- підтверджує, що інформована/ий медичним працівником закладу охорони здоров\'я про мету та підстави обробки персональних даних пацієнта, для якого створюється запис в реєстрі пацієнтів Електронної системи охорони здоров\'я;
+- надає згоду медичному працівнику закладу охорони здоров\'я створити запис про пацієнта у Електронній системі охорони здоров\'я.',
+    'leaflet_intro' => 'Надаючи код законний представник пацієнта, від імені пацієнта, для якого створюється запис в електронній системі охорони здоров\'я:',
+    'leaflet_point_1' => 'підтверджує, що інформована/ий медичним працівником закладу охорони здоров\'я про мету та підстави обробки персональних даних пацієнта, для якого створюється запис в реєстрі пацієнтів Електронної системи охорони здоров\'я;',
+    'leaflet_point_2' => 'надає згоду медичному працівнику закладу охорони здоров\'я створити запис про пацієнта у Електронній системі охорони здоров\'я.',
+    'confirmation_code_sms' => 'Код підтвердження з СМС',
+    'resend_code' => 'Відправити ще раз (через 60 с)',
+    'terminate_relationship_warning_1' => 'При розірванні зв’язку з законним представником, буде деактивовано метод автентифікації "Автентифікація через іншу особу", пов’язаний з даним законним представником.',
+    'terminate_relationship_warning_2' => 'Якщо пацієнт не має інших законних представників - необхідно створити зв’язок принаймні з одним законним представником для продовження роботи з даним недієздатним пацієнтом.',
+    'auth_method_name_title' => 'Назва методу автентифікації',
+    'add_auth_method_third_person' => 'Додавання методу автентифікації - через третю особу',
+    'add_auth_method_documents' => 'Додавання методу автентифікації - через документи',
+    'sync_auth_methods' => 'Синхронізувати методи автентифікації',
+
+    'errors' => [
+        'authMethod' => [
+            'duplicate' => 'Вибраний метод аутентифікації вже додано.',
+            'distinct' => 'Методи автентифікації "Через СМС" та "Через документи" є взаємно виключними.'
+        ]
+    ],
+
+    'policy' => [
+        'create_confidant' => 'У вас немає дозволу на створення законного представника.',
+        'approve_confidant' => 'У вас немає дозволу на підтвердження створення законного представника.',
+        'sign_confidant' => 'У вас немає дозволу на підписання заявки на створення законного представника.',
+        'create' => 'У вас немає дозволу на створення пацієнта.',
+        'send_files' => 'У вас немає дозволу на завантаження файлів.',
+        'resend_sms' => 'У вас немає дозволу на повторну відправку СМС.',
+        'approve' => 'У вас немає дозволу на підтвердження створення пацієнта.',
+        'reject' => 'У вас немає дозволу на скасування заявки.',
+        'sign' => 'У вас немає дозволу на підписання заявки.',
+        'view_any' => 'У вас немає дозволу на пошук пацієнтів.',
+        'update' => 'У вас немає дозволу на оновлення пацієнта.',
+    ],
+
+    'messages' => [
+        'person_request_updated' => 'Заявка на створення пацієнта успішно оновлена.',
+        'person_request_created' => 'Заявка на створення пацієнта успішно створена.',
+        'person_request_approved' => 'Заявку успішно підтверджено.',
+        'person_request_rejected' => 'Заявку успішно відхилено.',
+        'person_updated' => 'Пацієнт успішно оновлений',
+        'person_created' => 'Пацієнт успішно створений',
+        'files_uploaded_successfully' => 'Всі файли успішно завантажено',
+        'sms_sent_successfully' => 'SMS успішно надіслано!',
+        'data_processing_error' => 'Помилка обробки даних. Зверніться до адміністратора.',
+        'upload_all_files' => 'Будь ласка завантажте всі файли!',
+        'ehealth_error' => 'Помилка від ЕСОЗ: :message',
+        'auth_methods_synced' => 'Методи автентифікації успішно синхронізовані.',
+        'offline_auth_method_added' => 'Метод автентифікації через документи успішно додано.',
+        'phone_number_changed' => 'Номер телефону успішно змінено.',
+        'auth_method_changed_offline_to_sms' => 'Метод автентифікації успішно змінений із документів на СМС',
+        'method_name_updated' => 'Назва методу успішно оновлена.',
+        'auth_method_name_changed' => 'Назва методу автентифікації успішно змінена.',
+        'auth_method_deactivated' => 'Метод автентифікації успішно деактивований.',
+        'new_auth_method_added' => 'Новий метод автентифікації успішно доданий.',
+        'code_resent_to_phone' => 'Код був повторно надісланий на телефон.',
+        'confidant_persons_synced' => 'Дані про законних представників успішно синхронізовано.',
+        'new_confidant_person_added' => 'Нового законного представника успішно додано.',
+        'confidant_requests_list_updated' => 'Список даних про запити на створення законних представників оновлено.',
+        'sync_auth_methods_and_try_again' => 'Будь ласка, синхронізуйте методи автентифікації та спробуйте знову.',
+    ]
+];

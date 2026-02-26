@@ -1,0 +1,123 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire\Division\HealthcareService;
+
+use App\Classes\eHealth\EHealth;
+use App\Core\Arr;
+use App\Exceptions\EHealth\EHealthResponseException;
+use App\Exceptions\EHealth\EHealthValidationException;
+use App\Livewire\Division\Forms\HealthcareServiceForm as Form;
+use App\Models\Division;
+use App\Models\HealthcareService;
+use App\Models\LegalEntity;
+use App\Repositories\Repository;
+use App\Traits\FormTrait;
+use App\Traits\WorkTimeUtilities;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+use Livewire\Component;
+use Throwable;
+
+class HealthcareServiceUpdate extends Component
+{
+    use WorkTimeUtilities;
+    use FormTrait;
+
+    public Form $form;
+
+    /**
+     * Determine is user has policy to update.
+     *
+     * @var bool
+     */
+    public bool $canUpdate;
+
+    public bool $working = true;
+
+    public bool $isDisabled = false;
+
+    public int $healthcareServiceId;
+
+    public string $healthcareServiceUuid;
+
+    public function mount(LegalEntity $legalEntity, Division $division, HealthcareService $healthcareService): void
+    {
+        $this->healthcareServiceId = $healthcareService->id;
+        $this->healthcareServiceUuid = $healthcareService->uuid;
+
+        $this->form->fill($healthcareService->only(['comment', 'availableTime', 'notAvailable']));
+
+        if ($this->form->availableTime) {
+            $this->form->availableTime = Arr::toCamelCase($this->form->availableTime);
+        }
+
+        $this->canUpdate = Auth::user()->can('update', $healthcareService);
+    }
+
+    public function update(): void
+    {
+        if (!$this->canUpdate) {
+            Session::flash('error', 'У вас немає дозволу на оновлення послуги');
+
+            return;
+        }
+
+        try {
+            $validated = $this->form->validate($this->form->rulesForUpdating());
+        } catch (ValidationException $exception) {
+            Session::flash('error', $exception->validator->errors()->first());
+            $this->setErrorBag($exception->validator->getMessageBag());
+
+            return;
+        }
+
+        try {
+            $response = EHealth::healthcareService()->update(
+                $this->healthcareServiceUuid,
+                $this->form->formatForApi($validated)
+            );
+        } catch (ConnectionException $exception) {
+            $this->logConnectionError($exception, 'Error connecting when updating a healthcare service');
+            Session::flash('error', "Виникла помилка. Відсутній зв'язок із ЕСОЗ.");
+
+            return;
+        } catch (EHealthValidationException|EHealthResponseException $exception) {
+            $this->logEHealthException($exception, 'Error when updating a healthcare service');
+
+            if ($exception instanceof EHealthValidationException) {
+                Session::flash('error', $exception->getFormattedMessage());
+            } else {
+                Session::flash('error', 'Помилка від ЕСОЗ: ' . $exception->getMessage());
+            }
+
+            return;
+        }
+
+        try {
+            $validated = $response->validate();
+
+            $validated = Arr::only($validated, ['comment', 'coverage_area', 'available_time', 'not_available', 'ehealth_updated_at', 'ehealth_updated_by']);
+            $validated['id'] = $this->healthcareServiceId;
+
+            Repository::healthcareService()->update($validated, false);
+
+            Session::flash('success', 'Послугу успішно оновлено.');
+            $this->redirectRoute('healthcare-service.index', [legalEntity()], navigate: true);
+        } catch (Throwable $exception) {
+            $this->logDatabaseErrors($exception, 'Failed to update healthcare service');
+            Session::flash('error', 'Виникла помилка. Зверніться до адміністратора.');
+
+            return;
+        }
+    }
+
+    public function render(): View
+    {
+        return view('livewire.division.healthcare-service.healthcare-service-update');
+    }
+}

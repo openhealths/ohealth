@@ -1,0 +1,12 @@
+<svg aria-hidden="true" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#1A56DB"
+          d="M0 20.5C0 9.45431 8.95431 0.5 20 0.5C31.0457 0.5 40 9.45431 40 20.5C40 31.5457 31.0457 40.5 20 40.5C8.95431 40.5 0 31.5457 0 20.5Z"
+    />
+    <path d="M20 20.5H13H20Z" fill="white"/>
+    <path d="M20 13.5V20.5M20 20.5V27.5M20 20.5H27M20 20.5H13"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+    />
+</svg>

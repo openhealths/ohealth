@@ -1,0 +1,718 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+@import "./svg-icons.css";
+
+@config "../../tailwind.config.js"; /* imports old configuration from transition form v3 to v4 */
+
+[x-cloak] {
+    display: none !important;
+}
+
+/*
+ * Forms
+ */
+
+/* Svg in inputs require specific styling. Assuming svg, input and label are siblings */
+select[required] ~ label:after,
+input[required] ~ label:after {
+    content: " *";
+}
+
+/* Acts like React's <fragment> counterpart */
+.fragment {
+    display: contents;
+}
+
+.svg-input {
+    top: 0.75rem;
+    @apply text-gray-500 dark:text-gray-400 absolute block w-4
+}
+
+.svg-input ~ input:placeholder-shown ~ .label {
+    padding-left: 1.5rem;
+}
+
+.svg-input ~ input:focus ~ .label {
+    padding-left: 0;
+}
+
+.svg-input ~ input {
+    padding-left: 1.5rem;
+}
+
+.svg-hover-action {
+    @apply text-gray-800 dark:text-white transition duration-150;
+}
+
+.svg-hover-action:hover {
+    @apply text-blue-600;
+}
+
+.breadcrumb-form {
+    @apply md:max-w-6xl
+}
+
+.section-form {
+    @apply bg-white dark:bg-gray-800
+}
+
+/* Standardized Navigation Classes */
+.navigation-container {
+    @apply p-4 bg-white block sm:flex items-center justify-between border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700;
+}
+
+.navigation-content {
+    @apply w-full mb-1;
+}
+
+.navigation-actions {
+    @apply mt-3 sm:mt-0 flex items-center gap-2;
+}
+
+.navigation-breadcrumb {
+    @apply flex mb-5;
+}
+
+.navigation-breadcrumb-list {
+    @apply inline-flex items-center space-x-1 text-sm font-medium md:space-x-2;
+}
+
+.navigation-breadcrumb-item {
+    @apply inline-flex items-center;
+}
+
+.navigation-breadcrumb-link {
+    @apply inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white;
+}
+
+.navigation-breadcrumb-separator {
+    @apply w-6 h-6 text-gray-400;
+}
+
+.navigation-breadcrumb-current {
+    @apply ml-1 text-gray-400 md:ml-2 dark:text-gray-500;
+}
+
+.navigation-title {
+    @apply text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white;
+}
+
+.navigation-description {
+    @apply pt-2 text-xs italic font-bold text-left font-normal text-gray-500 whitespace-nowrap dark:text-gray-700;
+}
+
+/* Unified section/form header with title left and actions right */
+.form-header {
+    @apply w-full flex flex-col gap-3 md:flex-row md:items-center md:justify-between;
+}
+
+.form-header-title {
+    @apply flex-1 min-w-0;
+}
+
+.form-header-actions {
+    @apply mt-3 md:mt-0 flex items-center gap-2;
+}
+
+.form {
+    @apply py-6 px-4 md:max-w-6xl lg:py-10
+}
+
+.fieldset {
+    @apply p-4 sm:p-8 sm:pb-10 mb-16 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 max-w-[1120px];
+}
+
+.fieldset-table {
+    @apply pb-4 sm:pb-10 mb-16 relative overflow-x-auto
+}
+
+.legend {
+    @apply px-1 text-xl font-bold text-gray-900 dark:text-white
+}
+
+.fieldset-table .legend {
+    @apply p-4
+}
+
+.form-row-4 {
+    @apply grid gap-4 md:gap-6 xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 md:mb-5 mb-4
+}
+
+.form-row-3 {
+    @apply grid gap-4 md:gap-6 lg:grid-cols-3 md:grid-cols-2 md:mb-5 mb-4
+}
+
+.form-row-2 {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-6;
+}
+
+.form-row {
+    @apply md:mb-5 mb-4
+}
+
+.form-group {
+    @apply relative z-0 w-full mb-3
+}
+
+@utility input {
+    @apply block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    background-clip: text !important;
+}
+
+.input-select {
+    @apply input dark:border-gray-700 dark:focus:border-blue-500 dark:bg-gray-800 pl-1 pr-9 whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer
+}
+
+.input-select option {
+    @apply py-2 px-3 text-base leading-relaxed
+}
+
+.input-error {
+    @apply border-b-2 border-red-500 dark:border-red-500
+}
+
+.label {
+    @apply peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-disabled:text-gray-300
+}
+
+/* Fixes the bug with autofill and floating label, see Vitaliy-1/openHealth#219 */
+input:-webkit-autofill ~ .label {
+    --tw-translate-y: calc(var(--spacing) * -6);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+    --tw-scale-x: 75%;
+    --tw-scale-y: 75%;
+    --tw-scale-z: 75%;
+    scale: var(--tw-scale-x) var(--tw-scale-y);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-blue-600);
+    inset-inline-start: calc(var(--spacing) * 0);
+}
+
+.text-error {
+    @apply mt-2 text-xs text-red-600 dark:text-red-500
+}
+
+.text-note {
+    @apply mt-2 text-xs text-blue-600 dark:text-blue-500
+}
+
+.textarea {
+    @apply block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+}
+
+.label-secondary {
+    @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white
+}
+
+.table-input {
+    @apply my-3 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400
+}
+
+.thead-input {
+    @apply text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400
+}
+
+.th-input {
+    @apply px-6 py-3
+}
+
+.td-input {
+    @apply px-6 py-4
+}
+
+.default-p {
+    @apply ms-2 text-gray-900 dark:text-white;
+}
+
+/* Dropdown panel */
+.dropdown-panel {
+    @apply absolute left-0 rounded-lg shadow-sm mt-2 z-10 origin-top-left bg-white dark:bg-gray-700 outline-none border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-200
+}
+
+.dropdown-panel button {
+    @apply p-2 px-2.5 w-full block items-center transition-colors text-left text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus-visible:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed
+}
+
+.dropdown-panel button:first-child {
+    @apply rounded-t-lg
+}
+
+.dropdown-panel button:last-child {
+    @apply rounded-b-lg
+}
+
+.dropdown-delete {
+    @apply hover:bg-red-50 hover:text-red-600 dark:hover:text-red-500 focus-visible:bg-red-50 focus-visible:text-red-600
+}
+
+/* Buttons */
+.form-button-group {
+    @apply flex md:max-w-6xl justify-between flex-wrap gap-3 flex-col sm:flex-row
+}
+
+@utility button {
+    @apply justify-center inline-flex font-medium rounded-lg text-sm px-5 py-2.5 text-center
+}
+
+.button-primary {
+    @apply cursor-pointer button text-white items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800;
+}
+
+.button-primary:disabled {
+    @apply button bg-blue-400 dark:bg-blue-500 cursor-not-allowed;
+}
+
+.button-primary-outline {
+    @apply cursor-pointer text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800;
+}
+
+.button-primary-outline-red {
+    @apply cursor-pointer text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-500 dark:focus:ring-red-800;
+}
+
+.button-minor {
+    @apply cursor-pointer text-gray-900 inline-flex items-center bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700;
+}
+
+.button-sync {
+    @apply cursor-pointer inline-flex items-center justify-center font-medium rounded-lg text-sm px-5 py-2.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800;
+}
+
+.button-sync-disabled {
+    @apply cursor-pointer inline-flex items-center justify-center font-medium rounded-lg text-sm px-5 py-2.5 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 opacity-30 cursor-default!;
+}
+
+.button-danger {
+    @apply cursor-pointer focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900;
+}
+
+.button-outline-primary {
+    @apply cursor-pointer inline-flex items-center justify-center font-medium text-sm px-5 py-2.5 rounded-lg text-primary-700 border border-primary-600 bg-transparent hover:bg-primary-50 focus:outline-none focus:ring-4 focus:ring-primary-200 dark:text-primary-400 dark:border-primary-500 dark:hover:bg-gray-800 dark:focus:ring-primary-800;
+}
+
+/* General */
+
+.default-label {
+    @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+}
+
+.default-checkbox {
+    @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
+}
+
+.default-input {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
+
+.accordion-content {
+    @apply p-5 border border-gray-200 dark:border-gray-700 dark:bg-gray-900;
+}
+
+.badge-dark {
+    @apply bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-300;
+}
+
+.badge-green {
+    @apply bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300;
+}
+
+.badge-purple {
+    @apply bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md dark:bg-purple-900 dark:text-purple-300;
+}
+
+.badge-yellow {
+    @apply bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-yellow-900 dark:text-yellow-300;
+}
+
+.badge-red {
+    @apply bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300;
+}
+
+.status-alert-green {
+    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 p-4 rounded-lg flex items-center gap-2 text-sm font-medium;
+}
+
+.status-alert-yellow {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 p-4 rounded-lg flex items-center gap-2 text-sm font-medium;
+}
+
+
+.status-alert-red {
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 p-4 rounded-lg flex items-center gap-2 text-sm font-medium;
+}
+
+.encounter-nav-item {
+    @apply flex items-center gap-3 p-2 rounded-lg transition duration-75 hover:bg-gray-600;
+}
+
+.default-radio {
+    @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
+}
+
+/* Buttons */
+.login-button {
+    @apply w-[150px] px-6 py-2 text-sm font-medium text-gray-600 transition-colors duration-200 bg-transparent border border-gray-300 rounded-lg hover:bg-blue-800 hover:text-white hover:border-transparent focus:outline-none dark:text-gray-300 dark:border-gray-600 dark:hover:bg-indigo-600;
+}
+
+.default-button {
+    @apply cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+}
+
+.alternative-button {
+    @apply py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700;
+}
+
+.dropdown-button {
+    @apply cursor-pointer inline-flex items-center p-0.5 text-sm font-medium text-left text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100;
+}
+
+.accordion-button {
+    @apply flex items-center justify-between cursor-pointer w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3;
+}
+
+/* Ensure Back + additional buttons align perfectly */
+.additional-actions > a,
+.additional-actions > button,
+.additional-actions > * > a,
+.additional-actions > * > button {
+    @apply inline-flex items-center leading-none !mb-0;
+}
+
+/* Tables */
+.table-container {
+    @apply bg-white dark:bg-gray-800 relative overflow-x-auto shadow-md sm:rounded-lg;
+}
+
+.table-base {
+    @apply w-full text-sm text-left text-gray-500 dark:text-gray-400;
+}
+
+.table-header {
+    @apply text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400;
+}
+
+.table-cell-primary {
+    @apply px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white;
+}
+
+/* Tables  */
+.index-table-wrapper {
+    @apply relative shadow-md sm:rounded-lg;
+}
+
+.index-table {
+    @apply w-full min-w-[1100px] table-fixed text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400;
+}
+
+.index-table-thead {
+    @apply text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400;
+}
+
+.index-table-th {
+    @apply px-6 py-3;
+}
+
+.index-table-tr {
+    @apply bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200;
+}
+
+.index-table-td {
+    @apply px-6 py-4 break-words whitespace-normal align-top;
+}
+
+.index-table-td-primary {
+    @apply px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white break-words whitespace-normal align-top;
+}
+
+.index-table-td-actions {
+    @apply px-6 py-4 text-center;
+}
+
+.show-fieldset-table-wrapper {
+    @apply w-full max-w-full overflow-x-auto;
+}
+
+.show-fieldset-table {
+    @apply w-full table-fixed text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400;
+}
+
+/* Modals */
+.modal {
+    @apply fixed inset-0 z-50 overflow-y-auto
+}
+
+.modal-wrapper {
+    @apply relative flex min-h-screen items-center justify-center p-4
+}
+
+.modal-content {
+    @apply relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5
+}
+
+.modal-header {
+    @apply flex justify-between items-center pb-4 mb-4 sm:mb-5 rounded-t border-b border-b-gray-200 dark:border-gray-600 text-lg font-semibold text-gray-900 dark:text-white;
+}
+
+.label-modal {
+    @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white
+}
+
+.input-modal {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500
+}
+
+.form-row-modal {
+    @apply grid gap-4 mb-4 sm:grid-cols-2
+}
+
+/* Stepping */
+.steps {
+    @apply p-4 mb-4 bg-white border-t border-gray-200 dark:border-gray-700 sm:p-6 dark:bg-gray-800
+}
+
+.steps-header {
+    @apply mb-4 flex flex-wrap gap-2 sm:gap-4 w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base
+}
+
+.steps-header_index {
+    @apply flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full font-semibold text-sm transition-all duration-300;
+}
+
+.steps-header_index.step-completed-color {
+    @apply text-green-700 border border-green-600 bg-green-100
+}
+
+.steps-header_index.step-incomplete-color {
+    @apply text-gray-600 border border-gray-400 bg-white
+}
+
+.steps-header_index.text-red-500 {
+    @apply text-white bg-red-500 border border-red-500
+}
+
+.dark .steps-header_index.step-completed-color {
+    @apply text-white bg-green-600 border border-green-500 shadow
+}
+
+.dark .steps-header_index.step-incomplete-color {
+    @apply text-gray-300 border border-gray-500 bg-transparent
+}
+
+.dark .steps-header_index.text-red-500 {
+    @apply text-white bg-red-600 border border-red-600
+}
+
+.steps-header_title {
+    @apply ms-2.5 flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-400 dark:after:text-gray-500
+}
+
+.steps-owner_gender_list {
+    @apply justify-start items-center gap-2 w-full mt-1 text-sm font-medium text-gray-900 bg-white sm:flex dark:text-white dark:bg-gray-800
+}
+
+.steps-owner_radio {
+    @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500
+}
+
+.steps-owner_radio_label {
+    @apply w-full py-2 ms-2 text-sm font-medium text-gray-600 dark:text-gray-300 dark:bg-gray-800
+}
+
+.steps-footer {
+    @apply mt-6 flex flex-col gap-6 xl:flex-row justify-between items-center
+}
+
+.steps-agreement_checkbox {
+    @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600
+}
+
+.steps-agreement_label {
+    @apply ms-2 text-sm font-medium text-gray-900 dark:text-gray-300
+}
+
+.steps-agreement_button {
+    @apply text-blue-600 dark:text-blue-500 hover:underline
+}
+
+.step-active-color {
+    @apply text-blue-600 dark:text-blue-500 cursor-default
+}
+
+.step-incomplete-color {
+    @apply text-gray-500 border-gray-600
+}
+
+
+:root {
+    --header-height: 64px; /* Adjust this value to match your header height */
+}
+
+.fixed {
+    position: fixed !important;
+}
+
+/* Ensure the modal overlay is below the header */
+.main-header {
+    position: relative;
+    z-index: 50;
+}
+
+/* Change autocomplete behavior for Google Chrome */
+input:-webkit-autofill {
+    background-color: transparent !important;
+    color: inherit !important;
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+}
+
+@layer components {
+    /* Section Navigation Component */
+    .section-card {
+        @apply p-0 pl-4 bg-white block border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700
+    }
+
+    .page-header {
+        @apply flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:flex-nowrap w-full
+    }
+
+    .page-header-content {
+        @apply flex-1 min-w-0
+    }
+
+    .button-group {
+        @apply flex items-center gap-2 md:ml-auto
+    }
+
+    .page-title {
+        @apply text-2xl font-bold leading-tight text-gray-900 dark:text-white truncate mb-6
+    }
+
+    .page-description {
+        @apply mt-1 text-gray-600 dark:text-gray-400
+    }
+
+    /* Breadcrumb Component */
+    .breadcrumb {
+        @apply flex pointer-events-auto mb-4
+    }
+
+    .breadcrumb-list {
+        @apply inline-flex flex-nowrap items-center whitespace-nowrap space-x-1 md:space-x-2 rtl:space-x-reverse
+    }
+
+    .breadcrumb-first {
+        @apply inline-flex items-center shrink-0
+    }
+
+    .breadcrumb-home-icon {
+        @apply w-3 h-3 me-3
+    }
+
+    .breadcrumb-link {
+        @apply inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white
+    }
+
+    .breadcrumb-text {
+        @apply inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-400
+    }
+
+    .breadcrumb-separator {
+        @apply flex items-center shrink-0
+    }
+
+    .breadcrumb-chevron {
+        @apply rtl:rotate-180 w-3 h-3 text-gray-400 mx-1
+    }
+
+    .breadcrumb-item-link {
+        @apply ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white
+    }
+
+    .breadcrumb-item-text {
+        @apply ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400
+    }
+}
+/* SIDEBAR NAVIGATION STYLES */
+
+#drawer-navigation .menu-item {
+    @apply cursor-pointer flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700;
+}
+
+#drawer-navigation .submenu-item {
+    @apply flex items-center p-2 pl-6 w-full text-sm font-medium text-gray-900 rounded-lg transition-all duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700;
+}
+
+#drawer-navigation .menu-item-simple {
+    @apply flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition-all duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700;
+}
+
+#drawer-navigation .menu-item > svg:not(:last-child),
+#drawer-navigation .menu-item-simple > svg {
+    @apply w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex-shrink-0 text-gray-500 transition-all duration-75 dark:text-gray-400;
+}
+
+#drawer-navigation .menu-item:hover > svg:not(:last-child),
+#drawer-navigation .menu-item-simple:hover > svg {
+    @apply text-gray-900 dark:text-white;
+}
+
+#drawer-navigation .submenu-item > svg {
+    @apply w-5 h-5 min-w-[1.25rem] min-h-[1.25rem] flex-shrink-0 text-gray-500 transition-all duration-75 dark:text-gray-400;
+}
+
+#drawer-navigation .submenu-item:hover > svg {
+    @apply text-gray-900 dark:text-white;
+}
+
+#drawer-navigation .menu-item > span {
+    @apply ml-3 whitespace-nowrap;
+}
+
+#drawer-navigation .menu-item > span:first-of-type {
+    @apply flex-1 text-left;
+}
+
+#drawer-navigation .menu-item-simple > span,
+#drawer-navigation .submenu-item > span {
+    @apply ml-3 whitespace-nowrap;
+}
+
+#drawer-navigation .menu-item > svg:last-child {
+    @apply w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex-shrink-0 transition-transform duration-200;
+}
+
+#drawer-navigation ul svg {
+    @apply flex-shrink-0;
+}
+
+@media (min-width: 2048px) {
+    .shift-content {
+        @apply mx-auto ml-[6%];
+    }
+}
+
+/* For numbers in LegalEntity creation header */
+@utility firefox-fix {
+    @-moz-document url-prefix() {
+        line-height: 1;
+    }
+}
+
+/* File upload input */
+.file-input-wrapper {
+    @apply flex items-center rounded-lg border border-gray-300 dark:border-gray-600;
+}
+
+.file-input-button {
+    @apply cursor-pointer inline-flex items-center px-5 py-2.5 bg-gray-800 rounded-l-lg text-sm font-medium text-white hover:bg-gray-700;
+}
+
+.file-input-text {
+    @apply flex-1 px-5 py-2.5 bg-white text-sm text-gray-500 truncate rounded-r-lg dark:bg-gray-700 dark:text-gray-400;
+}
