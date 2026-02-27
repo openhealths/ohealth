@@ -307,13 +307,15 @@
                                                         {{ __('patients.deactivate_relationship') }}
                                                     </button>
 
-                                                    <button type="button"
-                                                            class="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-red-600 dark:text-red-400 whitespace-nowrap"
-                                                            @click="confidantPersons && confidantPersons[confidantIndex] && confidantPersons[confidantIndex].documentsRelationship.splice(docIndex, 1); openDropdown = false"
-                                                    >
-                                                        @icon('delete', 'w-4 h-4')
-                                                        {{ __('forms.delete') }}
-                                                    </button>
+                                                    @if(!$this instanceof PersonUpdate)
+                                                        <button type="button"
+                                                                class="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-red-600 dark:text-red-400 whitespace-nowrap"
+                                                                @click="confidantPersons && confidantPersons[confidantIndex] && confidantPersons[confidantIndex].documentsRelationship.splice(docIndex, 1); openDropdown = false"
+                                                        >
+                                                            @icon('delete', 'w-4 h-4')
+                                                            {{ __('forms.delete') }}
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -335,7 +337,7 @@
                                         <span x-text="confidantPerson.secondName || ''"></span>
                                     </div>
                                     <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        <span x-text="confidantPerson.gender === 'MALE' ? '{{ __('patients.male') }}' : (confidantPerson.gender === 'FEMALE' ? '{{ __('patients.female') }}' : '')"></span>
+                                    <span x-text="confidantPerson.gender === 'MALE' ? '{{ __('patients.male') }}' : (confidantPerson.gender === 'FEMALE' ? '{{ __('patients.female') }}' : '')"></span>
                                     </div>
                                     <div class="text-sm text-gray-500 dark:text-gray-400">
                                         <span>{{ __('forms.rnokpp') }} </span>
@@ -375,7 +377,8 @@
                                     >
                                         <div>
                                             <div class="text-gray-900 dark:text-white"
-                                                 x-text="phoneTypes[phone.type] || '-'"></div>
+                                                 x-text="phoneTypes[phone.type] || '-'"
+                                            ></div>
                                             <div class="text-sm text-gray-500 dark:text-gray-400"
                                                  x-text="phone.number || '-'"
                                             ></div>

@@ -25,10 +25,14 @@ class ConfidantPersonRelationshipRequest extends Model
         'person_id',
         'action',
         'status',
-        'channel'
+        'channel',
+        'documents'
     ];
 
-    protected $casts = ['status' => ConfidantPersonRelationshipRequestStatus::class];
+    protected $casts = [
+        'status' => ConfidantPersonRelationshipRequestStatus::class,
+        'documents' => 'array'
+    ];
 
     public function documents(): MorphMany
     {

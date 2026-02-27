@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('action');
             $table->enum('status', ConfidantPersonRelationshipRequestStatus::values());
             $table->string('channel');
+            $table->jsonb('documents')->nullable();
             $table->timestamps();
         });
     }

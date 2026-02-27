@@ -142,16 +142,10 @@ return [
     'update_status' => 'Оновити статус',
     'passport_data' => 'Паспортні дані',
     'confidant_person_not_exist' => 'Законний представник не був вказаний.',
-    'add_legal_representative' => 'Додати законного представника',
-    'edit_legal_representative' => 'Редагувати законного представника',
-    'age_insufficient_for_legal_representative' => 'Вік персони недостатній для набуття статусу законного представника',
-    'representative' => 'Представник',
-    'representative_description' => 'Після заповнення документа, додайте представника до запису пацієнта.',
-    'add_representative' => 'Додати представника',
-    'authentication_methods' => 'Методи автентифікації',
 
     // Confidant persons
     'confidant_persons' => 'Законні представники',
+    'add_confidant_person' => 'Додати законного представника',
     'sync_confidant_persons' => 'Синхронізувати дані про законних представників ЕСОЗ',
     'relationship_active_to' => "Дата, до якої зв'язок активний",
     'relationship_confirmation_document' => "Документ підтвердження зв'язку",
@@ -161,6 +155,8 @@ return [
     'no_available_confidants' => 'Немає доступних законних представників',
     'new_confidant_person' => 'Новий законний представник',
     'all_confidants_have_auth' => 'Усі законні представники вже мають методи автентифікації або відсутні у системі',
+    'edit_confidant_person' => 'Редагувати законного представника',
+    'age_insufficient_for_confidant_person' => 'Вік персони недостатній для набуття статусу законного представника',
 
     // Requests section
     'confidant_relationship_requests' => "Запити на створення зв'язків із законним представником",
@@ -168,6 +164,7 @@ return [
     'channel' => 'Канал',
     'cancel_request' => 'Скасувати запит',
     'mis_system' => 'МІС',
+    'confirm_deactivation' => 'Підтвердити деактивацію',
 
     // Summary record
     'summary' => 'Зведені дані',
@@ -310,6 +307,7 @@ return [
     'medical_record' => 'медичний запис',
 
     // Auth methods
+    'authentication_methods' => 'Методи автентифікації',
     'change' => 'Змінити',
     'change_phone_number' => 'Змінити номер телефона',
     'change_method_to_sms' => 'Замінити метод на СМС',

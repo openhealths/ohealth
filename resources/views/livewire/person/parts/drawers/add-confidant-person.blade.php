@@ -1,4 +1,4 @@
-<div x-show="showLegalRepDrawer"
+<div x-show="showConfidantPersonDrawer"
      x-transition:enter="transition ease-out duration-300"
      x-transition:enter-start="translate-x-full"
      x-transition:enter-end="translate-x-0"
@@ -14,8 +14,9 @@
      id="legal-representative-drawer"
      tabindex="-1"
 >
-    <h3 class="modal-header" x-text="isEditingLegalRep ? '{{ __('patients.edit_legal_representative') }}' : '{{ __('patients.add_legal_representative') }}'">
-    </h3>
+    <h3 class="modal-header"
+        x-text="isEditingLegalRep ? '{{ __('patients.edit_confidant_person') }}' : '{{ __('patients.add_confidant_person') }}'"
+    ></h3>
 
     <div class="mt-4" x-data="{ showFilter: true }">
         <div class="mb-8 flex items-center gap-1 font-semibold text-gray-900 dark:text-white">
@@ -35,7 +36,7 @@
             </button>
             <button type="button"
                     class="button-primary-outline-red"
-                    @click="showResults = false; selectedPatient = null"
+                    @click="showResults = false; resetSearchFilters()"
             >
                 {{ __('forms.reset_all_filters') }}
             </button>
@@ -51,7 +52,7 @@
                 ></legend>
 
                 <div
-                    class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-700 pb-4">
+                        class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-700 pb-4">
                     <div class="flex items-center flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500 mt-2">
                         <span class="flex items-center gap-1.5" x-show="patient.birthDate">
                             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
@@ -114,16 +115,13 @@
                             <tr>
                                 <td class="td-input whitespace-nowrap overflow-hidden text-ellipsis align-top font-bold text-gray-900 dark:text-white"
                                     x-text="patient.birthSettlement || '-'"
-                                >
-                                </td>
+                                ></td>
                                 <td class="td-input whitespace-nowrap overflow-hidden text-ellipsis align-top font-bold text-gray-900 dark:text-white"
                                     x-text="patient.taxId || '-'"
-                                >
-                                </td>
+                                ></td>
                                 <td class="td-input whitespace-nowrap overflow-hidden text-ellipsis align-top font-bold text-gray-900 dark:text-white"
                                     x-text="patient.birthCertificate || '-'"
-                                >
-                                </td>
+                                ></td>
                                 <td class="td-input whitespace-nowrap align-top">
                                     <span class="badge-green">{{ __('patients.source.ehealth') }}</span>
                                 </td>
@@ -140,7 +138,7 @@
                     <div class="flex items-center gap-2">
                         @icon('alert-circle', 'w-5 h-5 text-red-700 dark:text-red-400')
                         <p class="font-semibold text-red-700 dark:text-red-400">
-                            {{ __('patients.age_insufficient_for_legal_representative') }}
+                            {{ __('patients.age_insufficient_for_confidant_person') }}
                         </p>
                     </div>
                 </div>
@@ -176,7 +174,9 @@
     @include('livewire.person.parts.drawers.add-documents-relationship')
 
     <div class="flex gap-3 mt-6">
-        <button class="button-minor" type="button" @click="showLegalRepDrawer = false">{{ __('forms.cancel') }}</button>
+        <button class="button-minor" type="button" @click="showConfidantPersonDrawer = false">
+            {{ __('forms.cancel') }}
+        </button>
         <button x-show="isEditingLegalRep && selectedPatient"
                 class="button-primary"
                 type="button"
@@ -190,14 +190,14 @@
                     class="button-primary"
                     wire:click.prevent="createNewConfidantPersonRelationshipRequest"
             >
-                {{ __('patients.add_representative') }}
+                {{ __('patients.add_confidant_person') }}
             </button>
         @else
             <button type="button"
                     class="button-primary"
-                    @click="addConfidantPersonToForm(); showLegalRepDrawer = false"
+                    @click="addConfidantPersonToForm(); showConfidantPersonDrawer = false"
             >
-                {{ __('patients.add_representative') }}
+                {{ __('patients.add_confidant_person') }}
             </button>
         @endif
     </div>
