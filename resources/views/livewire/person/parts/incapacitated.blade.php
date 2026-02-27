@@ -5,12 +5,11 @@
           x-data="{
               isIncapacitated: $wire.entangle('isIncapacitated'),
               showSignatureModal: $wire.showSignatureModal,
-              showLegalRepDrawer: false,
+              showConfidantPersonDrawer: @if($this instanceof PersonUpdate) $wire.entangle('showConfidantPersonDrawer') @else false @endif,
               showDocumentDrawer: false,
               showAuthDrawer: @if($this instanceof PersonUpdate) $wire.entangle('showAuthDrawer') @else false @endif,
               showSignatureDrawer: @if($this instanceof PersonUpdate) $wire.entangle('showSignatureDrawer') @else false @endif,
               showTerminateModal: @if($this instanceof PersonUpdate) $wire.entangle('showTerminateModal') @else false @endif,
-              authDrawerMode: null, // e.g. 'deactivate_relationship'
               deactivateDocIndex: null,
               selectedPatient: null,
               confidantPerson: @if($this instanceof PersonUpdate) $wire.entangle('newConfidantPerson') @else $wire.entangle('selectedConfidantPersonData') ?? {} @endif,
@@ -29,6 +28,17 @@
                   expiryDate: ''
               },
               verificationCode: '',
+              resetSearchFilters() {
+                  this.selectedPatient = null;
+                  $wire.form.firstName = '';
+                  $wire.form.lastName = '';
+                  $wire.form.birthDate = '';
+                  $wire.form.secondName = '';
+                  $wire.form.taxId = '';
+                  $wire.form.phoneNumber = '';
+                  $wire.form.birthCertificate = '';
+                  $wire.confidantPerson = [];
+              },
               timer: 60,
               isEditing: false,
               editingIndex: null,
@@ -93,12 +103,12 @@
               editLegalRepresentative(index) {
                   this.isEditingLegalRep = true;
                   this.editingLegalRepIndex = index;
-                  this.showLegalRepDrawer = true;
+                  this.showConfidantPersonDrawer = true;
               },
 
               saveConfidantPerson() {
                   if (this.isEditingLegalRep && this.editingLegalRepIndex !== null && this.selectedPatient) {
-                      this.showLegalRepDrawer = false;
+                      this.showConfidantPersonDrawer = false;
                       this.isEditingLegalRep = false;
                       this.editingLegalRepIndex = null;
                   }
@@ -185,18 +195,16 @@
                                     {{-- Personal Data - only show on first row for each confidant --}}
                                     <td class="td-input align-top" x-show="docIndex === 0">
                                         <div class="font-bold text-gray-900 dark:text-white">
-                                            <span
-                                                x-text="confidantPerson.person.name || (confidantPerson.person.lastName + ' ' + confidantPerson.person.firstName + ' ' + (confidantPerson.person.secondName || ''))"
+                                            <span x-text="confidantPerson.person.name || (confidantPerson.person.lastName + ' ' + confidantPerson.person.firstName + ' ' + (confidantPerson.person.secondName || ''))"
                                             ></span>
                                         </div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        <span
-                                            x-text="(confidantPerson.person?.gender) === 'MALE' ? '{{ __('patients.male') }}' : '{{ __('patients.female') }}'"></span>
+                                        <span x-text="(confidantPerson.person?.gender) === 'MALE' ? '{{ __('patients.male') }}' : '{{ __('patients.female') }}'"></span>
                                         </div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400">
                                             <span>{{ __('forms.rnokpp') }} </span>
                                             <span
-                                                x-text="confidantPerson.person?.taxId || '-'"></span>
+                                                    x-text="confidantPerson.person?.taxId || '-'"></span>
                                         </div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400"
                                              x-show="confidantPerson.person?.unzr"
@@ -211,8 +219,7 @@
                                             <template :key="'person-doc-' + confidantIndex + '-' + documentIndex"
                                                       x-for="(document, documentIndex) in (confidantPerson?.person?.documents)"
                                             >
-                                                <div
-                                                    class="border-b border-gray-200 dark:border-gray-600 pb-2 last:border-b-0 last:pb-0">
+                                                <div class="border-b border-gray-200 dark:border-gray-600 pb-2 last:border-b-0 last:pb-0">
                                                     <div class="text-gray-900 dark:text-white font-medium"
                                                          x-text="documentTypes[document.type] || document.type"
                                                     ></div>
@@ -282,6 +289,7 @@
                                                             {{ __('forms.edit') }}
                                                         </button>
                                                     @endif
+
                                                     <button type="button"
                                                             class="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 whitespace-nowrap"
                                                             @click.prevent="
@@ -298,15 +306,14 @@
                                                         @icon('close-circle', 'w-4 h-4 text-gray-600 dark:text-gray-300')
                                                         {{ __('patients.deactivate_relationship') }}
                                                     </button>
-                                                    @if(!$this instanceof PersonUpdate)
-                                                        <button type="button"
-                                                                class="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-red-600 dark:text-red-400 whitespace-nowrap"
-                                                                @click="confidantPersons && confidantPersons[confidantIndex] && confidantPersons[confidantIndex].documentsRelationship.splice(docIndex, 1); openDropdown = false"
-                                                        >
-                                                            @icon('delete', 'w-4 h-4')
-                                                            {{ __('forms.delete') }}
-                                                        </button>
-                                                    @endif
+
+                                                    <button type="button"
+                                                            class="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-red-600 dark:text-red-400 whitespace-nowrap"
+                                                            @click="confidantPersons && confidantPersons[confidantIndex] && confidantPersons[confidantIndex].documentsRelationship.splice(docIndex, 1); openDropdown = false"
+                                                    >
+                                                        @icon('delete', 'w-4 h-4')
+                                                        {{ __('forms.delete') }}
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -328,8 +335,7 @@
                                         <span x-text="confidantPerson.secondName || ''"></span>
                                     </div>
                                     <div class="text-sm text-gray-500 dark:text-gray-400">
-                                    <span
-                                        x-text="confidantPerson.gender === 'MALE' ? '{{ __('patients.male') }}' : (confidantPerson.gender === 'FEMALE' ? '{{ __('patients.female') }}' : '')"></span>
+                                        <span x-text="confidantPerson.gender === 'MALE' ? '{{ __('patients.male') }}' : (confidantPerson.gender === 'FEMALE' ? '{{ __('patients.female') }}' : '')"></span>
                                     </div>
                                     <div class="text-sm text-gray-500 dark:text-gray-400">
                                         <span>{{ __('forms.rnokpp') }} </span>
@@ -348,8 +354,7 @@
                                         <template :key="'person-doc-' + documentIndex"
                                                   x-for="(document, documentIndex) in (confidantPerson.documents || [])"
                                         >
-                                            <div
-                                                class="border-b border-gray-200 dark:border-gray-600 pb-2 last:border-b-0 last:pb-0">
+                                            <div class="border-b border-gray-200 dark:border-gray-600 pb-2 last:border-b-0 last:pb-0">
                                                 <div class="text-gray-900 dark:text-white font-medium"
                                                      x-text="documentTypes[document.type] || document.type"
                                                 ></div>
@@ -369,7 +374,8 @@
                                               x-for="(phone, phoneIndex) in (confidantPerson.phones || [])"
                                     >
                                         <div>
-                                            <div class="text-gray-900 dark:text-white" x-text="phoneTypes[phone.type] || '-'"></div>
+                                            <div class="text-gray-900 dark:text-white"
+                                                 x-text="phoneTypes[phone.type] || '-'"></div>
                                             <div class="text-sm text-gray-500 dark:text-gray-400"
                                                  x-text="phone.number || '-'"
                                             ></div>
@@ -432,8 +438,16 @@
             </div>
 
             @unless(($this instanceof \App\Livewire\Person\PersonCreate || $this instanceof \App\Livewire\Person\PersonRequestEdit) && $this->selectedConfidantPersonId)
-                <button type="button" @click="resetForm(); showLegalRepDrawer = true" class="item-add my-5">
-                    {{ __('patients.add_legal_representative') }}
+                <button type="button"
+                        @click="
+                            resetForm();
+                            resetSearchFilters();
+                            confidantPerson.documentsRelationship = [];
+                            showConfidantPersonDrawer = true;
+                        "
+                        class="item-add my-5"
+                >
+                    {{ __('patients.add_confidant_person') }}
                 </button>
             @endunless
         </div>
