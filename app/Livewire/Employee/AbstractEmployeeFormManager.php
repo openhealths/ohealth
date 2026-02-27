@@ -267,7 +267,7 @@ abstract class AbstractEmployeeFormManager extends EmployeeComponent
             $errorCode === 422 && str_contains($errorMessage, 'tax_id')
             => __('errors.ehealth.tax_id_exists'),
 
-            default => $e->getTranslatedMessage()
+            default => $errorMessage
         };
 
         $this->dispatch('flashMessage', [
