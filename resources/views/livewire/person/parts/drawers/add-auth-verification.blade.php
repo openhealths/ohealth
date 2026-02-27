@@ -44,9 +44,9 @@
 >
     <div class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white">
-            @if($this->authDrawerMode === 'create')
+            @if($authDrawerMode === 'create')
                 {{ __('patients.authentication_SMS') }}
-            @elseif($this->authDrawerMode === 'deactivate')
+            @elseif($authDrawerMode === 'deactivate')
                 {{ __('patients.deactivate_authentication_method') }}
             @else
                 {{ __('patients.authentication_SMS') }}
@@ -85,7 +85,7 @@
             </div>
         @endforeach
 
-        <div class="form-row-3">
+        <div class="form-row-3 mt-8">
             <div class="form-group group">
                 <input type="text"
                        wire:model="form.verificationCode"
@@ -123,21 +123,25 @@
                 {{ __('forms.back') }}
             </button>
 
-            @if($this->authDrawerMode === 'create')
-                <button type="button"
-                        @click="showDocumentDrawer = false; showLegalRepDrawer = false; showSignatureDrawer = true"
-                        class="button-outline-primary"
-                >
-                    {{ __('patients.to_authentication_methods') }}
-                </button>
+            @if($authDrawerMode === 'create')
+                <div>
+                    <button type="button"
+                            @click="showDocumentDrawer = false; showConfidantPersonDrawer = false; showSignatureDrawer = true"
+                            class="button-outline-primary"
+                    >
+                        {{ __('patients.to_authentication_methods') }}
+                    </button>
 
-                <button type="button"
-                        wire:click.prevent="approveConfidantPersonRelationshipRequest"
-                        class="button-primary"
-                >
-                    {{ __('forms.confirm') }}
-                </button>
-            @elseif($this->authDrawerMode === 'deactivate')
+                    <button type="button"
+                            wire:click.prevent="approveConfidantPersonRelationshipRequest"
+                            class="button-primary"
+                    >
+                        {{ __('forms.confirm') }}
+                    </button>
+                </div>
+            @endif
+
+            @if($authDrawerMode === 'deactivate')
                 <button type="button"
                         wire:click.prevent="approveDeactivatingAuthMethod"
                         class="button-danger"

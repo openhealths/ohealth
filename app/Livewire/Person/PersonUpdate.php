@@ -9,6 +9,7 @@ use App\Classes\Cipher\Exceptions\CipherApiException;
 use App\Classes\eHealth\EHealth;
 use App\Core\Arr;
 use App\Enums\Person\AuthStep;
+use App\Enums\Person\ConfidantPersonRelationshipRequestStatus;
 use App\Models\ConfidantPersonRelationshipRequest;
 use App\Models\Relations\AuthenticationMethod as AuthenticationMethodModel;
 use App\Enums\Person\AuthenticationMethod;
@@ -22,7 +23,6 @@ use App\Repositories\Repository;
 use App\Rules\PhoneNumber;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -126,12 +126,14 @@ class PersonUpdate extends PersonComponent
 
     public bool $showAuthDrawer = false;
 
+    public bool $showConfidantPersonDrawer = false;
+
     /**
      * List of confidant person relationship requests for current person.
      *
-     * @var Collection
+     * @var array
      */
-    public Collection $confidantPersonRelationshipRequests;
+    public array $confidantPersonRelationshipRequests;
 
     /**
      * Data for signing confidant person relationship.
@@ -186,7 +188,7 @@ class PersonUpdate extends PersonComponent
         $authenticationMethods = $person->authenticationMethods->toArray();
 
         // Initialize confidant person relationship requests for all cases
-        $this->confidantPersonRelationshipRequests = $person->confidantPersonRelationshipRequests()->get();
+        $this->confidantPersonRelationshipRequests = $this->loadConfidantPersonRelationshipRequests($person);
 
         if ($person->confidantPersons->isNotEmpty()) {
             // Create a lookup map of confidant persons by their UUID
@@ -883,12 +885,22 @@ class PersonUpdate extends PersonComponent
         try {
             $response = EHealth::person()->createConfidantRelationship($this->uuid, $validated);
 
-            $this->confidantPersonRelationshipRequestId = $response->validate()['uuid'];
+            // Update table of requests
+            $validatedData = $response->validate();
+            $validatedData['status'] = ConfidantPersonRelationshipRequestStatus::from($validatedData['status']);
+            $this->confidantPersonRelationshipRequests = array_merge(
+                [$validatedData],
+                $this->confidantPersonRelationshipRequests
+            );
+
+            // Set value of attributes for future interaction
+            $this->confidantPersonRelationshipRequestId = $validatedData['uuid'];
             $this->uploadedDocuments = $response->getUrgent()['documents'];
 
             try {
                 $dataForCreate = $response->validate();
-                $dataForCreate['person_id'] = Person::whereUuid($this->confidantPersonId)->value('id');
+                $dataForCreate['person_id'] = Person::whereUuid($this->uuid)->value('id');
+                $dataForCreate['documents'] = $response->getUrgent()['documents'];
 
                 ConfidantPersonRelationshipRequest::create($dataForCreate);
             } catch (Throwable $exception) {
@@ -904,6 +916,7 @@ class PersonUpdate extends PersonComponent
         }
 
         $this->authDrawerMode = 'create';
+        $this->showConfidantPersonDrawer = false;
         $this->showAuthDrawer = true;
     }
 
@@ -925,12 +938,31 @@ class PersonUpdate extends PersonComponent
                 $this->uuid,
                 $this->confidantPersonRelationshipRequestId
             );
+
             Session::flash('success', __('patients.messages.code_resent_to_phone'));
         } catch (ConnectionException|EHealthValidationException|EHealthResponseException $exception) {
             $this->handleEHealthExceptions($exception, 'Error when resending SMS');
 
             return;
         }
+
+        $this->authDrawerMode = 'create';
+    }
+
+    /**
+     * Continue adding new confidant person relationship.
+     *
+     * @param  string  $requestId
+     * @return void
+     */
+    public function approveFromRequest(string $requestId): void
+    {
+        $this->authDrawerMode = 'create';
+        $this->showAuthDrawer = true;
+        $this->confidantPersonRelationshipRequestId = $requestId;
+
+        $this->uploadedDocuments = ConfidantPersonRelationshipRequest::whereUuid($requestId)
+            ->value('documents') ?? [];
     }
 
     /**
@@ -1035,6 +1067,7 @@ class PersonUpdate extends PersonComponent
                 Repository::confidantPerson()->createFromSignedResponse($response->getData(), $this->uuid, $personData);
 
                 $this->showSignatureDrawer = false;
+                $this->showAuthDrawer = false;
                 Session::flash('success', __('patients.messages.new_confidant_person_added'));
             } catch (Exception $exception) {
                 Log::error('Failed to create confidant person relationship', [
@@ -1078,7 +1111,7 @@ class PersonUpdate extends PersonComponent
             Repository::confidantPersonRelationshipRequestRepository()->sync($person, $data);
 
             // Refresh the property to show updated data
-            $this->confidantPersonRelationshipRequests = $person->confidantPersonRelationshipRequests()->get();
+            $this->confidantPersonRelationshipRequests = $this->loadConfidantPersonRelationshipRequests($person);
 
             Session::flash('success', __('patients.messages.confidant_requests_list_updated'));
         } catch (Exception $exception) {
@@ -1147,6 +1180,36 @@ class PersonUpdate extends PersonComponent
 
             return;
         }
+    }
+
+    /**
+     * Load confidant person relationship requests from database as arrays with enum conversion
+     *
+     * @param  Person  $person
+     * @return array
+     */
+    private function loadConfidantPersonRelationshipRequests(Person $person): array
+    {
+        $requests = $person->confidantPersonRelationshipRequests()
+            ->whereStatus(ConfidantPersonRelationshipRequestStatus::NEW)
+            ->orderByDesc('created_at')
+            ->get()
+            ->toArray();
+
+        return $this->convertRequestStatusesToEnums($requests);
+    }
+
+    /**
+     * Convert status strings to enum instances in request arrays
+     *
+     * @param  array  $requests
+     * @return array
+     */
+    private function convertRequestStatusesToEnums(array $requests): array
+    {
+        return array_map(static fn (array $request) => array_merge($request, [
+            'status' => ConfidantPersonRelationshipRequestStatus::from($request['status'])
+        ]), $requests);
     }
 
     public function render(): View
