@@ -62,7 +62,7 @@ class DictionaryService
      */
     protected function getSourceDictionaries(): array
     {
-        return Cache::remember('dictionaries', now()->addDays(7), function () {
+        return Cache::remember('dictionaries', now()->endOfDay(), function () {
             try {
                 return EHealth::dictionary()->getDictionaries()->getData();
             } catch (ConnectionException $exception) {
