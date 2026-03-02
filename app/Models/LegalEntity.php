@@ -229,9 +229,9 @@ class LegalEntity extends Model
      * Get the status of a legal entity's sync process based on entity type.
      *
      * @param  string|null  $entityType  The type of legal entity's entity sync process to check
-     * @return string|null The status of the sync process of entity or null if not found
+     * @return JobStatus|string|null The status of the sync process of entity or null if not found
      */
-    public function getEntityStatus(?string $entityType = ''): ?string
+    public function getEntityStatus(?string $entityType = ''): JobStatus|string|null
     {
         return $this->{$entityType . 'sync_status'};
     }

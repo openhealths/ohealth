@@ -112,7 +112,7 @@ class ContractRequestIndex extends Component
             $msg = "First pages synced ($syncedCount items). Processing the rest in background.";
         } else {
             $currentLegalEntity->setEntityStatus(JobStatus::COMPLETED, LegalEntity::ENTITY_CONTRACT_REQUEST);
-            $msg = "Synchronization completed. Items received: $syncedCount.";
+            $msg = __('contracts.sync_completed', ['count' => $syncedCount]);
         }
 
         $this->dispatch('flashMessage', ['message' => $msg, 'type' => 'success']);
