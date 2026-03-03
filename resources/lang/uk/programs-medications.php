@@ -7,7 +7,7 @@ return [
 
     // Search
     'search_title' => 'Пошук програм',
-    'program_label' => 'Програма*',
+    'program_label' => 'Програма',
     'program_option_prescription_medication' => 'Рецептурний лікарський засіб',
 
     // Program details block
