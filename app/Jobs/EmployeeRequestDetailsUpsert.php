@@ -6,10 +6,12 @@ namespace App\Jobs;
 
 use Throwable;
 use App\Core\Arr;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Core\EHealthJob;
 use App\Enums\JobStatus;
 use App\Models\LegalEntity;
+use App\Models\Relations\Party;
 use App\Repositories\Repository;
 use App\Classes\eHealth\EHealth;
 use Spatie\Permission\Models\Role;
@@ -75,9 +77,16 @@ class EmployeeRequestDetailsUpsert extends EHealthJob
 
         $employeeRequestPartyId = $employeeRequestUser?->partyId;
 
+        $partyId = Repository::party()->createPartyByEmployeeRequest($this->employeeRequest, $validatedData['party'])?->id;
+
         $this->employeeRequest->fill(array_merge(
             $response->map($validatedData, $this->legalEntity, $employeeRequestUser?->id ?? null, $employeeRequestPartyId ?? null),
-            ['sync_status' => JobStatus::COMPLETED->value])
+                [
+                    'sync_status' => JobStatus::COMPLETED->value,
+                    'party_id' => $partyId,
+                    'applied_at' => $validatedData['updated_at'] ?? Carbon::now()
+                ]
+            )
         );
 
         $this->employeeRequest->save();
@@ -108,7 +117,6 @@ class EmployeeRequestDetailsUpsert extends EHealthJob
             ? new CompleteSync($this->legalEntity, isFirstLogin: $this->isFirstLogin)
             : $this->nextEntity;
     }
-
 
     /**
      * Determine which authentication guards define the given role.

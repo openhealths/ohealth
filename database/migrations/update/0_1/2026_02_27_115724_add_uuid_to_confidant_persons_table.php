@@ -14,7 +14,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('confidant_persons', function (Blueprint $table) {
-            $table->uuid()->after('id');
+            if (! Schema::hasColumn('confidant_persons', 'uuid')) {
+                $table->uuid()->after('id');
+            }
         });
     }
 
@@ -24,7 +26,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('confidant_persons', function (Blueprint $table) {
-            $table->dropColumn('uuid');
+            if (Schema::hasColumn('confidant_persons', 'uuid')) {
+                $table->dropColumn('uuid');
+            }
         });
     }
 };
