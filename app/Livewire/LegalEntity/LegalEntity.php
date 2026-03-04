@@ -805,6 +805,7 @@ abstract class LegalEntity extends Component
                     "employee_type" => $employeeData['employee_type'],
                     "id" => $employeeRequestId,
                     "inserted_at" => Carbon::now()->format('Y-m-d'),
+                    'applied_at' => Carbon::now()->format('Y-m-d'), // This value will be replaced with the real one from the server after the request will be sent
                     "legal_entity_id" => $legalEntityUUID,
                     "party" => [
                         "about_myself" => null,
