@@ -68,8 +68,8 @@ class EmployeeRequestProcessor
             $employee = Employee::where('uuid', $employeeUuid)->first();
 
             // Fallback for update scenarios (if we have a local link)
-            if (!$employee && $request->employee_id) {
-                $employee = Employee::find($request->employee_id);
+            if (!$employee && $request->employeeId) {
+                $employee = Employee::find($request->employeeId);
             }
 
             $isNew = false;
@@ -113,12 +113,12 @@ class EmployeeRequestProcessor
 
             if ($isNew) {
                 $employee->uuid = $employeeUuid; // Ensure UUID is set
-                $employee->legal_entity_id = $request->legal_entity_id;
-                $employee->user_id = $request->user_id;
+                $employee->legalEntityId = $request->legalEntityId;
+                $employee->userId = $request->userId;
                 $employee->status = $systemOverrides['status'] ?? Status::ACTIVE;
 
-                if ($request->party_id) {
-                    $employee->party_id = $request->party_id;
+                if ($request->partyId) {
+                    $employee->partyId = $request->partyId;
                 }
             }
 
@@ -128,10 +128,10 @@ class EmployeeRequestProcessor
             Log::info("[EmployeeRequestProcessor] Employee Saved. ID: {$employee->id}");
 
             // 8. Link Request to Employee
-            if ($request->employee_id !== $employee->id) {
+            if ($request->employeeId !== $employee->id) {
                 $request->update([
                                      'employee_id' => $employee->id,
-                                     'party_id' => $employee->party_id ?? $request->party_id,
+                                     'party_id' => $employee->partyId ?? $request->partyId,
                                  ]);
             }
 
@@ -387,10 +387,10 @@ class EmployeeRequestProcessor
     private function assignUserRoles(Employee $employee, int $legalEntityId, ?int $requestUserId = null): void
     {
         // Link User to Party if missing (critical for the User->Employee relation)
-        if ($requestUserId && $employee->party_id) {
+        if ($requestUserId && $employee->partyId) {
             $user = \App\Models\User::find($requestUserId);
-            if ($user && !$user->party_id) {
-                $user->party_id = $employee->party_id;
+            if ($user && !$user->partyId) {
+                $user->partyId = $employee->partyId;
                 $user->save();
             }
         }
