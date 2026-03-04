@@ -148,7 +148,7 @@ class EmployeeRequestProcessor
             );
 
             // 10. Assign Roles to User
-            $this->assignUserRoles($employee, $request->legal_entity_id);
+            $this->assignUserRoles($employee, $request->legal_entity_id, $request->user_id);
 
             // 11. Finalize Request Status
             $request->update([
@@ -384,9 +384,18 @@ class EmployeeRequestProcessor
     /**
      * Assigns roles to the user associated with the employee.
      */
-    private function assignUserRoles(Employee $employee, int $legalEntityId): void
+    private function assignUserRoles(Employee $employee, int $legalEntityId, ?int $requestUserId = null): void
     {
-        $users  = $employee->party->users;
+        // Link User to Party if missing (critical for the User->Employee relation)
+        if ($requestUserId && $employee->party_id) {
+            $user = \App\Models\User::find($requestUserId);
+            if ($user && !$user->party_id) {
+                $user->party_id = $employee->party_id;
+                $user->save();
+            }
+        }
+
+        $users = $employee->party->users()->get();
 
         if ($users->isEmpty()) {
             return;
@@ -395,12 +404,6 @@ class EmployeeRequestProcessor
         $roleName = $employee->employee_type;
 
         foreach ($users as $user) {
-            // Link User to Party if missing
-            if (!$user->party_id && $employee->party_id) {
-                $user->party_id = $employee->party_id;
-                $user->save();
-            }
-
             // Assign Role based on Employee Type
             if ($roleName && !$user->hasRole($roleName)) {
                 setPermissionsTeamId($legalEntityId);
