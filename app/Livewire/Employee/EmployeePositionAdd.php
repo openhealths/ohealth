@@ -45,6 +45,11 @@ class EmployeePositionAdd extends AbstractEmployeeFormManager
         }
     }
 
+    public function updatedFormEmail($value): void
+    {
+        $this->form->party['email'] = $value;
+    }
+
     /**
      * Implements the draft persistence logic for adding a new position.
      * It updates the draft if it already exists for this session,
