@@ -32,7 +32,8 @@ class ContractIndex extends Component
 
     public function mount(): void
     {
-        $this->typeFilter = Type::values();
+        // Initialize filter using enum values
+        $this->typeFilter = [Type::CAPITATIONS->value, Type::REIMBURSEMENT->value];
     }
 
     public function search(): void
@@ -44,7 +45,9 @@ class ContractIndex extends Component
     public function resetFilters(): void
     {
         $this->reset(['typeFilter', 'isFiltersApplied']);
-        $this->typeFilter = Type::values();
+
+        // Reset filter using enum values
+        $this->typeFilter = [Type::CAPITATIONS->value, Type::REIMBURSEMENT->value];
     }
 
     public function sync(): void
