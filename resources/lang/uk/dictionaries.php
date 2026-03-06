@@ -43,6 +43,20 @@ return [
         'treatment_plan_required_en' => 'Обов\'язковість використання плану лікування для ЕН:',
     ],
 
+    'service_catalog' => [
+        'title' => 'Каталог послуг',
+        'search_services' => 'Пошук послуг',
+        'search_placeholder' => 'Киснева терапія',
+        'service_category' => 'Категорія послуг',
+        'service_active' => 'Послуга активна',
+        'service_group_active' => 'Група послуг активна',
+        'allowed_for_en' => 'Дозволяється використання у ЕН',
+
+        'categories' => [
+            'nervous_system' => 'Процедури на нервовій системі',
+        ],
+    ],
+
     'loinc_observation_dictionary' => 'Довідник спостережень LOINC',
     'icf_dictionary_condition_patient' => 'Довідник станів пацієнта МКФ',
 ];
