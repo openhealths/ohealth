@@ -347,14 +347,14 @@
                                         // Find the last active employee of this person to check the rights
                                         $latestEmployee = $party->employees->first(); // or through the method by which you get a topical position
 
-                                        $isOwner = $latestEmployee && $latestEmployee->employeeType === Role::OWNER->value;
+                                        // Check if ANY of the employee positions for this party is an OWNER
+                                        $isOwner = $party->employees->contains(fn($emp) => $emp->employeeType === Role::OWNER->value);
                                         $hasUserLinked = $latestEmployee && !empty($latestEmployee->userId);
 
                                         // We check the possibility of editing personal data according to your rules:
-                                        // 1. Not the owner 2. There is a tethered user 3. Not exempt
+                                        // 1. Not the owner 3. Not exempt
                                         $canEditParty = $latestEmployee
                                             && !$isOwner
-                                            && $hasUserLinked
                                             && $latestEmployee->status !== \App\Enums\Status::DISMISSED;
                                     @endphp
                                     @can('create', \App\Models\Employee\EmployeeRequest::class)
