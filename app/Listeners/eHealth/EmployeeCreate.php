@@ -78,6 +78,7 @@ class EmployeeCreate
                 'legal_entity_id' => $event->legalEntity->uuid,
                 'tax_id' => $taxId,
                 'status' => 'APPROVED',
+                'page_size' => 500 // Get maximum records at one time allowed by EHealth's API (if page_size in .env will set to smaller value, some of employee may be missed)
             ]
         )->validate();
 
@@ -111,6 +112,9 @@ class EmployeeCreate
                     continue;
                 }
 
+                // If emloyee has already an associated user, we skip attaching because it means it's already created by the stored user (uer_id)
+                $eHealthEmployee['user_id'] ??= $user->id;
+
                 $dataFromRevision = EHealth::employeeRequest()->mapCreate($employeeRequest->revision->data);
                 $dataFromEHealth = Arr::only(
                     $eHealthEmployee,
@@ -122,12 +126,15 @@ class EmployeeCreate
                     array_merge($dataFromRevision['employee'], $dataFromEHealth, [
                         'legal_entity_id' => $event->legalEntity->id,
                         'legal_entity_uuid' => $event->legalEntity->uuid,
+                        'user_id' => $user->id
                     ])
                 );
 
                 $cleanPartyFromRevision = $dataFromRevision['party'];
                 $cleanPartyFromEHealth = Arr::except($eHealthEmployee['party'] ?? [], ['email']);
                 $mergedCleanPartyData = array_merge($cleanPartyFromRevision, $cleanPartyFromEHealth);
+
+                $newEmployee->users()->syncWithoutDetaching([$user->id]);
 
                 $newEmployee = Repository::employee()->updateDetails(
                     $newEmployee,
@@ -151,7 +158,7 @@ class EmployeeCreate
                     [
                         'employee_id' => $newEmployee->id,
                         'status' => RequestStatus::APPROVED,
-                        'applied_at' => now(),
+                        'applied_at' => $employeeRequest->updatedAt ?? Carbon::now(),
                         'user_id' => $user->id,
                         'party_id' => $newEmployee->partyId,
                     ]

@@ -6,6 +6,7 @@ namespace App\Jobs;
 
 use Throwable;
 use App\Core\Arr;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Core\EHealthJob;
 use App\Enums\JobStatus;
@@ -77,7 +78,10 @@ class EmployeeRequestDetailsUpsert extends EHealthJob
 
         $this->employeeRequest->fill(array_merge(
             $response->map($validatedData, $this->legalEntity, $employeeRequestUser?->id ?? null, $employeeRequestPartyId ?? null),
-            ['sync_status' => JobStatus::COMPLETED->value])
+            [
+                'sync_status' => JobStatus::COMPLETED->value,
+                'applied_at' => $validatedData['updated_at'] ?? Carbon::now()
+            ])
         );
 
         $this->employeeRequest->save();
