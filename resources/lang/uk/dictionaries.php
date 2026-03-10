@@ -52,4 +52,13 @@ return [
 
     'loinc_observation_dictionary' => 'Довідник спостережень LOINC',
     'icf_dictionary_condition_patient' => 'Довідник станів пацієнта МКФ',
+
+    'condition_diagnose' => [
+        'title' => 'Каталог груп станів/діагнозів',
+        'search_title' => 'Пошук груп станів/діагнозів',
+        'group_label' => 'Група діагнозів',
+        'details_title' => 'Вибрана група станів/діагнозів',
+        'example_group' => 'B25-B34 – Інші вірусні хвороби',
+        'codes_list_button' => 'Список кодів діагнозів',
+    ],
 ];

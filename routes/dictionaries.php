@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Route;
 use App\Livewire\Dictionary\DrugList;
 use App\Livewire\Dictionary\MedicationProgram;
 use App\Livewire\Dictionary\ServiceCatalog;
 use App\Livewire\Dictionary\ServiceProgram;
+use App\Livewire\Dictionary\ConditionDiagnose;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +32,7 @@ Route::prefix('dictionaries')->name('dictionaries.')
 
         Route::get('/service-catalog', ServiceCatalog::class)
             ->name('service-catalog.index');
+
+        Route::get('/condition-diagnose', ConditionDiagnose::class)
+            ->name('condition-diagnose.index');
     });
