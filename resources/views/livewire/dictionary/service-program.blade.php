@@ -48,7 +48,8 @@
                 </legend>
 
                 <div class="space-y-2 text-gray-900 dark:text-gray-100">
-                    <p>{{ __('dictionaries.service_programs.care_plan_required') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.service_programs.care_plan_required') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.care_plan_required ? '{{ __('forms.yes') }}' : '{{ __('forms.no') }}'"></span>
                     </p>
                 </div>

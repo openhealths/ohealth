@@ -44,6 +44,21 @@
                             {{ __('dictionaries.program_label') }}
                         </label>
                     </div>
+
+                    <div class="form-group group w-full">
+                        <select id="prescriptionWithoutDeclaration"
+                                name="prescriptionWithoutDeclaration"
+                                class="peer input-select w-full"
+                        >
+                            <option value="" selected>{{ __('forms.select') }}</option>
+                            <option value="1">{{ __('forms.yes') }}</option>
+                            <option value="0">{{ __('forms.no') }}</option>
+                        </select>
+
+                        <label for="prescriptionWithoutDeclaration" class="label peer-focus:text-blue-600 peer-valid:text-blue-600">
+                            {{ __('dictionaries.medication_programs.prescription_without_declaration') }}
+                        </label>
+                    </div>
                 </div>
             </div>
         </x-slot>
@@ -57,40 +72,53 @@
                 </legend>
 
                 <div class="space-y-2 text-gray-900 dark:text-gray-100">
-                    <p>{{ __('dictionaries.medication_programs.funding_source') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.funding_source') }}:</span>
                         <span x-text="dictionaries.FUNDING_SOURCE[selectedProgram.funding_source]"></span>
                     </p>
                     <p>{{ __('dictionaries.mr_blank_type') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.mr_blank_type') }}:</span>
                         <span x-text="selectedProgram.mr_blank_type"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.care_plan_required') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.care_plan_required') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.care_plan_required ? '{{ __('forms.yes') }}' : '{{ __('forms.no') }}'"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.employee_types_to_create_request') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.employee_types_to_create_request') }}:</span>
                         <span x-text="translateRoles(selectedProgram.medical_program_settings.employee_types_to_create_request)"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.speciality_types_allowed') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.speciality_types_allowed') }}:</span>
                         <span x-text="translateSpecialities(selectedProgram.medical_program_settings.speciality_types_allowed)"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.skip_treatment_period') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.skip_treatment_period') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.skip_treatment_period ? '{{ __('forms.yes') }}' : '{{ __('forms.no') }}'"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.request_max_period_day') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.request_max_period_day') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.request_max_period_day"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.skip_request_employee_declaration_verify') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.skip_request_employee_declaration_verify') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.skip_request_employee_declaration_verify ? '{{ __('forms.yes') }}' : '{{ __('forms.no') }}'"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.skip_request_legal_entity_declaration_verify') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.skip_request_legal_entity_declaration_verify') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.skip_request_legal_entity_declaration_verify ? '{{ __('forms.yes') }}' : '{{ __('forms.no') }}'"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.multi_medication_dispense_allowed') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.multi_medication_dispense_allowed') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.multi_medication_dispense_allowed ? '{{ __('forms.yes') }}' : '{{ __('forms.no') }}'"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.request_notification_disabled') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.request_notification_disabled') }}:</span>
                         <span x-text="selectedProgram.medical_program_settings.request_notification_disabled ? '{{ __('forms.yes') }}' : '{{ __('forms.no') }}'"></span>
                     </p>
-                    <p>{{ __('dictionaries.medication_programs.patient_categories_allowed') }}:
+                    <p>
+                        <span class="font-semibold">{{ __('dictionaries.medication_programs.patient_categories_allowed') }}:</span>
                         <span x-text="translatePatientCategories(selectedProgram.medical_program_settings.patient_categories_allowed)"></span>
                     </p>
                 </div>

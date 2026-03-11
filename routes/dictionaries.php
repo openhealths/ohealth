@@ -8,6 +8,7 @@ use App\Livewire\Dictionary\MedicationProgram;
 use App\Livewire\Dictionary\ServiceCatalog;
 use App\Livewire\Dictionary\ServiceProgram;
 use App\Livewire\Dictionary\ConditionDiagnose;
+use App\Livewire\Dictionary\SensitiveGroup;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +36,7 @@ Route::prefix('dictionaries')->name('dictionaries.')
 
         Route::get('/condition-diagnose', ConditionDiagnose::class)
             ->name('condition-diagnose.index');
+
+        Route::get('/sensitive-group', SensitiveGroup::class)
+            ->name('sensitive-group.index');
     });

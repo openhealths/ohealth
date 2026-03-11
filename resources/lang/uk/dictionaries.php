@@ -25,7 +25,10 @@ return [
         'skip_request_legal_entity_declaration_verify' => 'Можливість виписувати EP незалежно від наявності укладеної декларації в закладі, де виписується EP',
         'multi_medication_dispense_allowed' => 'Можливість часткового погашення EP',
         'request_notification_disabled' => 'Сповіщення пацієнта при операціях з рецептом вимкнено',
-        'patient_categories_allowed' => 'Категорії пацієнтів, яким дозволено створення призначення ПЛ'
+        'patient_categories_allowed' => 'Категорії пацієнтів, яким дозволено створення призначення ПЛ',
+
+        // Additional search filter
+        'prescription_without_declaration' => 'Виписка рецептів без декларації',
     ],
 
     'service_programs' => [
@@ -98,5 +101,16 @@ return [
         'details_title' => 'Вибрана група станів/діагнозів',
         'example_group' => 'B25-B34 – Інші вірусні хвороби',
         'codes_list_button' => 'Список кодів діагнозів',
+    ],
+
+    'sensitive_group' => [
+        'title' => 'Каталог чутливих груп',
+        'search_title' => 'Пошук чутливих груп',
+        'group_label' => 'Обмежувальна група',
+        'details_title' => 'Чутливі стани',
+        'example_group' => 'Чутливі стани, ВІЛ',
+        'details_button' => 'Переглянути деталі',
+        'codes_list_title' => 'Список кодів діагнозів',
+        'services_list_title' => 'Список послуг',
     ],
 ];
