@@ -79,7 +79,7 @@
                         <span x-text="dictionaries.FUNDING_SOURCE[selectedProgram.funding_source]"></span>
                     </p>
                     <p>
-                        <span class="font-semibold">{{ __('dictionaries.medication_programs.mr_blank_type') }}:</span>
+                        <span class="font-semibold">{{ __('dictionaries.mr_blank_type') }}:</span>
                         <span x-text="selectedProgram.mr_blank_type"></span>
                     </p>
                     <p>
