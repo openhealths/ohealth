@@ -26,7 +26,6 @@ return [
         'multi_medication_dispense_allowed' => 'Можливість часткового погашення EP',
         'request_notification_disabled' => 'Сповіщення пацієнта при операціях з рецептом вимкнено',
         'patient_categories_allowed' => 'Категорії пацієнтів, яким дозволено створення призначення ПЛ',
-        'prescription_without_declaration' => 'Виписка рецептів без декларації',
     ],
 
     'service_programs' => [

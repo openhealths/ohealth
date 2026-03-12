@@ -1,11 +1,32 @@
 <div x-data="{
-        programs: @js($activePrograms),
+        allPrograms: @js($activePrograms),
         roleLabels: @js(__('users.role')),
         dictionaries: @js($dictionaries),
         selectedProgramId: '',
-        prescriptionWithoutDeclaration: '',
+        skipDeclarationFilter: '',
+        skipLegalEntityDeclarationFilter: '',
         get selectedProgram() {
-            return this.programs.find(program => program.id === this.selectedProgramId) || null;
+            const program = this.allPrograms.find(program => program.id === this.selectedProgramId);
+            if (!program) return null;
+
+            // If no filter is set, show the program
+            if (this.skipDeclarationFilter === '' && this.skipLegalEntityDeclarationFilter === '') {
+                return program;
+            }
+
+            // Filter by (skip_request_employee_declaration_verify)
+            if (this.skipDeclarationFilter !== '') {
+                const expected = this.skipDeclarationFilter === 'true';
+                if (program.medical_program_settings?.skip_request_employee_declaration_verify !== expected) return null;
+            }
+
+            // Filter by (skip_request_legal_entity_declaration_verify)
+            if (this.skipLegalEntityDeclarationFilter !== '') {
+                const expected = this.skipLegalEntityDeclarationFilter === 'true';
+                if (program.medical_program_settings?.skip_request_legal_entity_declaration_verify !== expected) return null;
+            }
+
+            return program;
         },
         translateRoles(roles) {
             return roles?.map(role => this.roleLabels[role] || role).join(', ') || '-';
@@ -36,7 +57,7 @@
                                 x-model="selectedProgramId"
                         >
                             <option value="" selected>{{ __('forms.select') }}</option>
-                            <template x-for="program in programs" :key="program.id">
+                            <template x-for="program in allPrograms" :key="program.id">
                                 <option :value="program.id" x-text="program.name"></option>
                             </template>
                         </select>
@@ -46,21 +67,43 @@
                         </label>
                     </div>
 
-                    <div class="form-group group w-full">
-                        <select id="prescriptionWithoutDeclaration"
-                                name="prescriptionWithoutDeclaration"
-                                class="peer input-select w-full"
-                                x-model="prescriptionWithoutDeclaration"
-                        >
-                            <option value="" selected>{{ __('forms.select') }}</option>
-                            <option value="1">{{ __('forms.yes') }}</option>
-                            <option value="0">{{ __('forms.no') }}</option>
-                        </select>
+                    @if(auth()->user()->hasRole('DOCTOR'))
+                        <div class="form-group group w-full">
+                            <select id="skipDeclarationFilter"
+                                    name="skipDeclarationFilter"
+                                    class="peer input-select w-full"
+                                    x-model="skipDeclarationFilter"
+                            >
+                                <option value="" selected>{{ __('forms.select') }}</option>
+                                <option value="true">{{ __('forms.yes') }}</option>
+                                <option value="false">{{ __('forms.no') }}</option>
+                            </select>
 
-                        <label for="prescriptionWithoutDeclaration" class="label peer-focus:text-blue-600 peer-valid:text-blue-600">
-                            {{ __('dictionaries.medication_programs.prescription_without_declaration') }}
-                        </label>
-                    </div>
+                            <label for="skipDeclarationFilter"
+                                   class="label peer-focus:text-blue-600 peer-valid:text-blue-600 !top-0 !-translate-y-6 !scale-75"
+                            >
+                                {{ __('dictionaries.medication_programs.skip_request_employee_declaration_verify') }}
+                            </label>
+                        </div>
+
+                        <div class="form-group group w-full">
+                            <select id="skipLegalEntityDeclarationFilter"
+                                    name="skipLegalEntityDeclarationFilter"
+                                    class="peer input-select w-full"
+                                    x-model="skipLegalEntityDeclarationFilter"
+                            >
+                                <option value="" selected>{{ __('forms.select') }}</option>
+                                <option value="true">{{ __('forms.yes') }}</option>
+                                <option value="false">{{ __('forms.no') }}</option>
+                            </select>
+
+                            <label for="skipLegalEntityDeclarationFilter"
+                                   class="label peer-focus:text-blue-600 peer-valid:text-blue-600 !top-0 !-translate-y-6 !scale-75"
+                            >
+                                {{ __('dictionaries.medication_programs.skip_request_legal_entity_declaration_verify') }}
+                            </label>
+                        </div>
+                    @endif
                 </div>
             </div>
         </x-slot>
