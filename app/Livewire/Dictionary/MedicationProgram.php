@@ -55,11 +55,6 @@ class MedicationProgram extends Component
             });
         }
 
-        // 3.13.2.1.4 - Employee declaration filter, 3.13.2.1.5 - Legal entity declaration filter
-        if ($roles->contains(Role::DOCTOR->value)) {
-            // medical_program_settings.skip_request_employee_declaration_verify | medical_program_settings.skip_request_legal_entity_declaration_verify
-        }
-
         $this->activePrograms = $filteredPrograms->values()->toArray();
     }
 
