@@ -140,30 +140,30 @@
                     <legend class="legend">{{ mb_ucfirst($drug['name']) }}</legend>
 
                     <div class="space-y-2 text-gray-900 dark:text-gray-100">
-                        <p>{{ __('dictionaries.mr_blank_type') }}:
+                        <p class="font-semibold">{{ __('dictionaries.mr_blank_type') }}:
                             <span>{{ $drug['mr_blank_type'] }}</span></p>
                         <p>{{ __('dictionaries.drug_list.dosage_form_is_dosed') }}:
                             <span>{{ $drug['dosage_form_is_dosed'] ? __('forms.yes') : __('forms.no') }}</span>
                         </p>
 
-                        <p>{{ __('dictionaries.drug_list.ingredient.label') }}:</p>
+                        <p class="font-semibold">{{ __('dictionaries.drug_list.ingredient.label') }}:</p>
                         @foreach($drug['ingredients'] as $ingredient)
-                            <p>{{ __('dictionaries.drug_list.ingredient.name') }}:
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.ingredient.name') }}:
                                 <span>{{ $ingredient['name'] }}</span>
                             </p>
-                            <p>{{ __('dictionaries.drug_list.ingredient.is_primary') }}:
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.ingredient.is_primary') }}:
                                 <span>{{ $ingredient['is_primary'] ? __('forms.yes') : __('forms.no') }}</span>
                             </p>
-                            <p>{{ __('dictionaries.drug_list.ingredient.dosage.numerator_value') }}:
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.ingredient.dosage.numerator_value') }}:
                                 <span>{{ $ingredient['dosage']['numerator_value'] }}</span>
                             </p>
-                            <p>{{ __('dictionaries.drug_list.ingredient.dosage.numerator_unit') }}:
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.ingredient.dosage.numerator_unit') }}:
                                 <span>{{ $this->getMedicationUnit($ingredient['dosage']['numerator_unit']) }}</span>
                             </p>
-                            <p>{{ __('dictionaries.drug_list.ingredient.dosage.denumerator_value') }}:
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.ingredient.dosage.denumerator_value') }}:
                                 <span>{{ $ingredient['dosage']['denumerator_value'] }}</span>
                             </p>
-                            <p>{{ __('dictionaries.drug_list.ingredient.dosage.denumerator_unit') }}:
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.ingredient.dosage.denumerator_unit') }}:
                                 <span>{{ $this->getMedicationUnit($ingredient['dosage']['denumerator_unit']) }}</span>
                             </p>
                         @endforeach
@@ -179,21 +179,21 @@
                                     ->value('max_daily_dosage');
                             @endphp
 
-                            <p>{{ __('dictionaries.drug_list.daily_dosage') }}:
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.daily_dosage') }}:
                                 <span>{{ $drug['daily_dosage'] }} {{ $unitLabel }}</span>
                             </p>
 
                             @if($maxDailyDosage)
-                                <p>{{ __('dictionaries.drug_list.max_daily_dosage') }}:
+                                <p class="font-semibold">{{ __('dictionaries.drug_list.max_daily_dosage') }}:
                                     <span>{{ $maxDailyDosage }} {{ $unitLabel }}</span>
                                 </p>
                             @endif
                         @endif
 
                         @if($drug['packages'])
-                            <p>{{ __('dictionaries.drug_list.package.label') }}:</p>
+                            <p class="font-semibold">{{ __('dictionaries.drug_list.package.label') }}:</p>
                             @foreach($drug['packages'] as $package)
-                                <p>{{ __('dictionaries.drug_list.package.container_quantity') }}:
+                                <p class="font-semibold">{{ __('dictionaries.drug_list.package.container_quantity') }}:
                                     <span>{{ $package['container_dosage']['numerator_value'] }}</span>
                                 </p>
                                 <p>{{ __('dictionaries.drug_list.package.container_quantity_unit') }}:
