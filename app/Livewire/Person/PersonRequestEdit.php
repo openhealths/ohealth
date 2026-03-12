@@ -61,16 +61,16 @@ class PersonRequestEdit extends PersonComponent
             // Get the actual person data and merge it with relationship data
             $personData = $personRequest->confidantPersons->first()->person->load('phones', 'documents')->toArray();
 
-            // Merge person data into selectedConfidantPersonData for the blade template
-            $this->selectedConfidantPersonData = array_merge($personData, [
-                'documentsRelationship' => $confidantPersonRelation['documentsRelationship'] ?? [],
-                'personId' => $personData['uuid']
+            // Merge person data into newConfidantPerson for the blade template
+            $this->newConfidantPerson = array_merge($personData, [
+                'personId' => $personData['uuid'],
+                'documentsRelationship' => $confidantPersonRelation['documentsRelationship'] ?? []
             ]);
 
             $this->form->person['confidantPerson']['personId'] = $personData['uuid'];
         } else {
             $this->form->person['confidantPerson']['documentsRelationship'] = [];
-            $this->selectedConfidantPersonData = ['documentsRelationship' => []];
+            $this->newConfidantPerson = ['documentsRelationship' => []];
         }
     }
 

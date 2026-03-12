@@ -112,13 +112,6 @@ class PersonUpdate extends PersonComponent
      */
     public string $alias;
 
-    /**
-     * Data about new confidant person.
-     *
-     * @var array
-     */
-    public array $newConfidantPerson;
-
     public string $confidantPersonRelationshipRequestId;
 
     public string $confidantPersonId;

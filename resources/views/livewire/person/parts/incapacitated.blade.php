@@ -6,14 +6,14 @@
               isIncapacitated: $wire.entangle('isIncapacitated'),
               showSignatureModal: $wire.showSignatureModal,
               showConfidantPersonDrawer: @if($this instanceof PersonUpdate) $wire.entangle('showConfidantPersonDrawer') @else false @endif,
-              showDeactivateConfidantPersonDrawer: $wire.entangle('showDeactivateConfidantPersonDrawer'),
+              showDeactivateConfidantPersonDrawer: @if($this instanceof PersonUpdate) $wire.entangle('showDeactivateConfidantPersonDrawer') @else false @endif,
               showDocumentDrawer: false,
               showAuthDrawer: @if($this instanceof PersonUpdate) $wire.entangle('showAuthDrawer') @else false @endif,
               showSignatureDrawer: @if($this instanceof PersonUpdate) $wire.entangle('showSignatureDrawer') @else false @endif,
               showTerminateModal: @if($this instanceof PersonUpdate) $wire.entangle('showTerminateModal') @else false @endif,
               deactivateDocIndex: null,
               selectedPatient: null,
-              confidantPerson: @if($this instanceof PersonUpdate) $wire.entangle('newConfidantPerson') @else $wire.entangle('selectedConfidantPersonData') ?? {} @endif,
+              confidantPerson: $wire.entangle('newConfidantPerson'),
               confidantPersons: @if($this instanceof PersonUpdate) $wire.entangle('form.person.confidantPersons') @else [] @endif,
               authenticationMethods: @if($this instanceof PersonUpdate) $wire.entangle('form.person.authenticationMethods') @else [] @endif,
               selectedConfidantIndex: null,
@@ -205,14 +205,14 @@
                                          x-show="confidantPerson.person?.unzr"
                                     >
                                         <span>{{ __('patients.unzr') }} </span>
-                                        <span x-text="confidantPerson?.person?.unzr"></span>
+                                        <span x-text="confidantPerson.person?.unzr"></span>
                                     </div>
                                 </td>
-                                {{-- Document --}}
+                                {{-- Confidant person documents --}}
                                 <td class="td-input align-top">
                                     <div class="space-y-2">
                                         <template :key="'person-doc-' + confidantIndex + '-' + documentIndex"
-                                                  x-for="(document, documentIndex) in (confidantPerson?.person?.documents)"
+                                                  x-for="(document, documentIndex) in (confidantPerson.person.documents)"
                                         >
                                             <div class="border-b border-gray-200 dark:border-gray-600 pb-2 last:border-b-0 last:pb-0">
                                                 <div class="text-gray-900 dark:text-white font-medium"
@@ -340,11 +340,11 @@
                                         <span x-text="confidantPerson.unzr || ''"></span>
                                     </div>
                                 </td>
-                                {{-- Document - only show on first row --}}
+                                {{-- Confidant person documents --}}
                                 <td class="td-input align-top" x-show="docIndex === 0">
                                     <div class="space-y-2">
                                         <template :key="'person-doc-' + documentIndex"
-                                                  x-for="(document, documentIndex) in (confidantPerson.documents || [])"
+                                                  x-for="(document, documentIndex) in (confidantPerson.documents)"
                                         >
                                             <div class="border-b border-gray-200 dark:border-gray-600 pb-2 last:border-b-0 last:pb-0">
                                                 <div class="text-gray-900 dark:text-white font-medium"
@@ -363,7 +363,7 @@
                                         <div class="text-gray-900 dark:text-white">-</div>
                                     </div>
                                     <template :key="'phone-' + phoneIndex"
-                                              x-for="(phone, phoneIndex) in (confidantPerson.phones || [])"
+                                              x-for="(phone, phoneIndex) in (confidantPerson.phones)"
                                     >
                                         <div>
                                             <div class="text-gray-900 dark:text-white"
@@ -414,7 +414,11 @@
                                                 </button>
                                                 <button type="button"
                                                         class="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-red-600 dark:text-red-400 whitespace-nowrap"
-                                                        @click="confidantPerson.documentsRelationship.splice(docIndex, 1); confidantPerson = { ...confidantPerson }; openDropdown = false"
+                                                        @click="
+                                                            confidantPerson.documentsRelationship.splice(docIndex, 1);
+                                                            confidantPerson = { ...confidantPerson };
+                                                            openDropdown = false;
+                                                        "
                                                 >
                                                     @icon('delete', 'w-4 h-4')
                                                     {{ __('forms.delete') }}
@@ -430,7 +434,7 @@
                 </table>
             </div>
 
-            @unless(($this instanceof \App\Livewire\Person\PersonCreate || $this instanceof \App\Livewire\Person\PersonRequestEdit) && $this->selectedConfidantPersonId)
+            @unless(($this instanceof \App\Livewire\Person\PersonCreate || $this instanceof \App\Livewire\Person\PersonRequestEdit) && $this->selectedConfidantPersonId && !empty($this->newConfidantPerson['documentsRelationship']))
                 <button type="button"
                         @click="
                             resetForm();

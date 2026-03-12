@@ -5,7 +5,7 @@
         </x-slot>
 
         <x-slot name="navigation">
-            <div class="flex flex-col gap-4" x-data="{ showFilter: true }">
+            <div class="flex flex-col gap-4" x-data="{ showFilter: false }">
                 <div class="flex flex-col gap-4 max-w-sm">
                     <div class="form-group group">
                         <label for="programSelect" class="default-label mb-2">

@@ -114,6 +114,13 @@ class PersonComponent extends Component
     public ?string $invalidPersonId = null;
 
     /**
+     * Data about new confidant person.
+     *
+     * @var array
+     */
+    public array $newConfidantPerson;
+
+    /**
      * KEP key.
      *
      * @var object|null
@@ -125,8 +132,6 @@ class PersonComponent extends Component
     public bool $showSignatureModal = false;
 
     public bool $showLeafletModal = false;
-
-    public array $selectedConfidantPersonData;
 
     public array $dictionaryNames = [
         'DOCUMENT_TYPE',
@@ -168,7 +173,13 @@ class PersonComponent extends Component
 
         if (!$this instanceof PersonUpdate) {
             $this->form->person['confidantPerson']['personId'] = $personData['id'];
-            $this->selectedConfidantPersonData = $personData;
+
+            // Show data about person that will be confidant
+            $person = Person::whereUuid($personData['id'])->with(['documents', 'phones'])->first();
+            $personData['documents'] = $person?->documents->toArray() ?? [];
+            $personData['phones'] = $person?->phones->toArray() ?? [];
+            $this->newConfidantPerson = $personData;
+
             $this->form->person['authenticationMethods'][0]['value'] = $personData['id'];
         }
     }

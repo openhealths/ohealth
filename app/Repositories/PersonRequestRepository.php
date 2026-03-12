@@ -43,6 +43,7 @@ class PersonRequestRepository
 
             if (!empty($personData['confidant_person'])) {
                 $confidant = $personRequest->confidantPersons()->create([
+                    'uuid' => $personData['uuid'],
                     'person_id' => $personData['confidant_person']['person_id'], // Who is a confidant person
                     'subject_person_id' => $personRequest->personId // Who needs a confidant person
                 ]);
@@ -104,6 +105,7 @@ class PersonRequestRepository
                 }
 
                 $confidant = $personRequest->confidantPersons()->create([
+                    'uuid' => $personData['uuid'],
                     'person_id' => $personData['confidant_person']['person_id'],
                     'subject_person_id' => $personRequest->personId
                 ]);

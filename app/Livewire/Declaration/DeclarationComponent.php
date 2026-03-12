@@ -450,7 +450,7 @@ abstract class DeclarationComponent extends Component
                 $toBeSignedData = $response->getData()['data_to_be_signed'];
                 DB::transaction(fn () => $this->syncDeclarationRelatedData($toBeSignedData));
             } catch (Exception|Throwable $exception) {
-                $this->logDatabaseErrors($exception, 'Error while approving declaration request');
+                $this->logDatabaseErrors($exception, 'Error while approving uploaded declaration request');
                 Session::flash('error', 'Виникла помилка. Зверніться до адміністратора.');
 
                 return;

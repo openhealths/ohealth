@@ -11,13 +11,12 @@
     <template x-teleport="body">
         <div x-show="showInformationMessageModal"
              style="display: none"
-             @keydown.escape.prevent.stop="showInformationMessageModal = false"
              role="dialog"
              aria-modal="true"
              class="modal"
         >
             <div x-transition.opacity class="fixed inset-0 bg-black/30"></div>
-            <div x-transition @click="showInformationMessageModal = false" class="modal-wrapper">
+            <div x-transition class="modal-wrapper">
                 <div @click.stop x-trap.noscroll.inert="showInformationMessageModal"
                      class="modal-content w-full max-w-4xl mx-auto"
                 >

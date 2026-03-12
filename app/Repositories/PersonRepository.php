@@ -46,13 +46,17 @@ class PersonRepository
         }
 
         if (!empty($personData['confidant_person'])) {
-            $confidant = $person->confidantPersons()->create(
-                Arr::only($personData['confidant_person'], 'person_id')
-            );
+            $confidant = $person->confidantPersons()->create([
+                'uuid' => $personData['uuid'],
+                'person_id' => $personData['confidant_person']['person_id'],
+                'subject_person_id' => $person->id
+            ]);
 
-            $confidant->documentsRelationship()->createMany(
-                $personData['confidant_person']['documents_relationship']
-            );
+            if (!empty($personData['confidant_person']['documents_relationship'])) {
+                $confidant->documentsRelationship()->createMany(
+                    $personData['confidant_person']['documents_relationship']
+                );
+            }
         }
     }
 
