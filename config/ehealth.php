@@ -28,6 +28,7 @@ return [
         'cooldown' => 300,
         'retries' => 10,
         'page_size' => env('EHEALTH_PAGE_SIZE', 300),
+        'page_size_max' => env('EHEALTH_PAGE_SIZE_MAX', 500)
     ],
 
     'auth' => [
@@ -161,9 +162,9 @@ return [
         'PRIMARY_CARE' => [
             'OWNER', 'HR', 'DOCTOR', 'ASSISTANT', 'ADMIN', 'RECEPTIONIST', 'MED_ADMIN', 'LABORANT'
         ],
-        'MSP_PHARMACY' => [
-            'OWNER', 'HR', 'DOCTOR', 'ADMIN', 'PHARMACIST', 'RECEPTIONIST'
-        ],
+        // 'MSP_PHARMACY' => [
+        //     'OWNER', 'HR', 'DOCTOR', 'ADMIN', 'PHARMACIST', 'RECEPTIONIST'
+        // ],
         'PHARMACY' => [
             'PHARMACY_OWNER', 'OWNER', 'PHARMACIST', 'HR'
         ],
