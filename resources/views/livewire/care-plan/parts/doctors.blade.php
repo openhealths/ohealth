@@ -16,7 +16,7 @@
                        placeholder=" "
                        required>
                 <label for="author" class="label">
-                    {{ __('treatment-plan.author') }}
+                    {{ __('care-plan.author') }}
                 </label>
                 @error('form.author') <p class="text-error">{{ $message }}</p> @enderror
             </div>
@@ -29,10 +29,10 @@
                         <select x-model="coAuthors[index]"
                                 class="input-select peer"
                                 :id="'coAuthor_' + index">
-                            <option value="" disabled selected hidden>{{ __('treatment-plan.find_doctor') }}</option>
+                            <option value="" disabled selected hidden>{{ __('care-plan.find_doctor') }}</option>
                         </select>
                         <label :for="'coAuthor_' + index" class="label">
-                            {{ __('treatment-plan.co-author') }}
+                            {{ __('care-plan.co-author') }}
                         </label>
 
                         <button type="button"

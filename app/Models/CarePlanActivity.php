@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TreatmentPlanActivity extends Model
+class CarePlanActivity extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'uuid',
-        'treatment_plan_id',
+        'care_plan_id',
         'author_id',
         'status',
         'do_not_perform',
@@ -49,9 +49,9 @@ class TreatmentPlanActivity extends Model
         'scheduled_period_end' => 'date',
     ];
 
-    public function treatmentPlan(): BelongsTo
+    public function carePlan(): BelongsTo
     {
-        return $this->belongsTo(TreatmentPlan::class);
+        return $this->belongsTo(CarePlan::class);
     }
 
     public function author(): BelongsTo

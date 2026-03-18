@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 return [
-    'new_treatment_plan' => 'Новий план лікування',
+    'new_care_plan' => 'Новий план лікування',
     'author' => 'Автор',
     'co-author' => 'Співавтор',
     'find_doctor' => 'Знайти лікаря',
     'patient_data' => 'Дані пацієнта',
     'patient' => 'Пацієнт',
     'medical_number' => 'Медичний запис №',
-    'treatment_plan_data' => 'Дані плану лікування',
+    'care_plan_data' => 'Дані плану лікування',
     'category' => 'Категорія',
-    'name_treatment_plan' => 'Назва плану лікування',
+    'name_care_plan' => 'Назва плану лікування',
     'intention' => 'Намір',
     'terms_service' => 'Умови надання послуг',
     'date_and_time_start' => 'Дата та час початку плану лікування:',
@@ -20,9 +20,9 @@ return [
     'attention' => 'Увага!',
     'you_specify_the_end_date' => 'Ви зазначаєте кінцевий термін періоду дійсності плану лікування. Зауважте, що отримання пацієнтом медичних послуг, медичних виробів або
 лікарських засобів за призначенням з цього плану лікування після цієї дати будуть неможливі!',
-    'based_treatment_plan' => 'Базується на плані лікування:',
-    'part_treatment_plan' => 'Є частиною плана лікування:',
-    'choose_treatment_plan' => 'Оберіть план лікування',
+    'based_care_plan' => 'Базується на плані лікування:',
+    'part_care_plan' => 'Є частиною плана лікування:',
+    'choose_care_plan' => 'Оберіть план лікування',
     'extended_description' => 'Розширений опис',
     'notes' => 'Нотатки',
     'condition/diagnosis' => 'Стан/діагноз',
@@ -31,7 +31,7 @@ return [
     'name' => 'Назва',
     'episode' => 'Епізод',
     'search' => 'Пошук',
-    'treatment_plan' => 'План лікування',
+    'care_plan' => 'План лікування',
     'plan_info' => 'Інформація про план',
     'prescriptions' => 'Призначення',
     'new_prescription' => 'Нове призначення',
@@ -42,7 +42,7 @@ return [
     'add_services' => 'Додати послуги',
     'add_medications' => 'Додати ліки',
     'add_medical_devices' => 'Додати медичні вироби',
-    'complete_treatment_plan' => 'Завершити план лікування',
+    'complete_care_plan' => 'Завершити план лікування',
 
     // Services drawer
     'new_service_prescription' => 'Нове призначення на послуги',

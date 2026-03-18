@@ -1,20 +1,20 @@
-@use('App\Livewire\TreatmentPlan\TreatmentPlanCreate')
+@use('App\Livewire\CarePlan\CarePlanCreate')
 
 <section class="section-form">
     <x-header-navigation x-.data="{ showFilter: false }" class="breadcrumb-form">
         <x-slot name="title">
-            {{ __('treatment-plan.new_treatment_plan') }}
+            {{ __('care-plan.new_care_plan') }}
         </x-slot>
     </x-header-navigation>
 
     <div x-data="{ showSignatureModal: $wire.entangle('showSignatureModal').live }" class="form shift-content" wire:key="{{ time() }}">
 
-        @include('livewire.treatment-plan.parts.doctors')
-        @include('livewire.treatment-plan.parts.patient_data')
-        @include('livewire.treatment-plan.parts.treatment_plan_data')
-        @include('livewire.treatment-plan.parts.condition_diagnosis')
-        @include('livewire.treatment-plan.parts.supporting_information')
-        @include('livewire.treatment-plan.parts.additional_info', ['context' => 'create'])
+        @include('livewire.care-plan.parts.doctors')
+        @include('livewire.care-plan.parts.patient_data')
+        @include('livewire.care-plan.parts.care_plan_data')
+        @include('livewire.care-plan.parts.condition_diagnosis')
+        @include('livewire.care-plan.parts.supporting_information')
+        @include('livewire.care-plan.parts.additional_info', ['context' => 'create'])
 
         <div class="mt-6 flex flex-row items-center gap-4 pt-6">
             <div class="flex items-center space-x-3">

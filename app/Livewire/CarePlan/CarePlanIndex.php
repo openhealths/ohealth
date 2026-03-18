@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\TreatmentPlan;
+namespace App\Livewire\CarePlan;
 
 use App\Classes\eHealth\EHealth;
-use App\Repositories\TreatmentPlanRepository;
+use App\Repositories\CarePlanRepository;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
-class TreatmentPlanIndex extends Component
+class CarePlanIndex extends Component
 {
-    public $treatmentPlans = [];
+    public $carePlans = [];
     public string $searchRequisition = '';
 
-    public function mount(TreatmentPlanRepository $repository): void
+    public function mount(CarePlanRepository $repository): void
     {
         $legalEntity = legalEntity();
 
         if ($legalEntity) {
-            $this->treatmentPlans = $repository->getByLegalEntity($legalEntity->id);
+            $this->carePlans = $repository->getByLegalEntity($legalEntity->id);
         }
     }
 
@@ -36,7 +36,7 @@ class TreatmentPlanIndex extends Component
             $response = EHealth::carePlan()->getMany(['requisition' => $this->searchRequisition]);
             $data = $response->getData();
             // Merge eHealth results with local list
-            $this->treatmentPlans = collect($data)->toArray();
+            $this->carePlans = collect($data)->toArray();
         } catch (\Throwable $e) {
             Log::error('CarePlan search error: ' . $e->getMessage());
             session()->flash('error', 'Помилка пошуку планів лікування в ЕСОЗ: ' . $e->getMessage());
@@ -45,6 +45,6 @@ class TreatmentPlanIndex extends Component
 
     public function render()
     {
-        return view('livewire.treatment-plan.treatment-plan-index');
+        return view('livewire.care-plan.care-plan-index');
     }
 }

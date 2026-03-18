@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TreatmentPlan extends Model
+class CarePlan extends Model
 {
     use HasFactory;
 
@@ -65,6 +65,6 @@ class TreatmentPlan extends Model
 
     public function activities(): HasMany
     {
-        return $this->hasMany(TreatmentPlanActivity::class);
+        return $this->hasMany(CarePlanActivity::class);
     }
 }

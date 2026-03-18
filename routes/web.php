@@ -252,10 +252,10 @@ Route::middleware(['auth:web,ehealth', 'verified'])->group(function () {
                         });
                 });
 
-            Route::get('/treatment-plan', \App\Livewire\TreatmentPlan\TreatmentPlanIndex::class)
-                ->name('treatmentPlan.index');
-            Route::get('/treatment-plan/create', \App\Livewire\TreatmentPlan\TreatmentPlanCreate::class)
-                ->name('treatmentPlan.create');
+            Route::get('/care-plan', \App\Livewire\CarePlan\CarePlanIndex::class)
+                ->name('carePlan.index');
+            Route::get('/care-plan/create', \App\Livewire\CarePlan\CarePlanCreate::class)
+                ->name('carePlan.create');
 
             Route::prefix('equipment')->name('equipment.')->group(static function () {
                 Route::get('/', EquipmentIndex::class)->name('index')->can('viewAny', Equipment::class);

@@ -186,7 +186,7 @@ return [
     'referrals' => 'Направлення',
     'medical_reports' => 'Медичні висновки',
     'procedures' => 'Процедури',
-    'treatment_plans' => 'Плани лікування',
+    'care_plans' => 'Плани лікування',
     'clinical_impressions' => 'Клінічні оцінки',
 
     // Main data

@@ -6,7 +6,7 @@
     <div class="form-row">
         <div class="form-group">
             <label for="description"
-                   class="peer appearance-none bg-white">{{ __('treatment-plan.extended_description') }}</label>
+                   class="peer appearance-none bg-white">{{ __('care-plan.extended_description') }}</label>
             <textarea
                 id="description"
                 class="textarea !text-gray-500 dark:!text-gray-400 mt-1"
@@ -20,7 +20,7 @@
     <div class="form-row">
         <div class="form-group">
             <label for="note"
-                   class="peer appearance-none bg-white">{{ __('treatment-plan.notes') }}</label>
+                   class="peer appearance-none bg-white">{{ __('care-plan.notes') }}</label>
             <textarea
                 id="note"
                 class="textarea !text-gray-500 dark:!text-gray-400 mt-1"
@@ -34,7 +34,7 @@
     <div class="form-row-2">
         <div class="form-group group">
             <label for="inform_with" class="label">
-                {{ __('treatment-plan.inform_with') }}
+                {{ __('care-plan.inform_with') }}
             </label>
             <select id="inform_with"
                     name="inform_with"
