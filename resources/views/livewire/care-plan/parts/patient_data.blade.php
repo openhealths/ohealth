@@ -1,6 +1,6 @@
 <fieldset class="fieldset">
     <legend class="legend">
-        {{ __('treatment-plan.patient_data') }}
+        {{ __('care-plan.patient_data') }}
     </legend>
 
     <div class="form-row-2">
@@ -15,9 +15,9 @@
             >
 
             <label for="patient" class="label">
-                {{ __('treatment-plan.patient') }}
+                {{ __('care-plan.patient') }}
             </label>
-            @error('treatment-plan.patient')
+            @error('care-plan.patient')
             <p class="text-error">{{ $message }}</p>
             @enderror
         </div>
@@ -32,9 +32,9 @@
             >
 
             <label for="medical_number" class="label">
-                {{ __('treatment-plan.medical_number') }}
+                {{ __('care-plan.medical_number') }}
             </label>
-            @error('treatment-plan.medical_number')
+            @error('care-plan.medical_number')
             <p class="text-error">{{ $message }}</p>
             @enderror
         </div>

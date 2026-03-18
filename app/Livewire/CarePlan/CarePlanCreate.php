@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\TreatmentPlan;
+namespace App\Livewire\CarePlan;
 
 use App\Classes\eHealth\EHealth;
 use App\Core\Arr;
 use App\Exceptions\EHealth\EHealthResponseException;
 use App\Exceptions\EHealth\EHealthValidationException;
-use App\Models\TreatmentPlan;
-use App\Repositories\TreatmentPlanRepository;
+use App\Models\CarePlan;
+use App\Repositories\CarePlanRepository;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +18,7 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class TreatmentPlanCreate extends Component
+class CarePlanCreate extends Component
 {
     use WithFileUploads;
 
@@ -110,9 +110,9 @@ class TreatmentPlanCreate extends Component
     /**
      * Save as a local draft (without sending to eHealth).
      */
-    public function save(TreatmentPlanRepository $repository): void
+    public function save(CarePlanRepository $repository): void
     {
-        if (Auth::user()?->cannot('create', TreatmentPlan::class)) {
+        if (Auth::user()?->cannot('create', CarePlan::class)) {
             Session::flash('error', 'У вас немає дозволу на створення плану лікування.');
             return;
         }
@@ -154,9 +154,9 @@ class TreatmentPlanCreate extends Component
     /**
      * Sign with KEP and send to eHealth.
      */
-    public function sign(TreatmentPlanRepository $repository): void
+    public function sign(CarePlanRepository $repository): void
     {
-        if (Auth::user()?->cannot('create', TreatmentPlan::class)) {
+        if (Auth::user()?->cannot('create', CarePlan::class)) {
             Session::flash('error', 'У вас немає дозволу на створення плану лікування.');
             return;
         }
@@ -293,6 +293,6 @@ class TreatmentPlanCreate extends Component
 
     public function render()
     {
-        return view('livewire.treatment-plan.treatment-plan-create');
+        return view('livewire.care-plan.care-plan-create');
     }
 }

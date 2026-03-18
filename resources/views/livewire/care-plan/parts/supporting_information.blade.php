@@ -45,7 +45,7 @@
     }
 }">
     <legend class="legend">
-        {{ __('treatment-plan.supporting_information') }}
+        {{ __('care-plan.supporting_information') }}
     </legend>
 
     <div class="mt-4 space-y-10">
@@ -201,7 +201,7 @@
 
                                 <div class="mb-8 flex items-center gap-1 font-semibold text-gray-900 dark:text-white">
                                     @icon('search-outline', 'w-4.5 h-4.5')
-                                    <p>{{ __('treatment-plan.search') }}</p>
+                                    <p>{{ __('care-plan.search') }}</p>
                                 </div>
 
                                 <div class="form-row-2" x-data="{
@@ -252,7 +252,7 @@
                                     </div>
                                     <div class="form-group group">
                                         <label for="episode" class="label">
-                                            {{ __('treatment-plan.episode') }}
+                                            {{ __('care-plan.episode') }}
                                         </label>
 
                                         <select id="episode"
@@ -263,7 +263,7 @@
                                             <option selected value="">{{ __('forms.select') }}</option>
                                         </select>
 
-                                        @error('treatment-plan.episode')
+                                        @error('care-plan.episode')
                                         <p class="text-error">{{ $message }}</p>
                                         @enderror
                                     </div>

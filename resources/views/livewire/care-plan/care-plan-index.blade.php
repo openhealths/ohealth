@@ -1,14 +1,14 @@
-@use('App\Livewire\TreatmentPlan\TreatmentPlanIndex')
+@use('App\Livewire\CarePlan\CarePlanIndex')
 
 <section class="section-form">
     <x-header-navigation x-data="{ showFilter: false }" class="breadcrumb-form">
         <x-slot name="title">
-            {{ __('treatment-plan.treatment_plan') }}
+            {{ __('care-plan.care_plan') }}
 
-            @if(isset($treatmentPlan) && $treatmentPlan->number)
-                №{{ $treatmentPlan->number }}
-            @elseif(isset($this->treatmentPlanNumber))
-                №{{ $this->treatmentPlanNumber }}
+            @if(isset($carePlan) && $carePlan->number)
+                №{{ $carePlan->number }}
+            @elseif(isset($this->carePlanNumber))
+                №{{ $this->carePlanNumber }}
             @endif
         </x-slot>
     </x-header-navigation>
@@ -27,7 +27,7 @@
                         : 'border-b-2 border-gray-200 text-gray-500 hover:text-gray-700 dark:border-gray-700 dark:text-gray-400'"
                     class="px-4 py-2 text-sm font-medium focus:outline-none"
                 >
-                    {{ __('treatment-plan.plan_info') }}
+                    {{ __('care-plan.plan_info') }}
                 </button>
                 <button
                     type="button"
@@ -37,7 +37,7 @@
                         : 'border-b-2 border-gray-200 text-gray-500 hover:text-gray-700 dark:border-gray-700 dark:text-gray-400'"
                     class="px-4 py-2 text-sm font-medium focus:outline-none"
                 >
-                    {{ __('treatment-plan.prescriptions') }}
+                    {{ __('care-plan.prescriptions') }}
                 </button>
             </div>
 
@@ -48,7 +48,7 @@
                     @click="openDropdown = !openDropdown"
                     class="text-blue-500 hover:text-blue-600 text-sm font-medium"
                 >
-                    + {{ __('treatment-plan.new_prescription') }}
+                    + {{ __('care-plan.new_prescription') }}
                 </button>
 
                 <div
@@ -58,13 +58,13 @@
                     class="dropdown-panel absolute right-0 mt-2 w-48"
                 >
                     <button type="button" @click="openDropdown = false">
-                        {{ __('treatment-plan.services') }}
+                        {{ __('care-plan.services') }}
                     </button>
                     <button type="button" @click="openDropdown = false">
-                        {{ __('treatment-plan.medications') }}
+                        {{ __('care-plan.medications') }}
                     </button>
                     <button type="button" @click="openDropdown = false">
-                        {{ __('treatment-plan.medical_devices') }}
+                        {{ __('care-plan.medical_devices') }}
                     </button>
                 </div>
             </div>
@@ -72,12 +72,12 @@
 
         {{-- Tab Content: Plan Info --}}
         <div x-show="activeTab === 'info'" class="form" wire:key="{{ time() }}">
-            @include('livewire.treatment-plan.parts.doctors')
-            @include('livewire.treatment-plan.parts.patient_data')
-            @include('livewire.treatment-plan.parts.treatment_plan_data')
-            @include('livewire.treatment-plan.parts.condition_diagnosis')
-            @include('livewire.treatment-plan.parts.supporting_information')
-            @include('livewire.treatment-plan.parts.additional_info', ['context' => 'create'])
+            @include('livewire.care-plan.parts.doctors')
+            @include('livewire.care-plan.parts.patient_data')
+            @include('livewire.care-plan.parts.care_plan_data')
+            @include('livewire.care-plan.parts.condition_diagnosis')
+            @include('livewire.care-plan.parts.supporting_information')
+            @include('livewire.care-plan.parts.additional_info', ['context' => 'create'])
 
             <div class="mt-6 flex flex-row items-center gap-4 pt-6">
                 <div class="flex items-center space-x-3">
@@ -85,7 +85,7 @@
                         {{ __('Видалити') }}
                     </a>
 
-                    @if(get_class($this) === TreatmentPlanCreate::class)
+                    @if(get_class($this) === CarePlanCreate::class)
                         <button type="submit"
                                 class="button-primary-outline flex items-center gap-2 px-4 py-2"
                                 wire:click="createLocally"
@@ -107,12 +107,12 @@
             {{-- Services Section --}}
             <fieldset class="fieldset">
                 <legend class="legend">
-                    {{ __('treatment-plan.services') }}
+                    {{ __('care-plan.services') }}
                 </legend>
                 <div class="p-4 rounded-lg bg-blue-100 flex items-center gap-3 mb-4">
                     @icon('check-round', 'w-5 h-5 text-blue-500 flex-shrink-0')
                     <p class="text-sm text-blue-700">
-                        {{ __('treatment-plan.no_prescriptions_yet') }}
+                        {{ __('care-plan.no_prescriptions_yet') }}
                     </p>
                 </div>
                 <button type="button"
@@ -123,19 +123,19 @@
                         data-drawer-body-scrolling="false"
                         aria-controls="services-drawer-right"
                 >
-                    {{ __('treatment-plan.add_services') }}
+                    {{ __('care-plan.add_services') }}
                 </button>
             </fieldset>
 
             {{-- Medications Section --}}
             <fieldset class="fieldset">
                 <legend class="legend">
-                    {{ __('treatment-plan.medications') }}
+                    {{ __('care-plan.medications') }}
                 </legend>
                 <div class="p-4 rounded-lg bg-blue-100 flex items-center gap-3 mb-4">
                     @icon('check-round', 'w-5 h-5 text-blue-500 flex-shrink-0')
                     <p class="text-sm text-blue-700">
-                        {{ __('treatment-plan.no_prescriptions_yet') }}
+                        {{ __('care-plan.no_prescriptions_yet') }}
                     </p>
                 </div>
                 <button type="button"
@@ -146,19 +146,19 @@
                         data-drawer-body-scrolling="false"
                         aria-controls="medications-drawer-right"
                 >
-                    {{ __('treatment-plan.add_medications') }}
+                    {{ __('care-plan.add_medications') }}
                 </button>
             </fieldset>
 
             {{-- Medical Devices Section --}}
             <fieldset class="fieldset">
                 <legend class="legend">
-                    {{ __('treatment-plan.medical_devices') }}
+                    {{ __('care-plan.medical_devices') }}
                 </legend>
                 <div class="p-4 rounded-lg bg-blue-100 flex items-center gap-3 mb-4">
                     @icon('check-round', 'w-5 h-5 text-blue-500 flex-shrink-0')
                     <p class="text-sm text-blue-700">
-                        {{ __('treatment-plan.no_prescriptions_yet') }}
+                        {{ __('care-plan.no_prescriptions_yet') }}
                     </p>
                 </div>
                 <button type="button"
@@ -169,26 +169,26 @@
                         data-drawer-body-scrolling="false"
                         aria-controls="medical-devices-drawer-right"
                 >
-                    {{ __('treatment-plan.add_medical_devices') }}
+                    {{ __('care-plan.add_medical_devices') }}
                 </button>
             </fieldset>
 
             {{-- Complete Treatment Plan Button --}}
             <div class="pt-6">
                 <button type="button" class="button-primary-outline-red">
-                    {{ __('treatment-plan.complete_treatment_plan') }}
+                    {{ __('care-plan.complete_care_plan') }}
                 </button>
             </div>
 
             {{-- Drawers --}}
-            @include('livewire.treatment-plan.parts.modals.services-drawer')
-            @include('livewire.treatment-plan.parts.modals.service-search-drawer')
-            @include('livewire.treatment-plan.parts.modals.medications-drawer')
-            @include('livewire.treatment-plan.parts.modals.medication-search-drawer')
-            @include('livewire.treatment-plan.parts.modals.medication-form-drawer')
-            @include('livewire.treatment-plan.parts.modals.medical-devices-drawer')
-            @include('livewire.treatment-plan.parts.modals.medical-device-search-drawer')
-            @include('livewire.treatment-plan.parts.modals.medical-device-form-drawer')
+            @include('livewire.care-plan.parts.modals.services-drawer')
+            @include('livewire.care-plan.parts.modals.service-search-drawer')
+            @include('livewire.care-plan.parts.modals.medications-drawer')
+            @include('livewire.care-plan.parts.modals.medication-search-drawer')
+            @include('livewire.care-plan.parts.modals.medication-form-drawer')
+            @include('livewire.care-plan.parts.modals.medical-devices-drawer')
+            @include('livewire.care-plan.parts.modals.medical-device-search-drawer')
+            @include('livewire.care-plan.parts.modals.medical-device-form-drawer')
         </div>
     </div>
 

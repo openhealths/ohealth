@@ -1,12 +1,12 @@
 <fieldset class="fieldset">
     <legend class="legend">
-        {{ __('treatment-plan.treatment_plan_data') }}
+        {{ __('care-plan.care_plan_data') }}
     </legend>
 
     <div class="form-row-2">
         <div class="form-group group">
             <label for="category" class="label">
-                {{ __('treatment-plan.category') }}
+                {{ __('care-plan.category') }}
             </label>
 
             <select id="category"
@@ -14,7 +14,7 @@
                     class="input-select peer"
                     wire:model="form.category"
             >
-                <option value="">{{ __('treatment-plan.category') }}</option>
+                <option value="">{{ __('care-plan.category') }}</option>
                 {{-- Options populated from eHealth dictionary --}}
             </select>
 
@@ -34,7 +34,7 @@
                    required
             >
             <label for="title" class="label">
-                {{ __('treatment-plan.name_treatment_plan') }}
+                {{ __('care-plan.name_care_plan') }}
             </label>
             @error('form.title')
             <p class="text-error">{{ $message }}</p>
@@ -45,7 +45,7 @@
     <div class="form-row-2">
         <div class="form-group group">
             <label for="intent" class="label">
-                {{ __('treatment-plan.intention') }}
+                {{ __('care-plan.intention') }}
             </label>
 
             <select id="intent"
@@ -63,7 +63,7 @@
 
         <div class="form-group group">
             <label for="terms_of_service" class="label">
-                {{ __('treatment-plan.terms_service') }}
+                {{ __('care-plan.terms_service') }}
             </label>
 
             <select id="terms_of_service"
@@ -95,7 +95,7 @@
                    wire:model.lazy="form.period_start"
             />
             <label for="period_start" class="wrapped-label">
-                {{ __('treatment-plan.date_and_time_start') }}
+                {{ __('care-plan.date_and_time_start') }}
             </label>
             @error('form.period_start')
             <p class="text-error">{{ $message }}</p>
@@ -114,7 +114,7 @@
                    wire:model.lazy="form.period_end"
             />
             <label for="period_end" class="wrapped-label">
-                {{ __('treatment-plan.date_and_time_end') }}
+                {{ __('care-plan.date_and_time_end') }}
             </label>
             @error('form.period_end')
             <p class="text-error">{{ $message }}</p>
@@ -128,9 +128,9 @@
         <div class="p-4">
             <div class="flex items-center gap-2 mb-2">
                 @icon('alert-circle', 'w-5 h-5 text-red-700')
-                <p class="font-semibold text-red-700">{{ __('treatment-plan.attention') }}</p>
+                <p class="font-semibold text-red-700">{{ __('care-plan.attention') }}</p>
             </div>
-            <p class="text-sm text-red-700">{{ __('treatment-plan.you_specify_the_end_date') }}</p>
+            <p class="text-sm text-red-700">{{ __('care-plan.you_specify_the_end_date') }}</p>
         </div>
     </div>
     @endif
