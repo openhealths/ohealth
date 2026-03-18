@@ -127,6 +127,8 @@ class TreatmentPlanCreate extends Component
 
         $legalEntity = legalEntity();
 
+        $encounterData = $this->resolveEncounterData();
+
         $repository->create([
             'person_id'       => $this->resolvePersonId(),
             'author_id'       => Auth::user()?->activeEmployee()?->id,
@@ -138,7 +140,8 @@ class TreatmentPlanCreate extends Component
             'period_end'      => !empty($validated['form']['period_end'])
                 ? convertToYmd($validated['form']['period_end']) : null,
             'terms_of_service' => $validated['form']['terms_of_service'] ?? null,
-            'encounter_id'    => null, // TODO: resolve local encounter id from uuid
+            'encounter_id'    => $encounterData['id'],
+            'addresses'       => $encounterData['addresses'],
             'description'     => $validated['form']['description'] ?? null,
             'note'            => $validated['form']['note'] ?? null,
             'inform_with'     => $validated['form']['inform_with'] ?? null,
@@ -169,6 +172,8 @@ class TreatmentPlanCreate extends Component
 
         $legalEntity = legalEntity();
 
+        $encounterData = $this->resolveEncounterData();
+
         // Build eHealth payload
         $carePlanPayload = removeEmptyKeys([
             'intent'          => 'order',
@@ -180,11 +185,13 @@ class TreatmentPlanCreate extends Component
                 'end'   => !empty($this->form['period_end'])
                     ? convertToYmd($this->form['period_end']) : null,
             ]),
+            'addresses'       => $encounterData['addresses'],
             'encounter'       => ['identifier' => ['value' => $this->form['encounter']]],
             'care_manager'    => ['identifier' => ['value' => Auth::user()?->activeEmployee()?->uuid]],
             'description'     => $this->form['description'] ?: null,
             'note'            => $this->form['note'] ?: null,
             'inform_with'     => $this->form['inform_with'] ?: null,
+            'terms_of_service' => $this->form['terms_of_service'] ?: null,
         ]);
 
         try {
@@ -248,6 +255,40 @@ class TreatmentPlanCreate extends Component
             return null;
         }
         return \App\Models\Person\Person::where('uuid', $this->patientUuid)->value('id');
+    }
+
+    /**
+     * Resolve the local Encounter ID and extract Conditions (addresses) from it.
+     */
+    protected function resolveEncounterData(): array
+    {
+        $data = ['id' => null, 'addresses' => []];
+        if (empty($this->form['encounter'])) {
+            return $data;
+        }
+
+        $encounter = \App\Models\MedicalEvents\Sql\Encounter::where('uuid', $this->form['encounter'])
+            ->with('diagnoses.condition')
+            ->first();
+
+        if ($encounter) {
+            $data['id'] = $encounter->id;
+            
+            // Extract the UUID of the conditions (addresses for the care plan)
+            $conditionUuids = $encounter->diagnoses
+                ->map(fn($d) => $d->condition?->value)
+                ->filter()
+                ->values()
+                ->toArray();
+                
+            // Use the primary condition (first one per eHealth typical usage for 'addresses' in care plan)
+            if (!empty($conditionUuids)) {
+                $primaryCondition = $conditionUuids[0];
+                $data['addresses'][] = ['identifier' => ['value' => $primaryCondition]];
+            }
+        }
+
+        return $data;
     }
 
     public function render()
