@@ -14,9 +14,9 @@
     </x-header-navigation>
 
     {{-- Tabs Container --}}
-    <div x-data="{ activeTab: 'info', openDropdown: false, showServiceSearchDrawer: false, showMedicationSearchDrawer: false, showMedicationFormDrawer: false, showMedicalDeviceSearchDrawer: false, showMedicalDeviceFormDrawer: false }" class="form shift-content">
+    <div x-data="{ activeTab: 'info', openDropdown: false, showServiceDrawer: false, showMedicationDrawer: false, showMedicalDeviceDrawer: false, showServiceSearchDrawer: false, showMedicationSearchDrawer: false, showMedicationFormDrawer: false, showMedicalDeviceSearchDrawer: false, showMedicalDeviceFormDrawer: false }" class="form shift-content">
         {{-- Tab Switcher and New Prescription Button - on the same row --}}
-        <div class="flex items-center justify-between mt-4 mb-6">
+        <div class="flex items-center justify-between mt-4 mb-6 pl-3.5">
             {{-- Tabs on the left --}}
             <div class="flex">
                 <button
@@ -57,13 +57,22 @@
                     x-cloak
                     class="dropdown-panel absolute right-0 mt-2 w-48"
                 >
-                    <button type="button" @click="openDropdown = false">
+                    <button
+                        type="button"
+                        @click="openDropdown = false; activeTab = 'prescriptions'; setTimeout(() => { const el = document.getElementById('services'); if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 0)"
+                    >
                         {{ __('treatment-plan.services') }}
                     </button>
-                    <button type="button" @click="openDropdown = false">
+                    <button
+                        type="button"
+                        @click="openDropdown = false; activeTab = 'prescriptions'; setTimeout(() => { const el = document.getElementById('medications'); if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 0)"
+                    >
                         {{ __('treatment-plan.medications') }}
                     </button>
-                    <button type="button" @click="openDropdown = false">
+                    <button
+                        type="button"
+                        @click="openDropdown = false; activeTab = 'prescriptions'; setTimeout(() => { const el = document.getElementById('medical-devices'); if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 0)"
+                    >
                         {{ __('treatment-plan.medical_devices') }}
                     </button>
                 </div>
@@ -105,7 +114,7 @@
         {{-- Tab Content: Prescriptions --}}
         <div x-show="activeTab === 'prescriptions'" x-cloak class="space-y-6">
             {{-- Services Section --}}
-            <fieldset class="fieldset">
+            <fieldset id="services" class="fieldset" style="scroll-margin-top: 120px;">
                 <legend class="legend">
                     {{ __('treatment-plan.services') }}
                 </legend>
@@ -117,18 +126,15 @@
                 </div>
                 <button type="button"
                         class="item-add"
-                        data-drawer-target="services-drawer-right"
-                        data-drawer-show="services-drawer-right"
-                        data-drawer-placement="right"
-                        data-drawer-body-scrolling="false"
                         aria-controls="services-drawer-right"
+                        @click="showServiceDrawer = true"
                 >
                     {{ __('treatment-plan.add_services') }}
                 </button>
             </fieldset>
 
             {{-- Medications Section --}}
-            <fieldset class="fieldset">
+            <fieldset id="medications" class="fieldset" style="scroll-margin-top: 120px;">
                 <legend class="legend">
                     {{ __('treatment-plan.medications') }}
                 </legend>
@@ -140,18 +146,15 @@
                 </div>
                 <button type="button"
                         class="item-add"
-                        data-drawer-target="medications-drawer-right"
-                        data-drawer-show="medications-drawer-right"
-                        data-drawer-placement="right"
-                        data-drawer-body-scrolling="false"
                         aria-controls="medications-drawer-right"
+                        @click="showMedicationDrawer = true"
                 >
                     {{ __('treatment-plan.add_medications') }}
                 </button>
             </fieldset>
 
             {{-- Medical Devices Section --}}
-            <fieldset class="fieldset">
+            <fieldset id="medical-devices" class="fieldset" style="scroll-margin-top: 120px;">
                 <legend class="legend">
                     {{ __('treatment-plan.medical_devices') }}
                 </legend>
@@ -163,11 +166,8 @@
                 </div>
                 <button type="button"
                         class="item-add"
-                        data-drawer-target="medical-devices-drawer-right"
-                        data-drawer-show="medical-devices-drawer-right"
-                        data-drawer-placement="right"
-                        data-drawer-body-scrolling="false"
                         aria-controls="medical-devices-drawer-right"
+                        @click="showMedicalDeviceDrawer = true"
                 >
                     {{ __('treatment-plan.add_medical_devices') }}
                 </button>
@@ -191,7 +191,4 @@
             @include('livewire.treatment-plan.parts.modals.medical-device-form-drawer')
         </div>
     </div>
-
-    <x-messages/>
-    <x-forms.loading/>
 </section>

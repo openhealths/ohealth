@@ -38,7 +38,4 @@
             </div>
         </div>
     </div>
-
-    <x-messages/>
-    <x-forms.loading/>
 </section>

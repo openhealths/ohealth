@@ -1,11 +1,38 @@
-{{-- Services Drawer --}}
+{{-- Services Drawer
+     Alpine x-teleport only moves template.content.firstElementChild — one root required.
+     Backdrop + panel must live in one wrapper or the panel never reaches body and the
+     backdrop covers the page alone. --}}
 <template x-teleport="body">
-    <div id="services-drawer-right"
-         class="fixed top-0 right-0 h-screen pt-20 p-4 overflow-y-auto transition-transform translate-x-full bg-white w-4/5 dark:bg-gray-800"
-         style="z-index: 40;"
-         tabindex="-1"
+    <div x-show="showServiceDrawer"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         x-cloak
+         class="fixed inset-0"
+         style="z-index: 39;"
+         role="dialog"
+         aria-modal="true"
          aria-labelledby="services-drawer-label"
     >
+        {{-- Full-viewport scrim: dims main app; drawer panel stacks above (z-10) --}}
+        <div class="absolute inset-0 bg-gray-900/50"
+             aria-hidden="true"
+             @click="showServiceDrawer = false"
+        ></div>
+
+        <div id="services-drawer-right"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             class="absolute top-0 right-0 z-10 h-screen pt-20 p-4 overflow-y-auto bg-white w-4/5 dark:bg-gray-800 shadow-2xl"
+             tabindex="-1"
+        >
         <h3 class="modal-header" id="services-drawer-label">
             {{ __('treatment-plan.new_service_prescription') }}
         </h3>
@@ -282,8 +309,8 @@
             <div class="mt-6 flex justify-start gap-3">
                 <button type="button"
                         class="button-minor"
-                        data-drawer-hide="services-drawer-right"
                         aria-controls="services-drawer-right"
+                        @click="showServiceDrawer = false"
                 >
                     {{ __('forms.cancel') }}
                 </button>
@@ -300,5 +327,6 @@
                 </button>
             </div>
         </form>
+        </div>
     </div>
 </template>
