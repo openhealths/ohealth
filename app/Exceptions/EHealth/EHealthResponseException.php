@@ -42,4 +42,14 @@ class EHealthResponseException extends Exception
 
         return $response->status() . ': ' . $errorMessage;
     }
+
+    /**
+     * Get a translated error message.
+     *
+     * @return string
+     */
+    public function getTranslatedMessage(): string
+    {
+        return $this->getMessage();
+    }
 }
