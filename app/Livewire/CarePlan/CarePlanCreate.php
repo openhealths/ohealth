@@ -48,10 +48,17 @@ class CarePlanCreate extends Component
 
     public string $patientUuid = '';
 
+    /** @var array<string, string> Loaded from eHealth dictionary CARE_PLAN_CATEGORIES */
+    public array $categories = [];
+
+    /** @var array<string, string> Loaded from eHealth dictionary TERMS_OF_SERVICE_TYPES */
+    public array $termsOfService = [];
+
     public function mount(string $patientUuid = ''): void
     {
         $this->patientUuid = $patientUuid;
         $this->form['period_start'] = now()->format('d.m.Y');
+
         // Pre-fill author from current employee
         $employee = Auth::user()?->activeEmployee();
         if ($employee) {
@@ -59,6 +66,22 @@ class CarePlanCreate extends Component
             $this->form['author'] = implode(' ', array_filter([
                 $party?->last_name, $party?->first_name, $party?->second_name,
             ]));
+        }
+
+        // Load dictionaries (cached via DictionaryManager)
+        try {
+            $this->categories = dictionary()->basics()
+                ->byName('CARE_PLAN_CATEGORIES')
+                ->asCodeDescription()
+                ->toArray();
+
+            $this->termsOfService = dictionary()->basics()
+                ->byName('TERMS_OF_SERVICE_TYPES')
+                ->asCodeDescription()
+                ->toArray();
+        } catch (\Throwable $e) {
+            // Dictionaries might not be cached yet; log and continue
+            \Illuminate\Support\Facades\Log::warning('CarePlanCreate: failed to load dictionaries: ' . $e->getMessage());
         }
     }
 

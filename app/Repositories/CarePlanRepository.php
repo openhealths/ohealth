@@ -36,4 +36,13 @@ class CarePlanRepository
     {
         return $carePlan->update($data);
     }
+
+    public function updateById(int $id, array $data): bool
+    {
+        $carePlan = CarePlan::find($id);
+        if (!$carePlan) {
+            return false;
+        }
+        return $carePlan->update($data);
+    }
 }

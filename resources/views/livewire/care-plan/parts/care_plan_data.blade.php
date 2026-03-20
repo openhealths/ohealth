@@ -14,8 +14,10 @@
                     class="input-select peer"
                     wire:model="form.category"
             >
-                <option value="">{{ __('care-plan.category') }}</option>
-                {{-- Options populated from eHealth dictionary --}}
+                <option value="">{{ __('forms.select') }}</option>
+                @foreach($categories as $code => $description)
+                    <option value="{{ $code }}">{{ $description }}</option>
+                @endforeach
             </select>
 
             @error('form.category')
@@ -72,7 +74,9 @@
                     wire:model="form.terms_of_service"
             >
                 <option value="">{{ __('forms.select') }}</option>
-                {{-- Values from eHealth dictionary TERMS_OF_SERVICE_TYPES --}}
+                @foreach($termsOfService as $code => $description)
+                    <option value="{{ $code }}">{{ $description }}</option>
+                @endforeach
             </select>
 
             @error('form.terms_of_service')

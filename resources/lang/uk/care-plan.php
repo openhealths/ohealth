@@ -131,4 +131,19 @@ return [
     'box_50_pieces' => 'Коробка 50 штук',
     'program_participants' => 'Учасники програми',
 
+
+    // Index view
+    'no_care_plans'          => 'Планів лікування поки немає',
+    'search_by_requisition'  => 'Пошук за реквізиційним номером',
+    'requisition'            => 'Реквізиційний №',
+    'care_plan_details'      => 'Деталі плану лікування',
+    'activities'             => 'Призначення',
+    'no_activities'          => 'Призначень поки немає',
+    'kind'                   => 'Вид',
+
+    // Show view
+    'no_end_date'    => 'Безтерміново',
+    'cancel_care_plan' => 'Скасувати план (КЕП)',
+    'status_reason'  => 'Обґрунтування зміни статусу',
+
 ];

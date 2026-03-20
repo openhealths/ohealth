@@ -33,9 +33,9 @@ class CarePlanShow extends Component
     public $keyContainerUpload = null;
     public string $password = '';
 
-    public function mount(CarePlanRepository $repository, int $id): void
+    public function mount(CarePlanRepository $repository, int $carePlan): void
     {
-        $plan = $repository->findById($id);
+        $plan = $repository->findById($carePlan);
         if (!$plan) {
             abort(404, 'Care Plan not found');
         }
@@ -110,7 +110,7 @@ class CarePlanShow extends Component
             $responseData = $eHealthResponse->getData();
 
             // Update local state
-            $repository->update($this->carePlan->id, [
+            $repository->updateById($this->carePlan->id, [
                 'status' => $responseData['status'] ?? $payload['status'],
             ]);
 

@@ -257,6 +257,14 @@ Route::middleware(['auth:web,ehealth', 'verified'])->group(function () {
             Route::get('/care-plan/create', \App\Livewire\CarePlan\CarePlanCreate::class)
                 ->name('carePlan.create');
 
+            Route::get('/care-plan', \App\Livewire\CarePlan\CarePlanIndex::class)
+                ->name('carePlan.index');
+            Route::get('/care-plan/create', \App\Livewire\CarePlan\CarePlanCreate::class)
+                ->name('carePlan.create');
+            Route::get('/care-plan/{carePlan}', \App\Livewire\CarePlan\CarePlanShow::class)
+                ->whereNumber('carePlan')
+                ->name('carePlan.show');
+
             Route::prefix('equipment')->name('equipment.')->group(static function () {
                 Route::get('/', EquipmentIndex::class)->name('index')->can('viewAny', Equipment::class);
                 Route::get('/create', EquipmentCreate::class)->name('create')->can('create', Equipment::class);
