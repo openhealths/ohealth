@@ -7,7 +7,7 @@
          aria-labelledby="services-drawer-label"
     >
         <h3 class="modal-header" id="services-drawer-label">
-            {{ __('treatment-plan.new_service_prescription') }}
+            {{ __('care-plan.new_service_prescription') }}
         </h3>
 
         {{-- Content --}}
@@ -15,14 +15,14 @@
             {{-- Main Data Section --}}
             <fieldset class="fieldset">
                 <legend class="legend">
-                    {{ __('treatment-plan.main_data') }}
+                    {{ __('care-plan.main_data') }}
                 </legend>
 
                 {{-- Service and Program --}}
                 <div class="form-row-3">
                     <div class="form-group group">
                         <label for="service" class="label">
-                            {{ __('treatment-plan.service') }}*
+                            {{ __('care-plan.service') }}*
                         </label>
                         <div class="relative">
                             <button type="button"
@@ -34,7 +34,7 @@
                                     aria-controls="service-search-drawer-right"
                                     @click="showServiceSearchDrawer = true"
                             >
-                                {{ __('treatment-plan.select_service') }}
+                                {{ __('care-plan.select_service') }}
                             </button>
                             <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -45,13 +45,13 @@
                     </div>
                     <div class="form-group group">
                         <label for="program" class="label">
-                            {{ __('treatment-plan.program') }}
+                            {{ __('care-plan.program') }}
                         </label>
                         <select id="program"
                                 name="program"
                                 class="input-select peer"
                         >
-                            <option selected value="">{{ __('treatment-plan.state_financial_guarantees') }}</option>
+                            <option selected value="">{{ __('care-plan.state_financial_guarantees') }}</option>
                         </select>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div class="form-group group">
                         <label for="quantity" class="label">
-                            {{ __('treatment-plan.quantity') }}
+                            {{ __('care-plan.quantity') }}
                         </label>
                         <div class="flex gap-2">
                             <input type="number"
@@ -70,13 +70,13 @@
                                    value="5"
                             >
                             <select class="input-select peer w-20">
-                                <option selected value="units">{{ __('treatment-plan.units') }}</option>
+                                <option selected value="units">{{ __('care-plan.units') }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group group">
                         <label class="label">
-                            {{ __('treatment-plan.start_date') }}:
+                            {{ __('care-plan.start_date') }}:
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -112,7 +112,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div class="form-group group">
                         <label for="quantity_per_time" class="label">
-                            {{ __('treatment-plan.quantity_per_time') }}
+                            {{ __('care-plan.quantity_per_time') }}
                         </label>
                         <div class="flex gap-2">
                             <input type="number"
@@ -122,13 +122,13 @@
                                    value="1"
                             >
                             <select class="input-select peer w-20">
-                                <option selected value="units">{{ __('treatment-plan.units') }}</option>
+                                <option selected value="units">{{ __('care-plan.units') }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group group">
                         <label class="label">
-                            {{ __('treatment-plan.end_date') }}:
+                            {{ __('care-plan.end_date') }}:
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -164,7 +164,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="form-group group">
                         <label for="number_of_times" class="label">
-                            {{ __('treatment-plan.number_of_times') }}
+                            {{ __('care-plan.number_of_times') }}
                         </label>
                         <div class="flex gap-2">
                             <input type="number"
@@ -174,13 +174,13 @@
                                    value="1"
                             >
                             <select class="input-select peer w-28">
-                                <option selected value="per_day">{{ __('treatment-plan.per_day') }}</option>
+                                <option selected value="per_day">{{ __('care-plan.per_day') }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group group">
                         <label for="duration" class="label">
-                            {{ __('treatment-plan.duration') }}
+                            {{ __('care-plan.duration') }}
                         </label>
                         <input type="number"
                                id="duration"
@@ -192,7 +192,7 @@
                     <div class="form-group group">
                         <label class="label">&nbsp;</label>
                         <select class="input-select peer w-full">
-                            <option selected value="days">{{ __('treatment-plan.days') }}</option>
+                            <option selected value="days">{{ __('care-plan.days') }}</option>
                         </select>
                     </div>
                 </div>
@@ -201,27 +201,27 @@
             {{-- Grounds for Prescription Section --}}
             <fieldset class="fieldset">
                 <legend class="legend">
-                    {{ __('treatment-plan.grounds_for_prescription') }}
+                    {{ __('care-plan.grounds_for_prescription') }}
                 </legend>
 
                 <div class="form-row-3">
                     <select class="input-select peer w-full">
-                        <option selected value="">{{ __('treatment-plan.select_icd10_code') }}</option>
+                        <option selected value="">{{ __('care-plan.select_icd10_code') }}</option>
                     </select>
                 </div>
 
                 <div class="mb-4">
                     <h4 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-                        {{ __('treatment-plan.justification_of_grounds') }}
+                        {{ __('care-plan.justification_of_grounds') }}
                     </h4>
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
                             <thead class="thead-input">
                                 <tr>
-                                    <th scope="col" class="px-4 py-3 font-medium">{{ __('treatment-plan.date') }}</th>
-                                    <th scope="col" class="px-4 py-3 font-medium">{{ __('treatment-plan.name') }}</th>
-                                    <th scope="col" class="px-4 py-3 font-medium text-right">{{ __('treatment-plan.action') }}</th>
+                                    <th scope="col" class="px-4 py-3 font-medium">{{ __('care-plan.date') }}</th>
+                                    <th scope="col" class="px-4 py-3 font-medium">{{ __('care-plan.name') }}</th>
+                                    <th scope="col" class="px-4 py-3 font-medium text-right">{{ __('care-plan.action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -244,37 +244,37 @@
                 </div>
 
                 <button type="button" class="item-add">
-                    {{ __('treatment-plan.add_medical_record') }}
+                    {{ __('care-plan.add_medical_record') }}
                 </button>
             </fieldset>
 
             {{-- Additional Information Section --}}
             <fieldset class="fieldset">
                 <legend class="legend">
-                    {{ __('treatment-plan.additional_info') }}
+                    {{ __('care-plan.additional_info') }}
                 </legend>
 
                 <div class="form-row-3">
                     <label for="expected_result" class="label">
-                        {{ __('treatment-plan.expected_result') }}
+                        {{ __('care-plan.expected_result') }}
                     </label>
                     <select id="expected_result"
                             name="expected_result"
                             class="input-select peer w-full"
                     >
-                        <option selected value="">{{ __('treatment-plan.select_result') }}</option>
+                        <option selected value="">{{ __('care-plan.select_result') }}</option>
                     </select>
                 </div>
 
                 <div class="form-row">
                     <label for="description" class="label">
-                        {{ __('treatment-plan.extended_description') }}
+                        {{ __('care-plan.extended_description') }}
                     </label>
                     <textarea id="description"
                               name="description"
                               class="input peer w-full"
                               rows="4"
-                              placeholder="{{ __('treatment-plan.description') }}"
+                              placeholder="{{ __('care-plan.description') }}"
                     ></textarea>
                 </div>
             </fieldset>
@@ -296,7 +296,7 @@
                         aria-controls="service-search-drawer-right"
                         @click="showServiceSearchDrawer = true"
                 >
-                    {{ __('treatment-plan.add_service') }}
+                    {{ __('care-plan.add_service') }}
                 </button>
             </div>
         </form>

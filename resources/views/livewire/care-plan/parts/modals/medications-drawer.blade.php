@@ -7,7 +7,7 @@
          aria-labelledby="medications-drawer-label"
     >
         <h3 class="modal-header" id="medications-drawer-label">
-            {{ __('treatment-plan.new_medication_prescription') }}
+            {{ __('care-plan.new_medication_prescription') }}
         </h3>
 
         {{-- Content --}}
@@ -15,19 +15,19 @@
             {{-- Program Selection Section --}}
             <fieldset class="fieldset">
                 <legend class="legend">
-                    {{ __('treatment-plan.program_selection') }}
+                    {{ __('care-plan.program_selection') }}
                 </legend>
 
                 <div class="form-row-3">
                     <div class="form-group group">
                         <label for="medication_program" class="label">
-                            {{ __('treatment-plan.program') }}*
+                            {{ __('care-plan.program') }}*
                         </label>
                         <select id="medication_program"
                                 name="medication_program"
                                 class="input-select peer"
                         >
-                            <option selected value="">{{ __('treatment-plan.prescription_medication') }}</option>
+                            <option selected value="">{{ __('care-plan.prescription_medication') }}</option>
                         </select>
                     </div>
                 </div>

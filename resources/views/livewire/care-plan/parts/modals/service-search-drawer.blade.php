@@ -31,7 +31,7 @@
      x-data="{ showFilter: false }"
 >
     <h3 class="modal-header" id="service-search-drawer-label">
-        {{ __('treatment-plan.search_service') }}
+        {{ __('care-plan.search_service') }}
     </h3>
 
     {{-- Search Input --}}
@@ -69,34 +69,34 @@
     <div x-show="showFilter" x-cloak x-transition class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div class="form-group group">
             <label class="label">
-                {{ __('treatment-plan.service_category') }}
+                {{ __('care-plan.service_category') }}
             </label>
             <select class="input-select peer w-full">
-                <option selected value="">{{ __('treatment-plan.procedures_on_nervous_system') }}</option>
+                <option selected value="">{{ __('care-plan.procedures_on_nervous_system') }}</option>
             </select>
         </div>
         <div class="form-group group">
             <label class="label">
-                {{ __('treatment-plan.service_group_active') }}
+                {{ __('care-plan.service_group_active') }}
             </label>
             <select class="input-select peer w-full">
-                <option selected value="yes">{{ __('treatment-plan.yes') }}</option>
+                <option selected value="yes">{{ __('care-plan.yes') }}</option>
             </select>
         </div>
         <div class="form-group group">
             <label class="label">
-                {{ __('treatment-plan.service_active') }}
+                {{ __('care-plan.service_active') }}
             </label>
             <select class="input-select peer w-full">
-                <option selected value="yes">{{ __('treatment-plan.yes') }}</option>
+                <option selected value="yes">{{ __('care-plan.yes') }}</option>
             </select>
         </div>
         <div class="form-group group">
             <label class="label">
-                {{ __('treatment-plan.allowed_in_em') }}
+                {{ __('care-plan.allowed_in_em') }}
             </label>
             <select class="input-select peer w-full">
-                <option selected value="yes">{{ __('treatment-plan.yes') }}</option>
+                <option selected value="yes">{{ __('care-plan.yes') }}</option>
             </select>
         </div>
     </div>
@@ -106,11 +106,11 @@
         <table class="w-full text-sm text-left">
             <thead class="thead-input">
                 <tr>
-                    <th scope="col" class="px-4 py-3 font-medium">{{ __('treatment-plan.name') }}</th>
-                    <th scope="col" class="px-4 py-3 font-medium">{{ __('treatment-plan.allowed_in_em_short') }}</th>
-                    <th scope="col" class="px-4 py-3 font-medium">{{ __('treatment-plan.code') }}</th>
-                    <th scope="col" class="px-4 py-3 font-medium">{{ __('treatment-plan.status') }}</th>
-                    <th scope="col" class="px-4 py-3 font-medium">{{ __('treatment-plan.action') }}</th>
+                    <th scope="col" class="px-4 py-3 font-medium">{{ __('care-plan.name') }}</th>
+                    <th scope="col" class="px-4 py-3 font-medium">{{ __('care-plan.allowed_in_em_short') }}</th>
+                    <th scope="col" class="px-4 py-3 font-medium">{{ __('care-plan.code') }}</th>
+                    <th scope="col" class="px-4 py-3 font-medium">{{ __('care-plan.status') }}</th>
+                    <th scope="col" class="px-4 py-3 font-medium">{{ __('care-plan.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -124,7 +124,7 @@
                     <td class="px-4 py-3 text-gray-500">+</td>
                     <td class="px-4 py-3"></td>
                     <td class="px-4 py-3">
-                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">{{ __('treatment-plan.active') }}</span>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">{{ __('care-plan.active') }}</span>
                     </td>
                     <td class="px-4 py-3"></td>
                 </tr>
@@ -135,7 +135,7 @@
                     <td class="px-4 py-3 text-gray-500">+</td>
                     <td class="px-4 py-3"></td>
                     <td class="px-4 py-3">
-                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">{{ __('treatment-plan.inactive') }}</span>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">{{ __('care-plan.inactive') }}</span>
                     </td>
                     <td class="px-4 py-3"></td>
                 </tr>
@@ -146,7 +146,7 @@
                     <td class="px-4 py-3 text-gray-500">+</td>
                     <td class="px-4 py-3"></td>
                     <td class="px-4 py-3">
-                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">{{ __('treatment-plan.active') }}</span>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">{{ __('care-plan.active') }}</span>
                     </td>
                     <td class="px-4 py-3"></td>
                 </tr>
