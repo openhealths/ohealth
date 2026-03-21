@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Models\User;
+use Illuminate\Support\Carbon;
 use App\Events\EhealthUserVerified;
-use Spatie\Permission\Models\Role;
+use App\Services\UserRoleSyncService;
 
 class SyncUserRolesAfterVerification
 {
@@ -22,28 +24,39 @@ class SyncUserRolesAfterVerification
         $user = $event->user;
         $legalEntityId = $event->legalEntityId;
 
-        setPermissionsTeamId($legalEntityId);
-        $user->unsetRelation('roles');
+        $user->party->syncAvailableEmployeesAndUsers();
+        $user->party->syncAvailableRolesAndUsers($legalEntityId);
+    }
 
-        $roleNames = $user->party->employees()
-            ->where('legal_entity_id', $legalEntityId)
-            ->where('status', 'APPROVED')
-            ->pluck('employee_type')
-            ->unique()
-            ->toArray();
+    /**
+     * Get roles based on employee types associated with the user's party.
+     *
+     * Only includes employee types where the user was created before or at the same time
+     * as the employee record was inserted, ensuring proper role assignment chronology.
+     *
+     * @param  User  $user
+     *
+     * @return array<string> Array of unique employee type role identifiers.
+     */
+    protected function getAvailableRolesForUser(User $user): array
+    {
+        $roles = [];
+        $user = $user->loadMissing('party');
+        $userCreatedTime = Carbon::parse($user->inserted_at);
 
-        if (empty($roleNames)) {
-            $user->syncRoles([]);
+        // Get the earliest inserted_at time among the user's employees to ensure we consider the correct employee records for role assignment
+        $userFirstEmployeeCreatedTime = $user->party?->employees()->orderBy('inserted_at')->first()?->inserted_at;
 
-            return;
+        $userCreatedTime = $userCreatedTime->min($userFirstEmployeeCreatedTime);
+
+        $partyEmployees = $user->party?->employees ?? [];
+
+        foreach ($partyEmployees as $employee) {
+            if ($employee->employeeType && $employee->insertedAt && $userCreatedTime && $userCreatedTime->lessThanOrEqualTo($employee->insertedAt)) {
+                $roles[] = $employee->employeeType;
+            }
         }
 
-        $allRoles = Role::whereIn('name', $roleNames)->get();
-
-        if ($allRoles->isEmpty()) {
-            return;
-        }
-
-        $user->syncRoles($allRoles);
+        return array_unique($roles);
     }
 }

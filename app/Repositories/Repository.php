@@ -105,9 +105,4 @@ final class Repository
     {
         return app(RevisionRepository::class);
     }
-
-    public static function party(): PartyRepository
-    {
-        return app(PartyRepository::class);
-    }
 }

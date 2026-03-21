@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Employee;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Enums\Status;
 use App\Enums\User\Role;
@@ -157,5 +158,21 @@ class Employee extends BaseEmployee
             ->where('employee_type', Role::OWNER)
             ->where('status', Status::APPROVED)
             ->where('is_active', true);
+    }
+
+    /**
+     * Scope to filter employees created at or after the given time.
+     *
+     * Used to find employees that should be available to a user based on their effective creation time.
+     *
+     * @param Builder $query
+     * @param Carbon $time The reference time to compare against
+     *
+     * @return Builder
+     */
+    #[Scope]
+    public function createdAtOrAfter(Builder $query, Carbon $time): Builder
+    {
+        return $query->where('inserted_at', '>=', $time);
     }
 }

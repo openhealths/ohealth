@@ -6,6 +6,7 @@ namespace App\Models;
 
 use BackedEnum;
 use Exception;
+use Carbon\Carbon;
 use App\Enums\Status;
 use App\Enums\User\Role;
 use InvalidArgumentException;
@@ -24,6 +25,7 @@ use Spatie\Permission\PermissionRegistrar;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Spatie\Permission\Models\Role as SpatieRole;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -124,6 +126,34 @@ class User extends Authenticatable implements MustVerifyEmail
     public function employeeRequests(): HasMany
     {
         return $this->hasMany(EmployeeRequest::class);
+    }
+
+    /**
+     * Get the creation time of the user's first (earliest) employee record.
+     *
+     * @return string|null
+     */
+    public function getFirstEmployeeTimeCreationAttribute(): ?string
+    {
+        return $this->employees()
+            ->orderBy('inserted_at')
+            ->first()
+            ?->insertedAt;
+    }
+
+    /**
+     * Get the user's effective creation time.
+     *
+     * Returns the earlier of: user's inserted_at attribute or their first employee's inserted_at one.
+     * Used to determine which employees/roles should be available to this user.
+     *
+     * @return Attribute<Carbon, never>
+     */
+    protected function effectiveTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Carbon::parse($this->insertedAt)->min(Carbon::parse($this->firstEmployeeTimeCreation))
+        );
     }
 
     /**
@@ -330,6 +360,40 @@ class User extends Authenticatable implements MustVerifyEmail
         return $employees->sortBy(
             fn (Employee $employee) => array_search($employee->employeeType, $roleValues, true)
         )->first();
+    }
+
+    /**
+     * Get roles based on employee types for user's party
+     *
+     * @return array Returns array of role names that are available for the user based on his effective creation time
+     */
+    public function getAvailableRolesAttribute(): array
+    {
+        return $this->loadMissing('party.employees')
+            ->party
+            ->employees()
+            ->createdAtOrAfter($this->effectiveTime)
+            ->get()
+            ->pluck('employee_type')
+            ->unique()
+            ->all();
+    }
+
+     /**
+     * Get employees based on employee types for user's party
+     *
+     * @return array Returns array of ids of employees that are available for the user based on his effective creation time
+     */
+    public function getAvailableEmployeesAttribute(): array
+    {
+        return $this->loadMissing('party.employees')
+            ->party
+            ->employees()
+            ->createdAtOrAfter($this->effectiveTime)
+            ->get()
+            ->pluck('id')
+            ->unique()
+            ->all();
     }
 
     /**
