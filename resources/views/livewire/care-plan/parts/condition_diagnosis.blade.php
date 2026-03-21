@@ -1,6 +1,6 @@
 <fieldset class="fieldset">
     <legend class="legend px-2 text-lg font-bold text-slate-900">
-        {{ __('treatment-plan.condition/diagnosis') }}
+        {{ __('care-plan.condition/diagnosis') }}
     </legend>
 
     <div class="mt-4">
@@ -8,10 +8,10 @@
             <thead>
             <tr class="bg-gray-50/50">
                 <th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b border-gray-100">
-                    {{ __('treatment-plan.date') }}
+                    {{ __('care-plan.date') }}
                 </th>
                 <th class="py-3 px-4 text-xs font-semibold uppercase tracking-wider text-gray-500 border-b border-gray-100">
-                    {{ __('treatment-plan.name') }}
+                    {{ __('care-plan.name') }}
                 </th>
             </tr>
             </thead>
