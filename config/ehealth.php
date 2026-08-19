@@ -30,7 +30,8 @@ return [
         'cooldown' => 300,
         'retries' => 10,
         'page_size' => env('EHEALTH_PAGE_SIZE', 300),
-        'page_size_max' => env('EHEALTH_PAGE_SIZE_MAX', 500)
+        'page_size_max' => env('EHEALTH_PAGE_SIZE_MAX', 500),
+        'page_size_le_connections_max' => env('EHEALTH_MIS_CONNECTIONS_PAGE_SIZE_MAX', 100),
     ],
 
     'party_verification' => [
@@ -825,5 +826,5 @@ return [
         'N03AX14', 'R03BB04', 'C01DA08', 'A10BB01', 'А10ВВ01', 'N07AA02', 'H02AB09', 'C03CA01', 'С03СА01', 'N04AA02',
         'C07AB03', 'A03FA01', 'L02BA01', 'L02BG06', 'L02BG04', 'A10AD05',
     ],
-    'show_connection_button' => false
+    'show_connection_button' => env('EHEALTH_MIS_CONNECTION_SHOW', false),
 ];

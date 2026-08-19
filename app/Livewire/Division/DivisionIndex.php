@@ -121,7 +121,7 @@ class DivisionIndex extends DivisionComponent
         unset($this->isSync);
     }
 
-    public function mount(): void
+    public function mount(?LegalEntity $legalEntity = null): void
     {
         $this->setDictionary();
 
@@ -263,10 +263,8 @@ class DivisionIndex extends DivisionComponent
 
         $syncQuery = [
             'page' => 1,
-            'per_page' => config('ehealth.api.page_size_max')
+            'page_size' => config('ehealth.api.page_size_max')
         ];
-
-        
 
         try {
             $response = EHealth::division()->getMany(query: $syncQuery);

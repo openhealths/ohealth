@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Repositories\MedicalEvents\ApprovalRepository;
+
 final class Repository
 {
     public static function address(): AddressRepository
