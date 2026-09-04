@@ -44,5 +44,12 @@ return [
         'sync_already_running' => 'Синхронізація обстежень вже запущена. Будь ласка, зачекайте її завершення.',
         'sync_resume_started' => 'Відновлення попередньої синхронізації обстежень розпочато',
         'sync_background_dispatch_error' => 'Помилка запуску фонової синхронізації обстежень'
+    ],
+
+    // Custom messages for validation rules
+    'validation' => [
+        'performer_employee_not_found' => 'Працівника, вказаного як виконавця обстеження, не знайдено.',
+        'performer_employee_invalid_type' => 'Тип працівника не дозволений як виконавець обстеження.',
+        'performer_not_participant' => 'Виконавець обстеження має бути учасником взаємодії.'
     ]
 ];

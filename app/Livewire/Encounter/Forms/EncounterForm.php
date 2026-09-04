@@ -43,8 +43,6 @@ class EncounterForm extends BaseForm
 
     public array $immunizations;
 
-    public array $observations;
-
     public array $diagnosticReports;
 
     protected function rules(): array
@@ -794,102 +792,7 @@ class EncounterForm extends BaseForm
             'diagnosticReports.*.effectivePeriodStartDate' => ['nullable'],
             'diagnosticReports.*.effectivePeriodStartTime' => ['nullable'],
             'diagnosticReports.*.effectivePeriodEndDate' => ['nullable'],
-            'diagnosticReports.*.effectivePeriodEndTime' => ['nullable'],
-
-            'observations' => ['nullable', 'array'],
-            // for edit page
-            'observations.*.uuid' => ['nullable', 'uuid'],
-            'observations.*.categorySystem' => ['required_with:observations', 'string'],
-            'observations.*.categoryCode' => [
-                'required_with:observations',
-                'string',
-                new InDictionary(['eHealth/observation_categories', 'eHealth/ICF/observation_categories'])
-            ],
-            'observations.*.codeSystem' => ['required_with:observations', 'string'],
-            'observations.*.codeCode' => [
-                'required_with:observations',
-                'string',
-                new InDictionary(
-                    ['eHealth/LOINC/observation_codes', 'eHealth/custom/observation_codes', 'eHealth/ICF/classifiers']
-                )
-            ],
-            'observations.*.effectiveDate' => ['nullable', 'date', 'before_or_equal:now'],
-            'observations.*.effectiveTime' => ['nullable', 'date_format:H:i'],
-            'observations.*.issuedDate' => ['required_with:observations', 'date', 'before_or_equal:today'],
-            'observations.*.issuedTime' => Rule::forEach(fn (mixed $value, string $attribute) => [
-                'required_with:observations',
-                'date_format:H:i',
-                new PastDateTime($this->observations[(int)explode('.', $attribute)[1]]['issuedDate'] ?? '')
-            ]),
-            'observations.*.primarySource' => ['required_with:observations', 'boolean'],
-            'observations.*.reportOriginCode' => Rule::forEach(function (mixed $value, string $attribute) {
-                $index = (int)explode('.', $attribute)[1];
-                $primarySource = $this->observations[$index]['primarySource'];
-
-                return [
-                    Rule::requiredIf($primarySource === false),
-                    $primarySource === true ? 'prohibited' : 'nullable',
-                    'string',
-                    new InDictionary('eHealth/report_origins')
-                ];
-            }),
-            'observations.*.interpretationCode' => [
-                'nullable',
-                'string',
-                new InDictionary('eHealth/observation_interpretations')
-            ],
-            'observations.*.comment' => ['nullable', 'string'],
-            'observations.*.bodySiteCode' => [
-                'nullable',
-                'string',
-                new InDictionary('eHealth/body_sites')
-            ],
-            'observations.*.methodCode' => [
-                'nullable',
-                'string',
-                new InDictionary('eHealth/observation_methods')
-            ],
-            'observations.*.reactionOn' => ['nullable', 'uuid'],
-            'observations.*.dictionaryName' => ['nullable', 'string'],
-            'observations.*.components' => ['nullable', 'array'],
-            'observations.*.components.*.codeCode' => ['nullable', 'string'],
-            'observations.*.components.*.codeSystem' => ['nullable', 'string'],
-            'observations.*.components.*.valueCode' => ['nullable', 'string'],
-            'observations.*.components.*.valueSystem' => ['nullable', 'string'],
-            'observations.*.components.*.interpretationCode' => [
-                'nullable',
-                'string',
-                new InDictionary('eHealth/observation_interpretations')
-            ],
-            'observations.*.valueQuantityValue' => ['nullable', 'numeric'],
-            'observations.*.valueQuantityComparator' => ['nullable', 'string', Rule::in(['>', '>=', '=', '<=', '<'])],
-            'observations.*.valueQuantityUnit' => ['nullable', 'string', new InDictionary('eHealth/ucum/units')],
-            'observations.*.valueQuantitySystem' => [
-                'required_with:observations.*.valueQuantityValue',
-                'string'
-            ],
-            'observations.*.valueQuantityCode' => [
-                'required_with:observations.*.valueQuantityValue',
-                'string'
-            ],
-            'observations.*.valueCodeableConcept' => ['nullable', 'string'],
-            'observations.*.valueString' => ['nullable', 'string'],
-            'observations.*.valueBoolean' => ['nullable', 'boolean'],
-            'observations.*.valueDate' => ['nullable', 'date', 'before_or_equal:now'],
-            'observations.*.valueTime' => ['nullable', 'date_format:H:i'],
-            'observations.*.valueSampledDataData' => ['nullable', 'string'],
-            'observations.*.valueSampledDataOrigin' => ['nullable', 'numeric'],
-            'observations.*.valueSampledDataPeriod' => ['nullable', 'numeric'],
-            'observations.*.valueSampledDataFactor' => ['nullable', 'numeric'],
-            'observations.*.valueSampledDataLowerLimit' => ['nullable', 'numeric'],
-            'observations.*.valueSampledDataUpperLimit' => ['nullable', 'numeric'],
-            'observations.*.valueSampledDataDimensions' => ['nullable', 'numeric'],
-            'observations.*.valueRange' => ['nullable', 'array'],
-            'observations.*.valueRange.low' => ['nullable', 'array'],
-            'observations.*.valueRange.high' => ['nullable', 'array'],
-            'observations.*.valueRatio' => ['nullable', 'array'],
-            'observations.*.valueRatio.numerator' => ['nullable', 'array'],
-            'observations.*.valueRatio.denominator' => ['nullable', 'array'],
+            'diagnosticReports.*.effectivePeriodEndTime' => ['nullable']
         ];
 
         $this->addAllowedEncounterClasses($rules);
@@ -1145,7 +1048,7 @@ class EncounterForm extends BaseForm
         }
 
         $rules['encounter.typeCode'][] = function (string $attribute, mixed $value, Closure $fail): void {
-            $codes = collect($this->observations ?? [])
+            $codes = collect($this->component->observationForm->observations)
                 ->pluck('codeCode')
                 ->filter()
                 ->all();

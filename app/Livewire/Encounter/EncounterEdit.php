@@ -87,7 +87,7 @@ class EncounterEdit extends EncounterComponent
         $this->form->conditions = $package['conditions'];
         $this->form->immunizations = $package['immunizations'];
         $this->form->diagnosticReports = $package['diagnosticReports'];
-        $this->form->observations = $package['observations'];
+        $this->observationForm->observations = $package['observations'];
         $this->procedureForm->procedures = $package['procedures'];
         $this->deviceForm->devices = $package['devices'];
         $this->detectedIssueForm->detectedIssues = $package['detectedIssues'];
@@ -278,7 +278,6 @@ class EncounterEdit extends EncounterComponent
         unset($formattedData['encounter']['incoming_referral']['display_value']);
 
         try {
-            $this->validateObservationPerformers($formattedData);
             $this->validateDiagnosticReportPerformers($formattedData);
             $this->validateEncounterPerformer($formattedData);
         } catch (ValidationException $exception) {

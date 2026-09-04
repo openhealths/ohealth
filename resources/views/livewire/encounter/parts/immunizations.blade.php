@@ -3,7 +3,7 @@
     id="immunizations-section"
     x-data="{
         immunizations: $wire.entangle('form.immunizations'),
-        observations: $wire.entangle('form.observations'),
+        observations: $wire.entangle('observationForm.observations'),
         selectedRecords: $wire.entangle('selectedRecords.immunizations'),
         cancelledRecords: $wire.cancelledRecords.immunizations,
         canCancelRecords: {{ ($canCancelRecords ?? false) ? 'true' : 'false' }},
