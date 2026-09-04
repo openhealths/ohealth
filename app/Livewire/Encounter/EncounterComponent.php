@@ -23,6 +23,7 @@ use App\Livewire\Encounter\Forms\DetectedIssueForm;
 use App\Livewire\Encounter\Forms\DeviceAssociationForm;
 use App\Livewire\Encounter\Forms\DeviceForm;
 use App\Livewire\Encounter\Forms\DiagnosticReportForm;
+use App\Livewire\Encounter\Forms\ImmunizationForm;
 use App\Livewire\Encounter\Forms\ObservationForm;
 use App\Livewire\Encounter\Forms\ProcedureForm;
 use App\Livewire\Encounter\Forms\EncounterForm as Form;
@@ -67,6 +68,8 @@ class EncounterComponent extends Component
     public ObservationForm $observationForm;
 
     public DiagnosticReportForm $diagnosticReportForm;
+
+    public ImmunizationForm $immunizationForm;
 
     public DetectedIssueForm $detectedIssueForm;
 

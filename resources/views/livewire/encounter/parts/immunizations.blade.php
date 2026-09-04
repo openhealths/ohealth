@@ -2,7 +2,7 @@
     class="p-4 sm:p-8"
     id="immunizations-section"
     x-data="{
-        immunizations: $wire.entangle('form.immunizations'),
+        immunizations: $wire.entangle('immunizationForm.immunizations'),
         observations: $wire.entangle('observationForm.observations'),
         selectedRecords: $wire.entangle('selectedRecords.immunizations'),
         cancelledRecords: $wire.cancelledRecords.immunizations,

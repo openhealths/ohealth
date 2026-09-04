@@ -313,9 +313,6 @@ return [
                 'patient_identity_not_allowed' => 'Для альтернативної ідентифікації неприпустимі спостереження з кодами: :codes',
             ],
         ],
-        'immunizations' => [
-            'not_given_by_patient' => 'Зі слів пацієнта можна вносити лише проведену вакцинацію'
-        ],
         'conditions' => [
             'codeSystem' => [
                 'class_forbidden' => "Для класу взаємодії 'Амбулаторна медична допомога' та 'Стаціонарна медична допомога' дозволена лише система eHealth/ICD10_AM/condition_codes"
@@ -773,33 +770,6 @@ return [
             '*.assertedDate' => 'дата внесення діагнозу',
             '*.assertedTime' => 'час внесення діагнозу',
             '*.evidenceCodes.*.code' => 'стани доказів діагнозу'
-        ],
-
-        'immunizations' => [
-            '*.primarySource' => 'джерело інформації вакцинації',
-            '*.notGiven' => 'чи була проведена вакцинація',
-            '*.vaccineCode' => 'код та назва вакцини',
-            '*.date' => 'дата вакцинації',
-            '*.time' => 'час вакцинації',
-            '*.reasons' => 'причини проведення вакцинації',
-            '*.reasons.*.code' => 'причина проведення вакцинації',
-            '*.reasonNotGivenCode' => 'причина не проведення вакцинації',
-            '*.reportOriginCode' => 'посилання на джерело інформації вакцинації',
-            '*.manufacturer' => 'виробник вакцини',
-            '*.lotNumber' => 'серія вакцини',
-            '*.expirationDate' => 'дата закінчення придатності вакцини',
-            '*.siteCode' => 'частина тіла вакцини',
-            '*.routeCode' => 'шлях введення вакцини',
-            '*.doseQuantityValue' => 'кількість введеної вакцини',
-            '*.doseQuantityCode' => 'одиниця виміру вакцини',
-            '*.doseQuantityUnit' => 'назва одиниці виміру вакцини',
-            '*.vaccinationProtocols' => 'протоколи імунізації',
-            '*.vaccinationProtocols.*.authorityCode' => 'автор протоколу імунізації',
-            '*.vaccinationProtocols.*.doseSequence' => 'порядковий номер дози імунізації',
-            '*.vaccinationProtocols.*.series' => 'етап імунізації',
-            '*.vaccinationProtocols.*.seriesDoses' => 'кількість доз по протоколу імунізації',
-            '*.vaccinationProtocols.*.targetDiseaseCodes' => 'протидія загрозам імунізації',
-            '*.vaccinationProtocols.*.targetDiseaseCodes.*' => 'код протидії загрозам імунізації',
         ],
 
         'observations.*' => [
