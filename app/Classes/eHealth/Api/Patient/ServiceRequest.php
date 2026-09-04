@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Classes\eHealth\Api\Patient;
 
 use App\Classes\eHealth\EHealthResponse;
+use App\Exceptions\EHealth\EHealthConnectionException;
+use App\Exceptions\EHealth\EHealthResponseException;
+use App\Exceptions\EHealth\EHealthValidationException;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -51,6 +54,9 @@ class ServiceRequest extends PatientApiBase
 
     /**
      * Get Service Requests by search parameters in patient context.
+     *
+     * @return PromiseInterface|EHealthResponse
+     * @throws EHealthConnectionException|EHealthValidationException|EHealthResponseException
      */
     public function getBySearchParams(string $patientId, array $query = []): PromiseInterface|EHealthResponse
     {

@@ -15,6 +15,18 @@ class ObservationForm extends Form
 {
     public array $observations = [];
 
+    /**
+     * Name the fields of an observation the way the form labels them.
+     *
+     * @return array
+     */
+    public function validationAttributes(): array
+    {
+        return collect(__('observations.attributes'))
+            ->mapWithKeys(static fn (string $name, string $field): array => ["observations.*.$field" => $name])
+            ->all();
+    }
+
     protected function rules(): array
     {
         return [

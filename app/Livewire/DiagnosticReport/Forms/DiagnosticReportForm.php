@@ -33,15 +33,20 @@ class DiagnosticReportForm extends BaseForm
     ];
 
     /**
-     * Name the fields of a diagnostic report the way the form labels them.
+     * Name the fields of a diagnostic report and of its observations the way the form labels them.
      *
      * @return array
      */
     public function validationAttributes(): array
     {
-        return collect(__('diagnostic-reports.attributes'))
-            ->mapWithKeys(static fn (string $name, string $field): array => ["diagnosticReport.$field" => $name])
-            ->all();
+        return [
+            ...collect(__('diagnostic-reports.attributes'))
+                ->mapWithKeys(static fn (string $name, string $field): array => ["diagnosticReport.$field" => $name])
+                ->all(),
+            ...collect(__('observations.attributes'))
+                ->mapWithKeys(static fn (string $name, string $field): array => ["observations.*.$field" => $name])
+                ->all()
+        ];
     }
 
     protected function rules(): array

@@ -6,7 +6,7 @@
         selectedRecords: $wire.entangle('selectedRecords.procedures'),
         cancelledRecords: $wire.cancelledRecords.procedures,
         canCancelRecords: {{ ($canCancelRecords ?? false) ? 'true' : 'false' }},
-        conditions: $wire.entangle('form.conditions'),
+        conditions: $wire.entangle('conditionForm.conditions'),
         modalProcedure: new Procedure(),
         newProcedure: false,
         openProcedureDrawer: false,

@@ -35,7 +35,7 @@ class ProcedureForm extends Form
     protected function rules(): array
     {
         // A complication is picked among the conditions of the same package
-        $conditionUuids = collect($this->component->form->conditions ?? [])
+        $conditionUuids = collect($this->component->conditionForm->conditions)
             ->pluck('uuid')
             ->filter()
             ->values()
@@ -246,13 +246,17 @@ class ProcedureForm extends Form
             'procedures.*.usedCodes.*.code' => ['required', new InDictionary('eHealth/assistive_products')],
             'procedures.*.reasonReferences' => ['nullable', 'array'],
             'procedures.*.reasonReferences.*.id' => ['nullable', 'uuid'],
-            'procedures.*.reasonReferences.*.type' => ['nullable', 'string', 'in:observation,condition'],
+            'procedures.*.reasonReferences.*.type' => [
+                'nullable',
+                'string',
+                Rule::in(['observation', 'condition'])
+            ],
             'procedures.*.reasonReferences.*.codeCode' => Rule::forEach(
                 fn (mixed $value, string $attribute) => $this->reasonReferenceCodeRule($attribute)
             ),
             'procedures.*.complicationDetails' => ['nullable', 'array'],
             'procedures.*.complicationDetails.*.id' => ['nullable', 'uuid', Rule::in($conditionUuids)],
-            'procedures.*.complicationDetails.*.type' => ['nullable', 'string', 'in:condition'],
+            'procedures.*.complicationDetails.*.type' => ['nullable', 'string', Rule::in(['condition'])],
             'procedures.*.complicationDetails.*.codeCode' => [
                 'nullable',
                 'string',
