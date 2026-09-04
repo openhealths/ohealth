@@ -315,16 +315,6 @@ return [
                 'performer_required' => 'Для обстеження потрібно вказати щонайменше одного виконавця.',
                 'performer_invalid_type' => 'Недопустимий тип виконавця обстеження.',
             ],
-            'procedures' => [
-                'performer_required' => 'Для процедури потрібно вказати щонайменше одного виконавця.',
-                'performer_invalid_type' => 'Недопустимий тип виконавця процедури.',
-                'performer_unique' => 'Кожен виконавець процедури має бути унікальним.',
-                'performer_employee_not_found' => 'Працівника, вказаного як виконавця процедури, не знайдено.',
-                'performer_wrong_legal_entity' => 'Працівник :employee не належить вашому закладу.',
-                'performer_invalid_status' => 'Невалідний статус працівника.',
-                'performer_employee_invalid_type' => 'Тип працівника не дозволений як виконавець процедури.',
-                'performer_not_participant' => 'Виконавець процедури має бути учасником взаємодії.',
-            ],
         ],
         'diagnosticReport' => [
             'categoryCode' => [
@@ -971,29 +961,6 @@ return [
 
         'procedure' => [
             'performerEmployeeId' => 'виконавець процедури',
-        ],
-
-        'procedures.*' => [
-            'categoryCode' => 'категорія',
-            'codeValue' => 'послуги',
-            'primarySource' => 'джерело інформації',
-            'performerEmployeeId' => 'виконавець процедури',
-            'reportOriginCode' => 'джерело',
-            'reportOriginText' => 'текст джерела',
-            'divisionId' => 'місце надання послуг',
-            'outcomeCode' => 'результат проведення',
-            'performedPeriodStartDate' => 'дата початку процедури',
-            'performedPeriodStartTime' => 'час початку процедури',
-            'performedPeriodEndDate' => 'дата завершення процедури',
-            'performedPeriodEndTime' => 'час завершення процедури',
-            'note' => 'коментар',
-            'paperReferralRequisition' => 'номер',
-            'paperReferralRequesterEmployeeName' => 'автор',
-            'paperReferralRequesterLegalEntityEdrpou' => 'ЄДРПОУ закладу, що виписав',
-            'paperReferralRequesterLegalEntityName' => 'найменування закладу, що виписав',
-            'paperReferralServiceRequestDate' => 'дата',
-            'paperReferralNote' => 'нотатки',
-            'usedCodes.*.code' => 'допоміжні засоби реабілітації'
         ],
 
         // Declaration

@@ -2,7 +2,7 @@
     class="p-4 sm:p-8"
     id="procedures-section"
     x-data="{
-        procedures: $wire.entangle('form.procedures'),
+        procedures: $wire.entangle('procedureForm.procedures'),
         selectedRecords: $wire.entangle('selectedRecords.procedures'),
         cancelledRecords: $wire.cancelledRecords.procedures,
         canCancelRecords: {{ ($canCancelRecords ?? false) ? 'true' : 'false' }},

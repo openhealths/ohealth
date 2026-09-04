@@ -255,7 +255,6 @@ class EncounterCreate extends EncounterComponent
         unset($formattedData['encounter']['incoming_referral']['display_value']);
 
         try {
-            $this->validateProcedurePerformers($formattedData);
             $this->validateObservationPerformers($formattedData);
             $this->validateDiagnosticReportPerformers($formattedData);
         } catch (ValidationException $exception) {
