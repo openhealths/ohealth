@@ -22,6 +22,7 @@ use App\Livewire\Encounter\Forms\ClinicalImpressionForm;
 use App\Livewire\Encounter\Forms\DetectedIssueForm;
 use App\Livewire\Encounter\Forms\DeviceAssociationForm;
 use App\Livewire\Encounter\Forms\DeviceForm;
+use App\Livewire\Encounter\Forms\DiagnosticReportForm;
 use App\Livewire\Encounter\Forms\ObservationForm;
 use App\Livewire\Encounter\Forms\ProcedureForm;
 use App\Livewire\Encounter\Forms\EncounterForm as Form;
@@ -64,6 +65,8 @@ class EncounterComponent extends Component
     public ProcedureForm $procedureForm;
 
     public ObservationForm $observationForm;
+
+    public DiagnosticReportForm $diagnosticReportForm;
 
     public DetectedIssueForm $detectedIssueForm;
 
@@ -1217,89 +1220,6 @@ class EncounterComponent extends Component
             throw ValidationException::withMessages([
                 'encounter.performer' => __('validation.custom.encounter.performer_not_current_user'),
             ]);
-        }
-    }
-
-    protected function validateDiagnosticReportPerformers(array $package): void
-    {
-        $allowedEmployeeTypes = config('ehealth.encounter_package_allowed_diagnostic_report_performer_employee_types', []);
-        $participantUuids = collect(data_get($package, 'encounter.participant', []))
-            ->filter(static fn (array $participant): bool => data_get($participant, 'identifier.type.coding.0.code') === 'employee')
-            ->pluck('identifier.value')
-            ->filter();
-
-        foreach ($package['diagnostic_reports'] ?? [] as $index => $diagnosticReport) {
-            if (($diagnosticReport['primary_source'] ?? false) !== true) {
-                continue;
-            }
-
-            $performers = $diagnosticReport['performer'] ?? null;
-
-            if (!is_array($performers) || $performers === [] || !array_is_list($performers)) {
-                throw ValidationException::withMessages([
-                    "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.required'),
-                ]);
-            }
-
-            $uniquePerformers = [];
-
-            foreach ($performers as $performer) {
-                $type = data_get($performer, 'reference.identifier.type.coding.0.code');
-                $value = data_get($performer, 'reference.identifier.value');
-
-                if ($type !== 'employee') {
-                    throw ValidationException::withMessages([
-                        "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.invalid_type'),
-                    ]);
-                }
-
-                $key = $type . ':' . $value;
-
-                if (isset($uniquePerformers[$key])) {
-                    throw ValidationException::withMessages([
-                        "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.unique'),
-                    ]);
-                }
-
-                $uniquePerformers[$key] = true;
-
-                $employee = Employee::query()->whereUuid($value)->first([
-                    'uuid',
-                    'legal_entity_id',
-                    'status',
-                    'employee_type',
-                ]);
-
-                if ($employee === null) {
-                    throw ValidationException::withMessages([
-                        "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.employee_not_found'),
-                    ]);
-                }
-
-                if ($employee->legalEntityId !== legalEntity()->id) {
-                    throw ValidationException::withMessages([
-                        "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.employee_wrong_legal_entity', ['employee' => $value]),
-                    ]);
-                }
-
-                if ($employee->status !== Status::APPROVED) {
-                    throw ValidationException::withMessages([
-                        "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.employee_invalid_status'),
-                    ]);
-                }
-
-                if (!in_array($employee->employeeType, $allowedEmployeeTypes, true)) {
-                    throw ValidationException::withMessages([
-                        "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.employee_invalid_type'),
-                    ]);
-                }
-
-                if (!$participantUuids->contains($value)) {
-                    throw ValidationException::withMessages([
-                        "diagnostic_reports.$index.performer" => __('validation.custom.diagnosticReport.performer.employee_not_participant'),
-                    ]);
-                }
-            }
         }
     }
 

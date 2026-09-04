@@ -64,5 +64,49 @@ return [
         'cancel_package_sign_error' => 'Помилка підписання пакета діагностичного звіту для позначення внесеним помилково.',
         'cancel_package_request_error' => 'Помилка відправлення запиту на позначення діагностичного звіту внесеним помилково.',
         'cancel_package_save_error' => 'Помилка збереження оновленого пакета діагностичного звіту після позначення внесеним помилково.'
+    ],
+
+    // Custom messages for validation rules
+    'validation' => [
+        'laborant_category' => 'Лаборант може створювати діагностичний звіт лише з категорією "Лабораторна процедура".',
+        'performer_employee_not_found' => 'Працівника, вказаного як виконавця діагностичного звіту, не знайдено.',
+        'performer_wrong_legal_entity' => 'Працівник :employee не належить вашому закладу.',
+        'performer_invalid_status' => 'Невалідний статус працівника.',
+        'performer_employee_invalid_type' => 'Тип працівника не дозволений як виконавець діагностичного звіту.',
+        'performer_not_participant' => 'Виконавець діагностичного звіту має бути учасником взаємодії.'
+    ],
+
+    // Field names for :attribute in validation messages
+    'attributes' => [
+        'categoryCode' => 'категорія діагностичного звіту',
+        'codeValue' => 'послуга діагностичного звіту',
+        'primarySource' => 'первинне джерело діагностичного звіту',
+        'reportOriginCode' => 'посилання на джерело інформації діагностичного звіту',
+        'reportOriginText' => 'джерело інформації діагностичного звіту',
+        'isReferralAvailable' => 'наявність направлення',
+        'referralType' => 'тип направлення',
+        'basedOnIdentifier' => 'номер електронного направлення',
+        'paperReferralRequisition' => 'номер направлення діагностичного звіту',
+        'paperReferralRequesterEmployeeName' => 'автор направлення діагностичного звіту',
+        'paperReferralRequesterLegalEntityEdrpou' => 'ЄДРПОУ закладу, що виписав направлення діагностичного звіту',
+        'paperReferralRequesterLegalEntityName' => 'найменування закладу, що виписав направлення діагностичного звіту',
+        'paperReferralServiceRequestDate' => 'дата направлення діагностичного звіту',
+        'paperReferralNote' => 'нотатки направлення діагностичного звіту',
+        'conclusionCode' => 'код заключення за МКХ-10АМ діагностичного звіту',
+        'conclusion' => 'заключення діагностичного звіту',
+        'divisionId' => 'місце надання послуг діагностичного звіту',
+        'usedReferences.*.id' => 'використане обладнання',
+        'performerEmployeeIds' => 'виконавці діагностичного звіту',
+        'performerEmployeeIds.*' => 'виконавець діагностичного звіту',
+        'resultsInterpreterEmployeeId' => 'лікар, що інтерпретував результати діагностичного звіту',
+        'issuedDate' => 'дата внесення діагностичного звіту',
+        'issuedTime' => 'час внесення діагностичного звіту',
+        'effectiveType' => 'спосіб зазначення часу проведення діагностики',
+        'effectiveDate' => 'дата проведення діагностики',
+        'effectiveTime' => 'час проведення діагностики',
+        'effectivePeriodStartDate' => 'дата початку прийому діагностичного звіту',
+        'effectivePeriodStartTime' => 'час початку прийому діагностичного звіту',
+        'effectivePeriodEndDate' => 'дата завершення прийому діагностичного звіту',
+        'effectivePeriodEndTime' => 'час завершення прийому діагностичного звіту'
     ]
 ];
