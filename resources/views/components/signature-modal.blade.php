@@ -1,5 +1,11 @@
-@props(['method'])
+@props(['method', 'onlyActions' => [], 'exceptActions' => []])
 
+@php
+    $actionType = $this->actionType ?? null;
+    $shouldRender = ($onlyActions === [] || in_array($actionType, $onlyActions, true)) && ($exceptActions === [] || !in_array($actionType, $exceptActions, true));
+@endphp
+
+@if ($shouldRender)
 <template x-teleport="body">
     <div x-data="{ 
             showSignatureModal: $wire.entangle('showSignatureModal'), 
@@ -114,3 +120,4 @@
         </div>
     </div>
 </template>
+@endif

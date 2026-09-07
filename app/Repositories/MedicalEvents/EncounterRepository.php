@@ -392,9 +392,15 @@ class EncounterRepository extends BaseRepository
 
                 $visit = $this->syncIdentifier($existing, $data['visit'] ?? null, 'visit');
                 $episode = $this->syncIdentifier($existing, $data['episode'], 'episode');
+                $incomingReferralData = $data['incoming_referral'] ?? null;
+
+                if ($incomingReferralData && $existing?->incomingReferral?->display_value) {
+                    $incomingReferralData['display_value'] = $existing->incomingReferral->display_value;
+                }
+
                 $incomingReferral = $this->syncIdentifier(
                     $existing,
-                    $data['incoming_referral'] ?? null,
+                    $incomingReferralData,
                     'incomingReferral'
                 );
                 $originEpisode = $this->syncIdentifier(

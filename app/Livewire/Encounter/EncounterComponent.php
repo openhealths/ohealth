@@ -12,6 +12,7 @@ use App\Enums\Equipment\AvailabilityStatus;
 use App\Enums\Person\ClinicalImpressionStatus;
 use App\Enums\Person\ImmunizationStatus;
 use App\Enums\Person\ObservationStatus;
+use App\Enums\Person\ServiceRequestStatus;
 use App\Enums\Status;
 use App\Exceptions\EHealth\EHealthConnectionException;
 use App\Exceptions\EHealth\EHealthException;
@@ -144,6 +145,7 @@ class EncounterComponent extends Component
     public ?string $patientUuid = null;
     public array $availableReferrals = [];
     public bool $referralsLoaded = false;
+    public ?string $selectedReferralUuid = null;
 
     /**
      * Legal entity type of auth user.
@@ -441,59 +443,35 @@ class EncounterComponent extends Component
      */
     public function loadInProgressReferrals(): void
     {
-        if ($this->referralsLoaded) {
+        if ($this->referralsLoaded || $this->patientUuid === null) {
             return;
         }
 
         try {
-            $patient = $this->patient();
-            $patientUuid = $patient->uuid;
+            $items = [];
+            $page = 1;
 
-            // searchForServiceRequestsByParams sends GET /api/service_requests
-            // The Request::sendRequest() already returns $data['data'] for successful responses
-            // so the result here IS the array of service requests directly
-            $items = \App\Classes\eHealth\EHealth::serviceRequest()->searchForServiceRequestsByParams([
-                'patient_id' => $patientUuid,
-                'status' => 'in_progress',
-            ])->getData();
+            do {
+                $response = EHealth::serviceRequest()->getBySearchParams($this->patientUuid, [
+                    'requester_legal_entity' => legalEntity()->uuid,
+                    'status' => ServiceRequestStatus::ACTIVE->value,
+                    'page' => $page,
+                ]);
 
-            // If the API returns a wrapped structure, unwrap it
-            if (isset($items['data'])) {
-                $items = $items['data'];
-            }
+                $items = [...$items, ...$response->validate()];
+                $page++;
+            } while ($response->isNotLast());
 
-            if (is_array($items)) {
-                $this->availableReferrals = collect($items)->map(function ($referral) {
-                    $codings = $referral['category']['coding'] ?? [];
-                    $category = $codings[0]['display'] ?? ($codings[0]['code'] ?? 'Направлення');
-                    $requisition = $referral['requisition'] ?? $referral['id'];
-
-                    return [
-                        'id' => $referral['id'],
-                        'requisition' => $requisition,
-                        'category' => $category,
-                    ];
-                })->values()->toArray();
-            }
-
+            $this->availableReferrals = collect($items)->map(static fn (array $referral): array => [
+                'id' => $referral['id'],
+                'requisition' => $referral['requisition'],
+                'category' => data_get($referral, 'category.coding.0.display', 'Направлення'),
+            ])->values()->toArray();
+            
             $this->referralsLoaded = true;
-        } catch (\Throwable $e) {
-            logger()->error('loadInProgressReferrals failed: ' . $e->getMessage());
-            // Don't show an error toast — just silently leave the dropdown empty
+        } catch (EHealthException|EHealthConnectionException $exception) {
+            $exception->handle('Error while loading processed referrals');
         }
-    }
-
-    /**
-     * Search for referral number.
-     *
-     * @return void
-     * @throws eHealthApiException
-     */
-    public function searchForReferralNumber(): void
-    {
-        EHealth::serviceRequest()
-            ->searchForServiceRequestsByParams(['requisition' => $this->form->referralNumber])
-            ->validate();
     }
 
     /**

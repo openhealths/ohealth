@@ -21,6 +21,7 @@ use App\Repositories\MedicalEvents\Repository;
 use App\Services\MedicalEvents\EncounterPackageBuilder;
 use App\Traits\EnsuresEntityExists;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -40,64 +41,63 @@ class EncounterCreate extends EncounterComponent
     public string $referralToRedeemUuid = '';
     public string $createdEncounterUuidForRedeem = '';
 
-    private function resolveReferralUuid(string $referralNum): ?string
+    private function resolveReferralUuid(string $referralNumber): ?string
     {
-        if (empty($referralNum) || \Illuminate\Support\Str::isUuid($referralNum)) {
-            return $referralNum;
+        if (empty($referralNumber) || Str::isUuid($referralNumber)) {
+            return $referralNumber;
         }
 
-        try {
-            $searchResult = \App\Classes\eHealth\EHealth::serviceRequest()->searchForServiceRequestsByParams(['requisition' => $referralNum])->getData();
-            if (!empty($searchResult['data']) && is_array($searchResult['data']) && count($searchResult['data']) > 0) {
-                $status = $searchResult['data'][0]['status'] ?? '';
-                if (!in_array($status, ['active', 'program_processing'])) {
-                    $statusName = __('forms.status.' . $status) ?? $status;
-                    throw new \Exception("Направлення не дійсне (має статус: $statusName). Для взаємодії потрібне активне направлення.");
-                }
+        if ($this->selectedReferralUuid !== null) {
+            $selectedReferral = collect($this->availableReferrals)->firstWhere('id', $this->selectedReferralUuid);
 
-                return $searchResult['data'][0]['id'];
+            if (($selectedReferral['requisition'] ?? null) === $referralNumber) {
+                return $this->selectedReferralUuid;
             }
-        } catch (\Exception $e) {
-            throw $e;
         }
 
-        return null;
+        $referral = collect($this->availableReferrals)->firstWhere('requisition', $referralNumber);
+
+        if ($referral !== null) {
+            return data_get($referral, 'id');
+        }
+
+        $referrals = EHealth::serviceRequest()
+            ->searchForServiceRequestsByParams(['requisition' => $referralNumber])
+            ->validate();
+
+        return data_get(collect($referrals)->first(), 'id');
     }
 
     private function resolveAllReferrals(array &$validated): void
     {
         if (($validated['encounter']['referralType'] ?? '') === 'electronic' && !empty($validated['encounter']['referralNumber'])) {
-            try {
-                $uuid = $this->resolveReferralUuid($validated['encounter']['referralNumber']);
-                if (!$uuid) {
-                    throw new \Exception('Направлення не знайдено в ЕСОЗ');
-                }
-                $originalNumber = $validated['encounter']['referralNumber'];
-                $validated['encounter']['referralNumber'] = $uuid;
-                if ($uuid !== $originalNumber) {
-                    $validated['encounter']['referralDisplayValue'] = $originalNumber;
-                }
-            } catch (\Exception $e) {
-                $this->addError('form.encounter.referralNumber', $e->getMessage());
-                throw $e;
+            $originalNumber = $validated['encounter']['referralNumber'];
+            $uuid = $this->resolveReferralUuid($originalNumber);
+
+            if ($uuid === null) {
+                throw ValidationException::withMessages([
+                    'form.encounter.referralNumber' => 'Направлення не знайдено в ЕСОЗ.'
+                ]);
             }
+
+            $validated['encounter']['referralNumber'] = $uuid;
+            $validated['encounter']['referralDisplayValue'] = $originalNumber;
         }
 
-        if (!empty($validated['procedures']) && is_array($validated['procedures'])) {
-            foreach ($validated['procedures'] as $index => $procedure) {
-                if (($procedure['referralType'] ?? '') === 'electronic' && !empty($procedure['basedOnIdentifier'])) {
-                    try {
-                        $uuid = $this->resolveReferralUuid($procedure['basedOnIdentifier']);
-                        if (!$uuid) {
-                            throw new \Exception('Направлення не знайдено в ЕСОЗ');
-                        }
-                        $validated['procedures'][$index]['basedOnIdentifier'] = $uuid;
-                    } catch (\Exception $e) {
-                        $this->addError("form.procedures.{$index}.basedOnIdentifier", $e->getMessage());
-                        throw $e;
-                    }
-                }
+        foreach ($validated['procedures'] ?? [] as $index => $procedure) {
+            if (($procedure['referralType'] ?? '') !== 'electronic' || empty($procedure['basedOnIdentifier'])) {
+                continue;
             }
+
+            $uuid = $this->resolveReferralUuid($procedure['basedOnIdentifier']);
+
+            if ($uuid === null) {
+                throw ValidationException::withMessages([
+                    "form.procedures.{$index}.basedOnIdentifier" => 'Направлення не знайдено серед активних направлень пацієнта.'
+                ]);
+            }
+
+            $validated['procedures'][$index]['basedOnIdentifier'] = $uuid;
         }
     }
 
@@ -119,7 +119,6 @@ class EncounterCreate extends EncounterComponent
 
         $this->setDefaultDate();
 
-        // Pre-load in-progress referrals from eHealth for the dropdown
         $this->loadInProgressReferrals();
     }
 
@@ -150,6 +149,11 @@ class EncounterCreate extends EncounterComponent
         } catch (ValidationException $exception) {
             Session::flash('error', $exception->validator->errors()->first());
             $this->setErrorBag($exception->validator->getMessageBag());
+            $this->dispatch('scroll-to-error');
+
+            return;
+        } catch (EHealthException|EHealthConnectionException $exception) {
+            $exception->handle('Error while searching for referral');
             $this->dispatch('scroll-to-error');
 
             return;
@@ -211,6 +215,12 @@ class EncounterCreate extends EncounterComponent
         } catch (ValidationException $exception) {
             Session::flash('error', $exception->validator->errors()->first());
             $this->setErrorBag($exception->validator->getMessageBag());
+            $this->showSignatureModal = false;
+            $this->dispatch('scroll-to-error');
+
+            return;
+        } catch (EHealthException|EHealthConnectionException $exception) {
+            $exception->handle('Error while searching for referral');
             $this->showSignatureModal = false;
             $this->dispatch('scroll-to-error');
 
