@@ -50,6 +50,19 @@ class ServiceRequest extends PatientApiBase
     }
 
     /**
+     * Get Service Requests by search parameters in patient context.
+     */
+    public function getBySearchParams(string $patientId, array $query = []): PromiseInterface|EHealthResponse
+    {
+        $this->setDefaultPageSize();
+        $this->setValidator($this->validateMany(...));
+
+        $query = array_merge($this->options['query'], $query);
+
+        return $this->get(self::URL . "/{$patientId}/service_requests", $query);
+    }
+
+    /**
      * Get a specific Service Request by ID.
      */
     public function getById(string $patientId, string $id, array $query = []): PromiseInterface|EHealthResponse

@@ -40,30 +40,104 @@
 
             <template x-if="referralType === 'electronic'">
                 <div class="form-row-2">
-                    <div class="form-group group">
+                    <div
+                        class="form-group group"
+                        x-data="{
+                            showReferrals: false,
+                            referralNumber: @js($form->encounter['referralNumber'] ?? ''),
+                            referrals: @js($availableReferrals),
+                            get filteredReferrals() {
+                                const value = this.referralNumber.replaceAll('-', '').toUpperCase();
+
+                                if (!value) {
+                                    return this.referrals;
+                                }
+
+                                return this.referrals.filter(referral =>
+                                    referral.requisition.replaceAll('-', '').toUpperCase().includes(value)
+                                );
+                            },
+                            selectReferral(referral) {
+                                this.referralNumber = referral.requisition;
+                                this.showReferrals = false;
+
+                                $wire.$set('selectedReferralUuid', referral.id, false);
+                                $wire.$set('form.encounter.referralNumber', referral.requisition, false);
+                            }
+                        }"
+                        @click.outside="showReferrals = false"
+                    >
                         <div class="relative">
                             <input
-                                wire:model="form.encounter.referralNumber"
+                                x-model="referralNumber"
                                 type="text"
                                 id="requisitionNumber"
                                 class="input !pr-7 peer @error('form.encounter.referralNumber') input-error @enderror uppercase"
                                 placeholder=" "
+                                autocomplete="off"
                                 x-mask="****-****-****-****"
-                                x-on:input="$el.value = $el.value.toUpperCase()"
+                                x-on:focus="showReferrals = true"
+                                x-on:input="
+                                    referralNumber = $el.value.toUpperCase();
+                                    $wire.$set('form.encounter.referralNumber', referralNumber, false);
+                                    $wire.$set('selectedReferralUuid', null, false);
+                                    showReferrals = true;
+                                "
                             />
+
                             <label for="requisitionNumber" class="label">
                                 {{ __('encounters.referral_number') }}
                             </label>
+
                             <div class="absolute inset-y-0 end-0 flex items-center">
                                 <button
                                     type="button"
-                                    @click="$wire.set('form.encounter.referralNumber', '')"
+                                    @click="
+                                        referralNumber = '';
+                                        $wire.$set('form.encounter.referralNumber', '', false);
+                                        $wire.$set('selectedReferralUuid', null, false);
+                                        showReferrals = true;
+                                    "
                                     class="text-gray-400 hover:text-gray-600"
                                 >
                                     @icon('close', 'w-4 h-4')
                                 </button>
                             </div>
+
+                            @if ($referralsLoaded)
+                                <div
+                                    x-show="showReferrals"
+                                    x-cloak
+                                    class="absolute top-full left-0 z-20 mt-1 max-h-64 w-full overflow-auto rounded-lg border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                                >
+                                    <template x-for="referral in filteredReferrals" :key="referral.id">
+                                        <button
+                                            type="button"
+                                            @click="selectReferral(referral)"
+                                            class="w-full rounded-md px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                            <div
+                                                class="font-medium text-gray-900 dark:text-white"
+                                                x-text="referral.requisition"
+                                            ></div>
+
+                                            <div
+                                                class="text-sm text-gray-500 dark:text-gray-400"
+                                                x-text="referral.category"
+                                            ></div>
+                                        </button>
+                                    </template>
+
+                                    <div
+                                        x-show="filteredReferrals.length === 0"
+                                        class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400"
+                                    >
+                                        {{ __('encounters.messages.referral_not_found') }}
+                                    </div>
+                                </div>
+                            @endif
                         </div>
+
                         @error('form.encounter.referralNumber')
                             <p class="text-error">{{ $message }}</p>
                         @enderror

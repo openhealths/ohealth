@@ -247,7 +247,7 @@ class EncounterMapper implements FhirMapperContract
                 !empty(data_get($data, 'paper_referral')) => 'paper',
                 default => ''
             },
-            'referralNumber' => data_get($data, 'incoming_referral.identifier.value', ''),
+            'referralNumber' => data_get($data, 'incoming_referral.displayValue', ''),
             'paperReferral' => [
                 ...(data_get($data, 'paper_referral') ?? []),
                 'serviceRequestDate' => convertToAppDateFormat(data_get($data, 'paper_referral.serviceRequestDate'))
