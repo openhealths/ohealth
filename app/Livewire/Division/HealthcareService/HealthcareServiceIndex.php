@@ -244,7 +244,7 @@ class HealthcareServiceIndex extends Component
 
             Session::flash('success', __('forms.success.sync_resumed'));
 
-            $user->notify(new SyncNotification('healthcare_service', 'resumed'));
+            $user->notify(new SyncNotification('hcs', 'resumed'));
 
             return;
         }
@@ -275,13 +275,13 @@ class HealthcareServiceIndex extends Component
         // If there are more pages, dispatch a job to handle the rest
         if ($response->isNotLast()) {
             try {
-                $user->notify(new SyncNotification('healthcare_service', 'started'));
+                $user->notify(new SyncNotification('hcs', 'started'));
                 $this->dispatchNextSyncJobs($user, $token);
                 Session::flash('success', __('healthcare-services.success.sync_started'));
             } catch (Throwable $exception) {
                 Log::error('Failed to dispatch HealthcareServiceSync batch', ['exception' => $exception]);
 
-                $user->notify(new SyncNotification('healthcare_service', 'failed'));
+                $user->notify(new SyncNotification('hcs', 'failed'));
             }
         } else {
             legalEntity()?->setEntityStatus(JobStatus::COMPLETED, LegalEntity::ENTITY_HEALTHCARE_SERVICE);
@@ -366,7 +366,7 @@ class HealthcareServiceIndex extends Component
                     'exception' => $exception
                 ]);
 
-                $user->notify(new SyncNotification('healthcare_service', 'failed'));
+                $user->notify(new SyncNotification('hcs', 'failed'));
             })
             ->onQueue('sync')
             ->name(self::BATCH_NAME)

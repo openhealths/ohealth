@@ -44,6 +44,7 @@ class LegalEntity extends Model
     public const string ENTITY_EMPLOYEE = 'employee_';
     public const string ENTITY_EMPLOYEE_ROLE = 'employee_role_';
     public const string ENTITY_EMPLOYEE_REQUEST = 'employee_request_';
+    public const string ENTITY_EMPLOYEE_REQUEST_FULL = 'employee_request_full_';
     public const string ENTITY_PARTY_VERIFICATION = 'party_verification_';
     public const string ENTITY_LICENSE = 'license_';
     public const string ENTITY_CONTRACT = 'contract_';

@@ -180,13 +180,20 @@ trait BatchLegalEntityQueries
      */
     protected function restartFailedBatch(User $user, stdClass $batch, string $token, LegalEntity $legalEntity, array $pendingJobs): void
     {
-        $newBatch = Bus::batch($pendingJobs)
+        $batchOptions = Bus::batch($pendingJobs)
             ->name($batch->name)
             ->withOption('legal_entity_id', $legalEntity->id)
             ->withOption('token', $token) // Here token is encrypted
             ->withOption('user', $user)
-            ->onQueue('sync')
-            ->dispatch();
+            ->onQueue('sync');
+
+        $syncEntity = app(BatchRepository::class)->find($batch->id)?->options['sync_entity'] ?? null;
+
+        if ($syncEntity !== null) {
+            $batchOptions->withOption('sync_entity', $syncEntity);
+        }
+
+        $newBatch = $batchOptions->dispatch();
 
         // Here do echo only into the job context where legalEntity() is not set
         if (!legalEntity()) {

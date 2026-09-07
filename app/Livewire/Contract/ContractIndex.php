@@ -70,8 +70,6 @@ class ContractIndex extends Component
         $user = Auth::user();
         $token = session()->get(config('ehealth.api.oauth.bearer_token'));
 
-        $this->dispatch('flashMessage', ['message' => 'Синхронізацію контрактів розпочато...', 'type' => 'success']);
-
         try {
             // Request first page — token is injected automatically inside EHealthRequest
             $response = EHealth::contract()->getMany([
@@ -86,6 +84,10 @@ class ContractIndex extends Component
             }
 
             if ($response->isNotLast()) {
+                $this->dispatch('flashMessage', ['message' => 'Синхронізацію контрактів розпочато...', 'type' => 'success']);
+
+                $user->notify(new SyncNotification('contract', 'started'));
+
                 Bus::batch([
                     new ContractSync(
                         legalEntity: $currentLegalEntity,
@@ -109,6 +111,8 @@ class ContractIndex extends Component
 
                 $currentLegalEntity->setEntityStatus(JobStatus::PROCESSING, LegalEntity::ENTITY_CONTRACT);
             } else {
+                $this->dispatch('flashMessage', ['message' => 'Синхронізацію контрактів успішно виконано', 'type' => 'success']);
+
                 $currentLegalEntity->setEntityStatus(JobStatus::COMPLETED, LegalEntity::ENTITY_CONTRACT);
             }
 
