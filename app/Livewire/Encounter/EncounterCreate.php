@@ -255,18 +255,6 @@ class EncounterCreate extends EncounterComponent
         unset($formattedData['encounter']['incoming_referral']['display_value']);
 
         try {
-            $this->validateProcedurePerformers($formattedData);
-            $this->validateObservationPerformers($formattedData);
-            $this->validateDiagnosticReportPerformers($formattedData);
-        } catch (ValidationException $exception) {
-            Session::flash('error', $exception->validator->errors()->first());
-
-            $this->setErrorBag($exception->validator->getMessageBag());
-
-            return;
-        }
-
-        try {
             $this->validateEncounterPerformer($formattedData);
         } catch (ValidationException $exception) {
             Session::flash('error', $exception->validator->errors()->first());
