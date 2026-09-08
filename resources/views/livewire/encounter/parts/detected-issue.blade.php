@@ -26,7 +26,7 @@
             const packageDeviceIds = packageDevices.map((device) => device.uuid);
 
             const existingDevices = (this.patientDevices || [])
-                .filter((device) => !packageDeviceIds.includes(device.uuid))
+                .filter((device) => ! packageDeviceIds.includes(device.uuid))
                 .map((device) => ({
                     uuid: device.uuid,
                     name: device.name || device.uuid,
@@ -39,7 +39,7 @@
         },
 
         deviceName(uuid) {
-            if (!uuid) {
+            if (! uuid) {
                 return '-';
             }
 
@@ -75,7 +75,7 @@
 
             this.previousDetectedIssues = [];
 
-            if (!this.modalDetectedIssue.subjectId) {
+            if (! this.modalDetectedIssue.subjectId) {
                 return;
             }
 
@@ -99,7 +99,7 @@
             this.newDetectedIssue = false;
             this.modalDetectedIssue = new DetectedIssue(this.detectedIssues[index]);
 
-            if (!this.isReadonly) {
+            if (! this.isReadonly) {
                 this.previousDetectedIssues = [];
 
                 if (this.modalDetectedIssue.subjectId) {
@@ -123,11 +123,11 @@
         },
 
         canSaveDetectedIssue() {
-            if (!this.modalDetectedIssue.subjectId || !this.modalDetectedIssue.status || !this.modalDetectedIssue.code) {
+            if (! this.modalDetectedIssue.subjectId || ! this.modalDetectedIssue.status || ! this.modalDetectedIssue.code) {
                 return false;
             }
 
-            if (this.modalDetectedIssue.primarySource === false && !this.modalDetectedIssue.reportOriginCode) {
+            if (this.modalDetectedIssue.primarySource === false && ! this.modalDetectedIssue.reportOriginCode) {
                 return false;
             }
 
@@ -144,28 +144,17 @@
     }"
 >
     <div class="space-y-4">
-        <template
-            x-for="(detectedIssue, index) in detectedIssues"
-            :key="detectedIssue.uuid || index"
-        >
+        <template x-for="(detectedIssue, index) in detectedIssues" :key="detectedIssue.uuid || index">
             <div class="record-inner-card">
                 <div class="record-inner-header">
                     <div class="record-inner-checkbox-col">
-                        <input
-                            type="checkbox"
-                            class="default-checkbox h-5 w-5"
-                        />
+                        <input type="checkbox" class="default-checkbox h-5 w-5" />
                     </div>
 
                     <div class="record-inner-column flex-1">
-                        <div class="record-inner-label">
-                            {{ __('detected-issues.device_name') }}
-                        </div>
+                        <div class="record-inner-label">{{ __('detected-issues.device_name') }}</div>
 
-                        <div
-                            class="record-inner-value text-[16px]"
-                            x-text="deviceName(detectedIssue.subjectId)"
-                        ></div>
+                        <div class="record-inner-value text-[16px]" x-text="deviceName(detectedIssue.subjectId)"></div>
                     </div>
 
                     <div class="record-inner-action-col">
@@ -183,7 +172,7 @@
                                 },
 
                                 close(focusAfter) {
-                                    if (!this.openDropdown) {
+                                    if (! this.openDropdown) {
                                         return;
                                     }
 
@@ -195,11 +184,7 @@
                                 },
                             }"
                             @keydown.escape.prevent.stop="close($refs.button)"
-                            @focusin.window="
-                                $refs.panel &&
-                                !$refs.panel.contains($event.target) &&
-                                close()
-                            "
+                            @focusin.window="$refs.panel && ! $refs.panel.contains($event.target) && close()"
                             x-id="['dropdown-button']"
                             class="relative"
                         >
@@ -212,9 +197,7 @@
                                 >
                                     @icon('eye', 'w-6 h-6')
 
-                                    <span class="sr-only">
-                                        {{ __('forms.view') }}
-                                    </span>
+                                    <span class="sr-only"> {{ __('forms.view') }} </span>
                                 </button>
                             @else
                                 <button
@@ -228,7 +211,7 @@
                                     @icon(
                                         'edit-user-outline',
                                         'w-6 h-6 text-gray-800 dark:text-gray-200'
-                                    )
+)
                                 </button>
 
                                 <div class="absolute right-0 z-50">
@@ -270,47 +253,26 @@
 
                 <div class="record-inner-body">
                     <div class="record-inner-grid-container">
-                        <div
-                            class="grid w-full grid-cols-2 gap-x-4 gap-y-4 xl:grid-cols-3"
-                        >
+                        <div class="grid w-full grid-cols-2 gap-x-4 gap-y-4 xl:grid-cols-3">
                             <div>
-                                <div class="record-inner-label">
-                                    {{ __('detected-issues.device_id') }}
-                                </div>
+                                <div class="record-inner-label">{{ __('detected-issues.device_id') }}</div>
 
-                                <div
-                                    class="record-inner-subvalue"
-                                    x-text="
-                                        detectedIssue.subjectId || '-'
-                                    "
-                                ></div>
+                                <div class="record-inner-subvalue" x-text="detectedIssue.subjectId || '-'"></div>
                             </div>
 
                             <div>
-                                <div class="record-inner-label">
-                                    {{ __('forms.status.label') }}
-                                </div>
+                                <div class="record-inner-label">{{ __('forms.status.label') }}</div>
 
-                                <div
-                                    class="record-inner-subvalue"
-                                    x-text="
-                                        issueStatusName(detectedIssue.status)
-                                    "
-                                ></div>
+                                <div class="record-inner-subvalue" x-text="issueStatusName(detectedIssue.status)"></div>
                             </div>
 
                             <div>
-                                <div class="record-inner-label">
-                                    {{ __('detected-issues.identified_at_short') }}
-                                </div>
+                                <div class="record-inner-label">{{ __('detected-issues.identified_at_short') }}</div>
 
                                 <div
                                     class="record-inner-subvalue"
                                     x-text="
-                                        [
-                                            detectedIssue.identifiedDate,
-                                            detectedIssue.identifiedTime
-                                        ]
+                                        [detectedIssue.identifiedDate, detectedIssue.identifiedTime]
                                             .filter(Boolean)
                                             .join(' ') || '-'
                                     "
@@ -318,35 +280,23 @@
                             </div>
 
                             <div>
-                                <div class="record-inner-label">
-                                    {{ __('detected-issues.sgusoz') }}
-                                </div>
+                                <div class="record-inner-label">{{ __('detected-issues.legal_entity') }}</div>
 
-                                <div class="record-inner-subvalue">
-                                    {{ legalEntity()->name }}
-                                </div>
+                                <div class="record-inner-subvalue">{{ legalEntity()->name }}</div>
                             </div>
 
                             <div>
-                                <div class="record-inner-label">
-                                    {{ __('forms.employee') }}
-                                </div>
+                                <div class="record-inner-label">{{ __('forms.employee') }}</div>
 
-                                <div class="record-inner-subvalue">
-                                    {{ $employeeFullName }}
-                                </div>
+                                <div class="record-inner-subvalue">{{ $employeeFullName }}</div>
                             </div>
 
                             <div>
-                                <div class="record-inner-label">
-                                    {{ __('detected-issues.record_created_at') }}
-                                </div>
+                                <div class="record-inner-label">{{ __('detected-issues.record_created_at') }}</div>
 
                                 <div
                                     class="record-inner-subvalue"
-                                    x-text="
-                                        $wire.form.encounter.periodDate || '-'
-                                    "
+                                    x-text="$wire.form.encounter.periodDate || '-'"
                                 ></div>
                             </div>
                         </div>
@@ -366,14 +316,8 @@
         </button>
     @endunless
 
-    <x-dialog-drawer
-        x-model="openProblemDrawer"
-        maxWidth="4/5"
-        wire:ignore
-    >
-        <x-slot name="title">
-            {{ __('detected-issues.new') }}
-        </x-slot>
+    <x-dialog-drawer x-model="openProblemDrawer" maxWidth="4/5" wire:ignore>
+        <x-slot name="title">{{ __('detected-issues.new') }}</x-slot>
 
         <form>
             <fieldset
@@ -384,9 +328,7 @@
             >
                 {{-- Main information --}}
                 <fieldset class="fieldset">
-                    <legend class="legend">
-                        {{ __('forms.main_information') }}
-                    </legend>
+                    <legend class="legend">{{ __('forms.main_information') }}</legend>
 
                     <div class="form-row-2">
                         {{-- Subject device --}}
@@ -398,44 +340,25 @@
                                 class="input-select peer"
                                 required
                             >
-                                <option value="">
-                                    {{ __('forms.select') }}
-                                </option>
+                                <option value="">{{ __('forms.select') }}</option>
 
-                                <template
-                                    x-for="
-                                        device in availableDevices()
-                                    "
-                                    :key="device.uuid"
-                                >
-                                    <option
-                                        :value="device.uuid"
-                                        x-text="device.name"
-                                    ></option>
+                                <template x-for="device in availableDevices()" :key="device.uuid">
+                                    <option :value="device.uuid" x-text="device.name"></option>
                                 </template>
                             </select>
 
-                            <label
-                                for="detectedIssueSubject"
-                                class="label"
-                            >
-                                {{ __('detected-issues.device') }}
-                            </label>
+                            <label for="detectedIssueSubject" class="label"> {{ __('detected-issues.device') }} </label>
                         </div>
 
                         {{-- Status --}}
                         <div class="form-group group">
                             <select
-                                x-model="
-                                    modalDetectedIssue.status
-                                "
+                                x-model="modalDetectedIssue.status"
                                 id="detectedIssueStatus"
                                 class="input-select peer"
                                 required
                             >
-                                <option value="">
-                                    {{ __('forms.select') }}
-                                </option>
+                                <option value="">{{ __('forms.select') }}</option>
 
                                 @foreach ($this->dictionaries['detected_issue_statuses'] ?? [] as $code => $status)
                                     @if (($isReadonly ?? false) || $code !== \App\Enums\DetectedIssue\Status::ENTERED_IN_ERROR->value)
@@ -444,32 +367,21 @@
                                 @endforeach
                             </select>
 
-                            <label
-                                for="detectedIssueStatus"
-                                class="label"
-                            >
-                                {{ __('detected-issues.status') }}
-                            </label>
+                            <label for="detectedIssueStatus" class="label"> {{ __('detected-issues.status') }} </label>
                         </div>
                     </div>
                 </fieldset>
 
                 {{-- Additional information --}}
                 <fieldset class="fieldset">
-                    <legend class="legend">
-                        {{ __('forms.additional_information') }}
-                    </legend>
+                    <legend class="legend">{{ __('forms.additional_information') }}</legend>
 
                     {{-- Date + time --}}
                     <div class="form-row-2">
-                        <div
-                            class="form-group group relative flex justify-between"
-                        >
+                        <div class="form-group group relative flex justify-between">
                             <div class="datepicker-wrapper flex-1">
                                 <input
-                                    x-model="
-                                        modalDetectedIssue.identifiedDate
-                                    "
+                                    x-model="modalDetectedIssue.identifiedDate"
                                     type="text"
                                     id="detectedIssueDate"
                                     autocomplete="off"
@@ -482,19 +394,14 @@
                                     placeholder=" "
                                 />
 
-                                <label
-                                    for="detectedIssueDate"
-                                    class="wrapped-label"
-                                >
+                                <label for="detectedIssueDate" class="wrapped-label">
                                     {{ __('detected-issues.identified_at') }}
                                 </label>
                             </div>
 
                             <div class="relative -ml-px w-32">
                                 <input
-                                    x-model="
-                                        modalDetectedIssue.identifiedTime
-                                    "
+                                    x-model="modalDetectedIssue.identifiedTime"
                                     type="time"
                                     id="detectedIssueTime"
                                     class="input peer rounded-l-none pl-10"
@@ -504,7 +411,7 @@
                                 @icon(
                                     'clock',
                                     'svg-input left-2.5 text-gray-400'
-                                )
+)
                             </div>
                         </div>
                     </div>
@@ -518,43 +425,28 @@
                                 class="input-select peer"
                                 required
                             >
-                                <option value="">
-                                    {{ __('forms.select') }}
-                                </option>
+                                <option value="">{{ __('forms.select') }}</option>
 
                                 @foreach (
-                                    $this->dictionaries['detected_issue_codes'] ?? []
-                                    as $code => $issueCode
-                                )
-                                    <option value="{{ $code }}">
-                                        {{ $issueCode }}
-                                    </option>
+                                    $this->dictionaries['detected_issue_codes'] ?? [] as $code => $issueCode
+)
+                                    <option value="{{ $code }}">{{ $issueCode }}</option>
                                 @endforeach
                             </select>
 
-                            <label
-                                for="detectedIssueCode"
-                                class="label"
-                            >
-                                {{ __('detected-issues.type') }}
-                            </label>
+                            <label for="detectedIssueCode" class="label"> {{ __('detected-issues.type') }} </label>
                         </div>
                     </div>
 
                     {{-- Description --}}
                     <div class="form-row-1 mt-4">
                         <div>
-                            <label
-                                for="detectedIssueDetail"
-                                class="label-modal mb-2 block text-sm text-gray-500"
-                            >
+                            <label for="detectedIssueDetail" class="label-modal mb-2 block text-sm text-gray-500">
                                 {{ __('detected-issues.detail') }}
                             </label>
 
                             <textarea
-                                x-model="
-                                    modalDetectedIssue.detail
-                                "
+                                x-model="modalDetectedIssue.detail"
                                 id="detectedIssueDetail"
                                 class="textarea"
                                 rows="4"
@@ -572,28 +464,15 @@
                                 id="detectedIssueImplicated"
                                 class="input-select peer"
                             >
-                                <option value="">
-                                    {{ __('forms.select') }}
-                                </option>
+                                <option value="">{{ __('forms.select') }}</option>
 
-                                <template
-                                    x-for="
-                                        device in availableDevices()
-                                    "
-                                    :key="device.uuid"
-                                >
-                                    <option
-                                        :value="device.uuid"
-                                        x-text="device.name"
-                                    ></option>
+                                <template x-for="device in availableDevices()" :key="device.uuid">
+                                    <option :value="device.uuid" x-text="device.name"></option>
                                 </template>
                             </select>
 
-                            <label
-                                for="detectedIssueImplicated"
-                                class="label"
-                            >
-                                {{ __('detected-issues.implicated_device')}}
+                            <label for="detectedIssueImplicated" class="label">
+                                {{ __('detected-issues.implicated_device') }}
                             </label>
                         </div>
 
@@ -602,8 +481,10 @@
                                 x-model="modalDetectedIssue.basedOnId"
                                 id="detectedIssueBasedOn"
                                 class="input-select peer"
-                                :class="!modalDetectedIssue.subjectId ? 'cursor-not-allowed text-gray-400 dark:text-gray-500' : ''"
-                                :disabled="!modalDetectedIssue.subjectId"
+                                :class="! modalDetectedIssue.subjectId
+                                    ? 'cursor-not-allowed text-gray-400 dark:text-gray-500'
+                                    : ''"
+                                :disabled="! modalDetectedIssue.subjectId"
                             >
                                 <option value="">{{ __('forms.select') }}</option>
 
@@ -612,58 +493,37 @@
                                 </template>
                             </select>
 
-                            <label
-                                for="detectedIssueBasedOn"
-                                class="label"
-                            >
+                            <label for="detectedIssueBasedOn" class="label">
                                 {{ __('detected-issues.based_on') }}
                             </label>
                         </div>
                     </div>
 
                     {{-- Source --}}
-                    <div
-                        class="mt-6 border-t border-gray-100 pt-6 dark:border-gray-700"
-                    >
-                        <div
-                            class="mb-6 flex items-center gap-6"
-                        >
-                            <span
-                                class="text-sm font-semibold text-gray-900 dark:text-gray-100"
-                            >
+                    <div class="mt-6 border-t border-gray-100 pt-6 dark:border-gray-700">
+                        <div class="mb-6 flex items-center gap-6">
+                            <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">
                                 {{ __('medical-events.information_source') }}
                             </span>
 
-                            <div
-                                class="flex items-center gap-4"
-                            >
-                                <label
-                                    class="flex cursor-pointer items-center gap-2"
-                                >
+                            <div class="flex items-center gap-4">
+                                <label class="flex cursor-pointer items-center gap-2">
                                     <input
                                         type="radio"
                                         name="detectedIssuePrimarySource"
-                                        x-model.boolean="
-                                            modalDetectedIssue.primarySource
-                                        "
-                                        @change="
-                                            modalDetectedIssue.reportOriginCode = ''
-                                        "
+                                        x-model.boolean="modalDetectedIssue.primarySource"
+                                        @change="modalDetectedIssue.reportOriginCode = ''"
                                         value="true"
                                         class="default-radio"
                                     />
                                     <span class="text-sm">{{ __('medical-events.performer') }}</span>
                                 </label>
 
-                                <label
-                                    class="flex cursor-pointer items-center gap-2"
-                                >
+                                <label class="flex cursor-pointer items-center gap-2">
                                     <input
                                         type="radio"
                                         name="detectedIssuePrimarySource"
-                                        x-model.boolean="
-                                            modalDetectedIssue.primarySource
-                                        "
+                                        x-model.boolean="modalDetectedIssue.primarySource"
                                         value="false"
                                         class="default-radio"
                                     />
@@ -672,35 +532,20 @@
                             </div>
                         </div>
 
-                        <div
-                            class="form-row-2"
-                            x-show="
-                                modalDetectedIssue.primarySource === false
-                            "
-                            x-cloak
-                        >
+                        <div class="form-row-2" x-show="modalDetectedIssue.primarySource === false" x-cloak>
                             <div class="form-group group">
                                 <select
-                                    x-model="
-                                        modalDetectedIssue.reportOriginCode
-                                    "
+                                    x-model="modalDetectedIssue.reportOriginCode"
                                     id="detectedIssueReportOrigin"
                                     class="input-select peer"
-                                    :required="
-                                        modalDetectedIssue.primarySource === false
-                                    "
+                                    :required="modalDetectedIssue.primarySource === false"
                                 >
-                                    <option value="">
-                                        {{ __('forms.select') }}
-                                    </option>
+                                    <option value="">{{ __('forms.select') }}</option>
 
                                     @foreach (
-                                        $this->dictionaries['eHealth/report_origins'] ?? []
-                                        as $code => $reportOrigin
-                                    )
-                                        <option value="{{ $code }}">
-                                            {{ $reportOrigin }}
-                                        </option>
+                                        $this->dictionaries['eHealth/report_origins'] ?? [] as $code => $reportOrigin
+)
+                                        <option value="{{ $code }}">{{ $reportOrigin }}</option>
                                     @endforeach
                                 </select>
                                 <label class="label">{{ __('medical-events.source_link') }}</label>
@@ -709,33 +554,19 @@
                     </div>
                 </fieldset>
 
-                <div
-                    class="mt-6 flex w-full justify-start space-x-4"
-                >
-                    <button
-                        type="button"
-                        @click="
-                            openProblemDrawer = false
-                        "
-                        class="button-minor"
-                    >
+                <div class="mt-6 flex w-full justify-start space-x-4">
+                    <button type="button" @click="openProblemDrawer = false" class="button-minor">
                         {{ ($isReadonly ?? false) ? __('forms.close') : __('forms.cancel') }}
                     </button>
 
                     @unless ($isReadonly ?? false)
                         <button
                             type="button"
-                            @click.prevent="
-                                saveDetectedIssue()
-                            "
-                            :disabled="
-                                !canSaveDetectedIssue()
-                            "
+                            @click.prevent="saveDetectedIssue()"
+                            :disabled="! canSaveDetectedIssue()"
                             class="button-primary"
                         >
-                            <span
-                                x-text="newDetectedIssue ? @js(__('forms.add')) : @js(__('forms.save'))"
-                            ></span>
+                            <span x-text="newDetectedIssue ? @js(__('forms.add')) : @js(__('forms.save'))"></span>
                         </button>
                     @endunless
                 </div>
@@ -764,10 +595,7 @@
             this.reportOriginCode = '';
 
             if (obj) {
-                Object.assign(
-                    this,
-                    JSON.parse(JSON.stringify(obj))
-                );
+                Object.assign(this, JSON.parse(JSON.stringify(obj)));
             }
         }
     }

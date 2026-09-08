@@ -43,7 +43,7 @@
             @elseif (isset($this->declarationNumber) && $this->declarationNumber)
                 <div class="mt-1 inline-flex items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 px-3 py-1.5 text-sm font-semibold text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
                     @icon('file-text', 'w-4 h-4 text-gray-400')
-                    Декларація №{{ $this->declarationNumber }}
+                    {{ __('declarations.label') }} №{{ $this->declarationNumber }}
                 </div>
             @endif
         </x-slot>
@@ -166,7 +166,7 @@
                             href="{{ route("$routePrefix.device-associations", [legalEntity(), $routeParamKey => $recordId]) }}"
                             class="summary-tab {{ request()->routeIs("$routePrefix.device-associations") ? 'summary-tab-active' : 'summary-tab-inactive' }}"
                         >
-                            {{ __('patients.device_associations') }}
+                            {{ __('device-associations.label') }}
                         </a>
 
                         @if ($prepersonId)
@@ -198,7 +198,9 @@
                         >
                             {{ __('procedures.plural') }}
                         </a>
+                    </div>
 
+                    <div class="summary-nav-row">
                         <a
                             href="{{ route("$routePrefix.devices", [legalEntity(), $routeParamKey => $recordId]) }}"
                             class="summary-tab {{ request()->routeIs("$routePrefix.devices") ? 'summary-tab-active' : 'summary-tab-inactive' }}"
@@ -206,22 +208,18 @@
                             {{ __('care-plan.medical_devices') }}
                         </a>
 
-                        <div class="flex-1"></div>
-                    </div>
-
-                    <div class="summary-nav-row">
                         <a
                             href="{{ Route::has("$routePrefix.device-dispenses") ? route("$routePrefix.device-dispenses", [legalEntity(), $routeParamKey => $recordId]) : 'javascript:void(0)' }}"
                             class="summary-tab {{ request()->routeIs("$routePrefix.device-dispenses") ? 'summary-tab-active' : 'summary-tab-inactive' }} {{ !Route::has("$routePrefix.device-dispenses") ? 'cursor-not-allowed opacity-60' : '' }}"
                         >
-                            {{ __('patients.device_dispenses') }}
+                            {{ __('device-dispenses.label') }}
                         </a>
 
                         <a
                             href="{{ route("$routePrefix.device-issues", [legalEntity(), $routeParamKey => $recordId]) }}"
                             class="summary-tab {{ request()->routeIs("$routePrefix.device-issues") ? 'summary-tab-active' : 'summary-tab-inactive' }}"
                         >
-                            {{ __('patients.device_issues') }}
+                            {{ __('detected-issues.label') }}
                         </a>
 
                         <div class="flex-1"></div>
@@ -232,5 +230,5 @@
     </x-header-navigation>
 
     {{ $slot }}
-    <livewire:components.x-message :listen-async="true" :key="time()" />
+    <livewire:components.x-message :key="time()" />
 </section>

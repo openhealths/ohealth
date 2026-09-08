@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Casts\EHealthDateCast;
 use App\Enums\Person\Gender;
 use App\Enums\Preperson\Status;
+use App\Models\MedicalEvents\Sql\Device;
 use App\Models\MedicalEvents\Sql\Episode;
 use Eloquence\Behaviours\HasCamelCasing;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -73,6 +74,16 @@ class Preperson extends Model
     public function episodes(): HasMany
     {
         return $this->hasMany(Episode::class);
+    }
+
+    /**
+     * Medical devices recorded for this preperson.
+     *
+     * @return HasMany
+     */
+    public function devices(): HasMany
+    {
+        return $this->hasMany(Device::class);
     }
 
     /**

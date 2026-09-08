@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Jobs\ClinicalImpressionSync;
 use App\Jobs\ConditionSync;
+use App\Jobs\DeviceSync;
 use App\Jobs\DiagnosticReportSync;
 use App\Jobs\EmployeeRoleSync;
 use App\Jobs\EncounterFullSync;
@@ -168,6 +169,11 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for(
             'ehealth-diagnostic-report-get',
             static fn (DiagnosticReportSync $job) => Limit::perMinute(config('ehealth.rate_limit.diagnostic_report'))->by($job->user->id)
+        );
+
+        RateLimiter::for(
+            'ehealth-device-get',
+            static fn (DeviceSync $job) => Limit::perMinute(config('ehealth.rate_limit.device'))->by($job->user->id)
         );
 
         RateLimiter::for(

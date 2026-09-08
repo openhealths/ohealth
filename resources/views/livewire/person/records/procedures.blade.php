@@ -202,7 +202,7 @@
                         bind="filterDeviceId"
                         bindValue="uuid"
                         bindParam="name"
-                        :label="__('patients.device_id')"
+                        :label="__('devices.device_id')"
                     />
                 </div>
             </div>
@@ -314,7 +314,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('forms.category') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 @php
                                                     $categoryCode = data_get($procedure, 'category.coding.0.code')
                                                         ?? data_get($procedure, 'category.0.coding.0.code');
@@ -333,7 +333,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('patients.referrals') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ data_get($procedure, 'paperReferral.requisition', '—') }}
                                             </div>
                                         </div>
@@ -344,7 +344,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('medical-events.performer') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold break-words uppercase">
+                                            <div class="record-inner-value font-semibold break-words uppercase">
                                                 {{ data_get($procedure, 'performer.displayValue', '-') }}
                                             </div>
                                         </div>
@@ -352,7 +352,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('patients.notes') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ data_get($procedure, 'note') ?? '-' }}
                                             </div>
                                         </div>
@@ -363,7 +363,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('patients.created') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 @php
                                                     $createdAt = data_get($procedure, 'ehealthInsertedAt') ?: data_get($procedure, 'createdAt');
                                                 @endphp
@@ -375,7 +375,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('patients.doctor') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold break-words">
+                                            <div class="record-inner-value font-semibold break-words">
                                                 {{ data_get($procedure, 'recordedBy.displayValue') ?? '-' }}
                                             </div>
                                         </div>

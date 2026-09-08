@@ -11,10 +11,12 @@ use App\Models\Preperson;
 use Eloquence\Behaviours\HasCamelCasing;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Device extends Model
 {
@@ -33,18 +35,24 @@ class Device extends Model
         'manufacture_date',
         'expiration_date',
         'note',
+        'explanatory_letter',
         'primary_source',
         'report_origin_id',
+        'status_reason_id',
         'context_id',
         'recorder_id',
         'definition_id',
-        'parent_id'
+        'parent_id',
+        'ehealth_inserted_at',
+        'ehealth_updated_at'
     ];
 
     protected $casts = [
         'status' => Status::class,
         'manufacture_date' => EHealthTimestampCast::class,
-        'expiration_date' => EHealthTimestampCast::class
+        'expiration_date' => EHealthTimestampCast::class,
+        'ehealth_inserted_at' => EHealthTimestampCast::class,
+        'ehealth_updated_at' => EHealthTimestampCast::class
     ];
 
     protected $hidden = [
@@ -53,6 +61,7 @@ class Device extends Model
         'preperson_id',
         'type_id',
         'report_origin_id',
+        'status_reason_id',
         'context_id',
         'recorder_id',
         'definition_id',
@@ -60,6 +69,34 @@ class Device extends Model
         'created_at',
         'updated_at'
     ];
+
+    protected function ehealthInsertedDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => Str::before((string) $this->ehealthInsertedAt, ' ')
+        );
+    }
+
+    protected function ehealthInsertedTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => Str::after((string) $this->ehealthInsertedAt, ' ')
+        );
+    }
+
+    protected function ehealthUpdatedDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => Str::before((string) $this->ehealthUpdatedAt, ' ')
+        );
+    }
+
+    protected function ehealthUpdatedTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => Str::after((string) $this->ehealthUpdatedAt, ' ')
+        );
+    }
 
     public function preperson(): BelongsTo
     {
@@ -84,6 +121,11 @@ class Device extends Model
     public function reportOrigin(): BelongsTo
     {
         return $this->belongsTo(CodeableConcept::class, 'report_origin_id');
+    }
+
+    public function statusReason(): BelongsTo
+    {
+        return $this->belongsTo(CodeableConcept::class, 'status_reason_id');
     }
 
     public function recorder(): BelongsTo
@@ -123,6 +165,7 @@ class Device extends Model
         return $query->with([
             'type.coding',
             'reportOrigin.coding',
+            'statusReason.coding',
             'context.type.coding',
             'recorder.type.coding',
             'definition.type.coding',
@@ -150,6 +193,19 @@ class Device extends Model
         return $patient instanceof Preperson
             ? $query->wherePrepersonId($patient->id)
             : $query->wherePersonId($patient->id);
+    }
+
+    /**
+     * Order by most recently updated in eHealth first, keeping records without a timestamp last.
+     *
+     * @param  Builder  $query
+     * @return Builder
+     */
+    #[Scope]
+    protected function recentlyUpdatedFirst(Builder $query): Builder
+    {
+        return $query->orderByRaw('CASE WHEN ehealth_updated_at IS NULL THEN 1 ELSE 0 END')
+            ->orderByDesc('ehealth_updated_at');
     }
 
     /**

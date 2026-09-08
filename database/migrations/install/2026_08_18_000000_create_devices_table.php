@@ -32,12 +32,16 @@ return new class extends Migration
             $table->timestamp('manufacture_date')->nullable();
             $table->timestamp('expiration_date')->nullable();
             $table->text('note')->nullable();
+            $table->string('explanatory_letter')->nullable();
             $table->boolean('primary_source');
             $table->foreignId('report_origin_id')->nullable()->constrained('codeable_concepts');
+            $table->foreignId('status_reason_id')->nullable()->constrained('codeable_concepts');
             $table->foreignId('context_id')->constrained('identifiers');
             $table->foreignId('recorder_id')->constrained('identifiers');
             $table->foreignId('definition_id')->nullable()->constrained('identifiers');
             $table->foreignId('parent_id')->nullable()->constrained('identifiers');
+            $table->timestamp('ehealth_inserted_at')->nullable();
+            $table->timestamp('ehealth_updated_at')->nullable();
             $table->timestamps();
         });
 

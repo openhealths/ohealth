@@ -274,25 +274,25 @@
                                 <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('patients.class') }}</div>
-                                        <div class="record-inner-value text-[14px]">
+                                        <div class="record-inner-value">
                                             {{ $this->dictionaryLabel($encounter, 'class') }}
                                         </div>
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('forms.type') }}</div>
-                                        <div class="record-inner-value text-[14px]">
+                                        <div class="record-inner-value">
                                             {{ $this->dictionaryLabel($encounter, 'type') }}
                                         </div>
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('patients.doctor_speciality') }}</div>
-                                        <div class="record-inner-value text-[14px]">
+                                        <div class="record-inner-value">
                                             {{ data_get($encounter, 'performer.displayValue') ?? '-' }}
                                         </div>
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('patients.referrals') }}</div>
-                                        <div class="record-inner-value text-[14px]">
+                                        <div class="record-inner-value">
                                             {{ data_get($encounter, 'referralDisplay', '-') }}
                                         </div>
                                     </div>

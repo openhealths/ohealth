@@ -171,7 +171,7 @@
                                 <div class="record-inner-subvalue" x-text="deviceAssociation.deviceId || '-'"></div>
                             </div>
                             <div>
-                                <div class="record-inner-label">{{ __('devices.sgusoz') }}</div>
+                                <div class="record-inner-label">{{ __('devices.legal_entity') }}</div>
                                 <div class="record-inner-subvalue">{{ legalEntity()->name }}</div>
                             </div>
                             <div>

@@ -33,7 +33,7 @@
             <div class="record-inner-grid-container">
                 <div class="[&>div]:min-w-0 [&_.record-inner-subvalue]:break-words grid w-full grid-cols-2 gap-x-4 gap-y-4 xl:grid-cols-5">
                     <div>
-                        <div class="record-inner-label">{{ __('patients.model_number') }}</div>
+                        <div class="record-inner-label">{{ __('devices.model_number') }}</div>
                         <div class="record-inner-subvalue">1231FDSE</div>
                     </div>
                     <div>
@@ -45,7 +45,7 @@
                         <div class="record-inner-subvalue">1231FDSE</div>
                     </div>
                     <div>
-                        <div class="record-inner-label">{{ __('patients.manufacture_date') }}</div>
+                        <div class="record-inner-label">{{ __('devices.manufacture_date') }}</div>
                         <div class="record-inner-subvalue">01.02.2025</div>
                     </div>
                     <div>
@@ -54,11 +54,11 @@
                     </div>
 
                     <div>
-                        <div class="record-inner-label">{{ __('patients.properties') }}</div>
+                        <div class="record-inner-label">{{ __('devices.properties') }}</div>
                         <div class="record-inner-subvalue">10 шт</div>
                     </div>
                     <div>
-                        <div class="record-inner-label">{{ __('patients.manufacturer_and_serial') }}</div>
+                        <div class="record-inner-label">{{ __('devices.manufacturer_and_serial') }}</div>
                         <div class="record-inner-subvalue">
                             GlobalMed, Inc <br />
                             NSPX30

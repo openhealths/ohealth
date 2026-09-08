@@ -273,7 +273,7 @@
                                                 {{ __('patients.dosage') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ data_get($immunization, 'doseQuantity.value') }} {{ $this->dictionaryLabel($immunization, 'doseQuantity') }}
                                             </div>
                                         </div>
@@ -283,7 +283,7 @@
                                                 {{ __('immunizations.manufacturer_and_lot_number') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ trim(data_get($immunization, 'manufacturer') . ' ' . data_get($immunization, 'lotNumber')) ?: '-' }}
                                             </div>
                                         </div>
@@ -293,7 +293,7 @@
                                                 {{ __('medical-events.performer') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ data_get($immunization, 'performer.displayValue', '—') }}
                                             </div>
                                         </div>
@@ -305,7 +305,7 @@
                                                 {{ __('immunizations.route') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ $this->dictionaryLabel($immunization, 'route') }}
                                             </div>
                                         </div>
@@ -315,7 +315,7 @@
                                                 {{ __('patients.body_part') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ $this->dictionaryLabel($immunization, 'site') }}
                                             </div>
                                         </div>
@@ -325,7 +325,7 @@
                                                 {{ __('patients.date_time_entered') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ data_get($immunization, 'ehealthInsertedAt') ?? '-' }}
                                             </div>
                                         </div>
@@ -337,7 +337,7 @@
                                                 {{ __('patients.reason') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ $this->dictionaryLabel($immunization, 'explanation.reasons.0') }}
                                             </div>
                                         </div>
@@ -347,7 +347,7 @@
                                                 {{ __('immunizations.was_performed') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ data_get($immunization, 'notGiven') ? 'Ні' : 'Так' }}
                                             </div>
                                         </div>
@@ -359,7 +359,7 @@
                                                 {{ __('immunizations.reactions') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px]">
+                                            <div class="record-inner-value">
                                                 {{ data_get($immunization, 'reactions.0.detail.displayValue', data_get($immunization, 'reactions.0.displayValue', '—')) }}
                                             </div>
                                         </div>
@@ -369,7 +369,7 @@
                                                 {{ __('immunizations.date_time_performed') }}
                                             </div>
 
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ data_get($immunization, 'date') }}
                                             </div>
                                         </div>

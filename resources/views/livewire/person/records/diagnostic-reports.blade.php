@@ -336,7 +336,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('forms.category') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{
                                                     data_get(
                                                         $this->dictionaries,
@@ -350,7 +350,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('patients.referrals') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ data_get($diagnosticReport, 'paperReferral.requisition', '—') }}
                                             </div>
                                         </div>
@@ -361,7 +361,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('medical-events.performer') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word uppercase">
+                                            <div class="record-inner-value font-semibold wrap-break-word uppercase">
                                                 {{ data_get($diagnosticReport, 'performer.reference.displayValue' ,'-') }}
                                             </div>
                                         </div>
@@ -369,7 +369,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('medical-events.conclusion') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ data_get($diagnosticReport, 'conclusion') ?? '-' }}
                                             </div>
                                         </div>
@@ -380,7 +380,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('patients.created') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ optional(\Carbon\Carbon::make(data_get($diagnosticReport, 'ehealthInsertedAt')))->format('d.m.Y H:i') ?? '-' }}
                                             </div>
                                         </div>
@@ -388,7 +388,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('patients.doctor') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold wrap-break-word">
+                                            <div class="record-inner-value font-semibold wrap-break-word">
                                                 {{ data_get($diagnosticReport, 'recordedBy.displayValue') ?? '-' }}
                                             </div>
                                         </div>

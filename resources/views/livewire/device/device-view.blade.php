@@ -1,7 +1,27 @@
+@php
+    use App\Models\MedicalEvents\Sql\DeviceProperty;
+
+    $deviceName = $device->names->first()?->value;
+    $typeCode = $device->type?->coding->first()?->code;
+    $reportOriginCode = $device->reportOrigin?->coding->first()?->code;
+    $statusReasonCoding = $device->statusReason?->coding->first();
+@endphp
+
 <div>
     <section class="section-form p-6">
-        <x-header-navigation class="breadcrumb-form" title="{{ data_get($device, 'name') }}">
-            <x-slot name="title">{{ data_get($device, 'name') }}</x-slot>
+        <x-header-navigation class="breadcrumb-form" title="{{ $deviceName }}">
+            <x-slot name="title">{{ $deviceName }}</x-slot>
+
+            <x-slot name="actions">
+                <button
+                    wire:click.prevent="sync"
+                    type="button"
+                    class="button-sync flex items-center gap-2 px-4 py-2 text-sm shadow-sm"
+                >
+                    @icon('refresh', 'w-4 h-4')
+                    <span>{{ __('forms.synchronise_with_eHealth') }}</span>
+                </button>
+            </x-slot>
         </x-header-navigation>
 
         <div class="form shift-content">
@@ -10,43 +30,50 @@
 
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'type') }}" disabled />
+                        <input
+                            type="text"
+                            class="input peer"
+                            value="{{ data_get($dictionaries, 'device_definition_classification_type.' . $typeCode) ?? '-' }}"
+                            disabled
+                        />
                         <label class="label">{{ __('devices.type') }}*</label>
                     </div>
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'name') }}" disabled />
+                        <input type="text" class="input peer" value="{{ $deviceName ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.name') }}*</label>
                     </div>
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'status') }}" disabled />
+                        <input type="text" class="input peer" value="{{ $device->status->label() }}" disabled />
                         <label class="label">{{ __('forms.status.label') }}</label>
                     </div>
                     <div class="form-group group">
                         <input
                             type="text"
                             class="input peer"
-                            value="{{ data_get($device, 'error_reason') }}"
+                            value="{{ data_get($dictionaries, $statusReasonCoding?->system . '.' . $statusReasonCoding?->code) ?? '-' }}"
                             disabled
                         />
                         <label class="label">{{ __('devices.entered_in_error_reason') }}</label>
                     </div>
                 </div>
 
+                <div class="form-row">
+                    <div class="form-group group">
+                        <label class="label-modal mb-1">{{ __('devices.explanatory_letter') }}</label>
+                        <textarea class="textarea" disabled rows="3">{{ $device->explanatoryLetter }}</textarea>
+                    </div>
+                </div>
+
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'encounter_id') }}"
-                            disabled
-                        />
+                        <input type="text" class="input peer" value="{{ $device->context?->value ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.encounter_id_label') }}</label>
                     </div>
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'device_id') }}" disabled />
+                        <input type="text" class="input peer" value="{{ $device->uuid }}" disabled />
                         <label class="label">{{ __('devices.device_id_label') }}</label>
                     </div>
                 </div>
@@ -57,11 +84,16 @@
 
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'model') }}" disabled />
+                        <input type="text" class="input peer" value="{{ $device->modelNumber ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.model_number') }}</label>
                     </div>
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'model_ref') }}" disabled />
+                        <input
+                            type="text"
+                            class="input peer"
+                            value="{{ $device->definition?->value ?? '-' }}"
+                            disabled
+                        />
                         <label
                             class="label max-w-full truncate"
                             title="{{ __('devices.definition_full') }}"
@@ -71,133 +103,117 @@
 
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'manufacturer') }}"
-                            disabled
-                        />
+                        <input type="text" class="input peer" value="{{ $device->manufacturer ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.manufacturer') }}</label>
                     </div>
                     <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'serial_number') }}"
-                            disabled
-                        />
+                        <input type="text" class="input peer" value="{{ $device->serialNumber ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.serial_number') }}</label>
                     </div>
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'lot_number') }}" disabled />
+                        <input type="text" class="input peer" value="{{ $device->lotNumber ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.lot_number') }}</label>
                     </div>
-                    <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'serial_number') }}"
-                            disabled
-                        />
-                        <label class="label">{{ __('devices.serial_number') }}</label>
-                    </div>
                 </div>
 
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'manufacture_date') }}"
-                            disabled
-                        />
+                        <input type="text" class="input peer" value="{{ $device->manufactureDate ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.manufacture_date') }}</label>
                     </div>
                     <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'expiration_date') }}"
-                            disabled
-                        />
+                        <input type="text" class="input peer" value="{{ $device->expirationDate ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.expiration_date') }}</label>
                     </div>
                 </div>
 
+                @foreach ($device->identifiers as $identifier)
+                    @php($externalSystemCode = $identifier->type->first()?->coding->first()?->code)
+                    <div class="form-row-2">
+                        <div class="form-group group">
+                            <input
+                                type="text"
+                                class="input peer"
+                                value="{{ data_get($dictionaries, 'external_system.' . $externalSystemCode) ?? '-' }}"
+                                disabled
+                            />
+                            <label class="label">{{ __('devices.external_system') }}</label>
+                        </div>
+                        <div class="form-group group">
+                            <input type="text" class="input peer" value="{{ $identifier->value }}" disabled />
+                            <label class="label">{{ __('devices.external_system_identifier') }}</label>
+                        </div>
+                    </div>
+                @endforeach
+
                 <div class="form-row-2">
                     <div class="form-group group">
-                        <input type="text" class="input peer" value="{{ data_get($device, 'external_id') }}" disabled />
-                        <label class="label">{{ __('devices.external_system_identifier') }}</label>
-                    </div>
-                    <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'parent_device') }}"
-                            disabled
-                        />
+                        <input type="text" class="input peer" value="{{ $device->parent?->value ?? '-' }}" disabled />
                         <label class="label">{{ __('devices.parent') }}</label>
                     </div>
                 </div>
+
+                @foreach ($device->properties as $property)
+                    @php($propertyCode = $property->code?->coding->first()?->code)
+                    <div class="form-row-2">
+                        <div class="form-group group">
+                            <input
+                                type="text"
+                                class="input peer"
+                                value="{{ data_get($dictionaries, 'device_properties.' . $propertyCode) ?? '-' }}"
+                                disabled
+                            />
+                            <label class="label">{{ __('devices.property') }}</label>
+                        </div>
+                        <div class="form-group group">
+                            <input
+                                type="text"
+                                class="input peer"
+                                value="{{ DeviceProperty::displayValue($property) }}"
+                                disabled
+                            />
+                            <label class="label">{{ __('devices.value') }}</label>
+                        </div>
+                    </div>
+                @endforeach
 
                 <div class="form-row-2">
                     <div class="form-group group">
                         <input
                             type="text"
                             class="input peer"
-                            value="{{ data_get($device, 'additional_property') }}"
-                            disabled
-                        />
-                        <label class="label">{{ __('devices.property') }}</label>
-                    </div>
-                    <div class="form-group group">
-                        <input
-                            type="text"
-                            class="input peer"
-                            value="{{ data_get($device, 'practitioner') }}"
+                            value="{{ $device->recorder?->displayValue ?? $device->recorder?->value ?? '-' }}"
                             disabled
                         />
                         <label class="label">{{ __('devices.recorder') }}</label>
                     </div>
                 </div>
 
-                <div class="form-row-2 mb-4" x-data="{ isOtherSource: false }">
+                <div
+                    class="form-row-2 mb-4"
+                    x-data="{ isOtherSource: {{ $device->primarySource ? 'false' : 'true' }} }"
+                >
                     <div class="form-group group">
                         <div class="flex items-center gap-4 pt-2">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">{{ __('devices.source_data') }}</span>
                             <label class="flex cursor-pointer items-center gap-2">
-                                <input
-                                    type="radio"
-                                    :checked="isOtherSource"
-                                    @click="isOtherSource = true"
-                                    class="default-radio cursor-pointer"
-                                />
+                                <input type="radio" :checked="isOtherSource" disabled class="default-radio" />
                                 <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('devices.other_source') }}</span>
                             </label>
                         </div>
                     </div>
                     <div class="form-group group" x-show="isOtherSource">
-                        <div class="flex items-end gap-2">
-                            <div class="relative flex-1">
-                                <input
-                                    type="text"
-                                    class="input peer w-full"
-                                    value="{{ data_get($device, 'source_ref') }}"
-                                    disabled
-                                />
-                                <label class="label">{{ __('devices.source_reference') }}</label>
-                            </div>
-                            <button
-                                type="button"
-                                @click="isOtherSource = false"
-                                class="mb-2 p-1 text-gray-400 transition-colors hover:text-red-500"
-                                title="Видалити"
-                            >
-                                @icon('trash', 'w-5 h-5')
-                            </button>
+                        <div class="relative flex-1">
+                            <input
+                                type="text"
+                                class="input peer w-full"
+                                value="{{ data_get($dictionaries, 'eHealth/report_origins.' . $reportOriginCode) ?? '-' }}"
+                                disabled
+                            />
+                            <label class="label">{{ __('devices.source_reference') }}</label>
                         </div>
                     </div>
                 </div>
@@ -208,7 +224,7 @@
                             <input
                                 type="text"
                                 class="datepicker-input with-leading-icon input peer"
-                                value="{{ data_get($device, 'created_at') }}"
+                                value="{{ $device->ehealthInsertedDate ?: '-' }}"
                                 placeholder=" "
                                 disabled
                             />
@@ -221,7 +237,7 @@
                             <input
                                 type="text"
                                 class="input peer pl-10!"
-                                value="{{ data_get($device, 'created_time') }}"
+                                value="{{ $device->ehealthInsertedTime ?: '-' }}"
                                 placeholder=" "
                                 disabled
                             />
@@ -235,7 +251,7 @@
                             <input
                                 type="text"
                                 class="datepicker-input with-leading-icon input peer"
-                                value="{{ data_get($device, 'updated_at') }}"
+                                value="{{ $device->ehealthUpdatedDate ?: '-' }}"
                                 placeholder=" "
                                 disabled
                             />
@@ -248,7 +264,7 @@
                             <input
                                 type="text"
                                 class="input peer pl-10!"
-                                value="{{ data_get($device, 'updated_time') }}"
+                                value="{{ $device->ehealthUpdatedTime ?: '-' }}"
                                 placeholder=" "
                                 disabled
                             />
@@ -259,7 +275,7 @@
                 <div class="form-row mt-4">
                     <div class="form-group group">
                         <label class="label-modal mb-1">{{ __('devices.notes') }}</label>
-                        <textarea class="textarea" disabled rows="4">{{ data_get($device, 'notes') }}</textarea>
+                        <textarea class="textarea" disabled rows="4">{{ $device->note }}</textarea>
                     </div>
                 </div>
             </fieldset>
@@ -272,4 +288,6 @@
             </div>
         </div>
     </section>
+
+    <livewire:components.x-message :key="now()->timestamp" />
 </div>

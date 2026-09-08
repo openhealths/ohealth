@@ -71,7 +71,7 @@
                 ['id' => 'procedures', 'action' => 'getProcedures', 'syncAction' => 'syncProcedures', 'label' => __('procedures.plural'), 'icon' => 'settings', 'syncEntity' => ''],
                 ['id' => 'allergies', 'action' => 'syncAllergyIntolerances', 'syncAction' => 'syncAllergyIntolerances', 'label' => __('patients.allergies'), 'icon' => 'alert', 'syncEntity' => ''],
                 ['id' => 'risk_assessments', 'action' => 'syncRiskAssessments', 'syncAction' => 'syncRiskAssessments', 'label' => __('patients.risk_assessments'), 'icon' => 'alert-octagon', 'syncEntity' => ''],
-                ['id' => 'devices', 'action' => 'syncDevices', 'syncAction' => 'syncDevices', 'label' => __('patients.devices'), 'icon' => 'equipment', 'syncEntity' => ''],
+                ['id' => 'devices', 'action' => 'syncDevices', 'syncAction' => 'syncDevices', 'label' => __('devices.plural'), 'icon' => 'equipment', 'syncEntity' => ''],
                 ['id' => 'medicines', 'action' => 'syncMedicationStatements', 'syncAction' => 'syncMedicationStatements', 'label' => __('patients.medicines'), 'icon' => 'pill-outline', 'syncEntity' => ''],
             ];
         @endphp

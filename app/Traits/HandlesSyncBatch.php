@@ -81,6 +81,7 @@ trait HandlesSyncBatch
             'condition' => 'conditions',
             'immunization' => 'immunizations',
             'clinical_impression' => 'clinical-impressions',
+            'device' => 'devices',
             'encounter' => 'encounters',
             'episode' => 'episodes',
             default => 'patients'

@@ -134,6 +134,7 @@ class DeviceRepository extends BaseRepository
 
                 $type = $this->syncCodeableConcept($existing, $data['type'], 'type');
                 $reportOrigin = $this->syncCodeableConcept($existing, $data['report_origin'] ?? null, 'reportOrigin');
+                $statusReason = $this->syncCodeableConcept($existing, $data['status_reason'] ?? null, 'statusReason');
                 $context = $this->syncIdentifier($existing, $data['context'], 'context');
                 $recorder = $this->syncIdentifier($existing, $data['recorder'], 'recorder');
                 $definition = $this->syncIdentifier($existing, $data['definition'] ?? null, 'definition');
@@ -150,12 +151,16 @@ class DeviceRepository extends BaseRepository
                     'manufacture_date' => $data['manufacture_date'] ?? null,
                     'expiration_date' => $data['expiration_date'] ?? null,
                     'note' => $data['note'] ?? null,
+                    'explanatory_letter' => $data['explanatory_letter'] ?? null,
                     'primary_source' => $data['primary_source'],
                     'report_origin_id' => $reportOrigin?->id,
+                    'status_reason_id' => $statusReason?->id,
                     'context_id' => $context->id,
                     'recorder_id' => $recorder->id,
                     'definition_id' => $definition?->id,
-                    'parent_id' => $parent?->id
+                    'parent_id' => $parent?->id,
+                    'ehealth_inserted_at' => $data['ehealth_inserted_at'] ?? null,
+                    'ehealth_updated_at' => $data['ehealth_updated_at'] ?? null
                 ];
 
                 if ($existing) {
