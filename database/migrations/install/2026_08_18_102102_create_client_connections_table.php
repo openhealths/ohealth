@@ -27,7 +27,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['uuid', 'legal_entity_id']);
+            $table->unique(['uuid', 'legal_entity_id'], 'client_connections_unique');
         });
     }
 

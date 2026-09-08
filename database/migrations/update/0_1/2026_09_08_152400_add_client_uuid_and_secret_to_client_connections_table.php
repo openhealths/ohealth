@@ -24,8 +24,8 @@ return new class extends Migration
                 $table->uuid()->comment('Client UUID at the eHealth side')->change();
             }
 
-            if (!Schema::hasIndex('client_connections', 'client_connections_uuid_legal_entity_id_unique')) {
-                $table->unique(['uuid', 'legal_entity_id']);
+            if (!Schema::hasIndex('client_connections', 'client_connections_unique')) {
+                $table->unique(['uuid', 'legal_entity_id'], 'client_connections_unique');
             }
 
             if (!Schema::hasColumn('client_connections', 'secret')) {
@@ -46,8 +46,8 @@ return new class extends Migration
                 $table->dropColumn('client_uuid');
             }
 
-            if (Schema::hasIndex('client_connections', 'client_connections_uuid_legal_entity_id_unique')) {
-                $table->dropUnique(['uuid', 'legal_entity_id']);
+            if (Schema::hasIndex('client_connections', 'client_connections_unique')) {
+                $table->dropUnique('client_connections_unique');
             }
 
             if (Schema::hasColumn('client_connections', 'secret')) {
