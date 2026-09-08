@@ -55,8 +55,6 @@ class PatientEncounters extends BasePatientComponent
 
     public bool $showAdditionalParams = false;
 
-    public bool $showSignatureModal = false;
-
     public EncounterCancellationForm $form;
 
     public array $dictionaryNames = [

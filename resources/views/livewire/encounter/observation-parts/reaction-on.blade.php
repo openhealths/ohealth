@@ -2,13 +2,13 @@
     <legend class="legend">{{ __('immunizations.reaction_on') }}</legend>
 
     <div>
-        <template x-if="! modalObservation.reactionOn">
-            @unless ($isReadonly)
+        @unless ($isReadonly)
+            <template x-if="! modalObservation.reactionOn">
                 <button type="button" class="item-add my-5" @click.prevent="openReactionDrawer()">
                     {{ __('immunizations.add') }}
                 </button>
-            @endunless
-        </template>
+            </template>
+        @endunless
 
         <template x-if="modalObservation.reactionOn">
             <div class="overflow-x-auto">

@@ -32,6 +32,12 @@
                             {{ $description ?? __('encounters.cancel_modal_description') }}
                         </p>
 
+                        @isset($note)
+                            <p class="mt-6 max-w-5xl text-base leading-relaxed text-amber-700 dark:text-amber-400">
+                                {{ $note }}
+                            </p>
+                        @endisset
+
                         <div class="mt-12 max-w-5xl">
                             <label
                                 for="encounterCancellationReason"

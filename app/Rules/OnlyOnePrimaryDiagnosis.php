@@ -28,10 +28,15 @@ readonly class OnlyOnePrimaryDiagnosis implements ValidationRule
     {
         $diagnoses = collect($value);
 
+        // An intervention may carry no diagnosis at all; the ones it does carry are checked like any other
+        if ($diagnoses->isEmpty()) {
+            return;
+        }
+
         $primaryCount = $diagnoses->filter(fn (array $diagnosis) => $diagnosis['roleCode'] === 'primary')->count();
 
         if ($primaryCount !== 1) {
-            $fail(__('Тільки один основний діагноз може бути.'));
+            $fail(__('conditions.validation.single_primary_diagnosis'));
 
             return;
         }
@@ -52,7 +57,7 @@ readonly class OnlyOnePrimaryDiagnosis implements ValidationRule
         }
 
         if (($condition['codeSystem'] ?? '') !== $expectedSystem) {
-            $fail("Основний діагноз повинен бути визначений у системі $expectedSystem");
+            $fail(__('conditions.validation.primary_diagnosis_code_system', ['system' => $expectedSystem]));
         }
     }
 }

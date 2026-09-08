@@ -13,6 +13,7 @@ return [
     'device_name' => 'Назва виробу',
     'device_id' => 'ID виробу',
     'status' => 'Статус запису',
+    'entered_in_error' => 'Внесена помилково',
 
     'identified_at' => 'Дата та час виявлення',
     'identified_at_short' => 'Дата та час виявлення проблеми',

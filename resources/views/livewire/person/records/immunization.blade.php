@@ -252,13 +252,16 @@
                                             {{ __('patients.view_details') }}
                                         </button>
 
-                                        <button
-                                            @click="close($refs.button)"
-                                            class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600"
-                                        >
-                                            @icon('alert-circle', 'w-5 h-5 text-gray-500')
-                                            {{ __('immunizations.status.entered_in_error') }}
-                                        </button>
+                                        @if ($status !== ImmunizationStatus::ENTERED_IN_ERROR)
+                                            <button
+                                                wire:click="openRecordCancellation('immunizations', '{{ data_get($immunization, 'uuid') }}')"
+                                                @click="close($refs.button)"
+                                                class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600"
+                                            >
+                                                @icon('alert-circle', 'w-5 h-5 text-gray-500')
+                                                {{ __('immunizations.status.entered_in_error') }}
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -489,6 +492,8 @@
             <div class="mt-8">{{ $this->paginatedImmunizations->links() }}</div>
         </div>
     </div>
+
+    @include('livewire.encounter.encounter-cancellation')
 
     <x-forms.loading />
 </x-layouts.patient>

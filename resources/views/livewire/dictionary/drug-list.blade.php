@@ -165,28 +165,28 @@
                             </p>
                         @endforeach
 
+                        @php
+                            $unit = $drug['ingredients'][0]['dosage']['denumerator_unit'] ?? null;
+                            $unitLabel = $unit ? $this->getMedicationUnit($unit) : '';
+
+                            $maxDailyDosage = collect($drug['packages'])
+                                ->flatMap(static fn (array $package) => $package['program_medications'])
+                                ->whereNotNull('max_daily_dosage')
+                                ->value('max_daily_dosage');
+                        @endphp
+
                         @if ($drug['daily_dosage'])
-                            @php
-                                $unit = $drug['ingredients'][0]['dosage']['denumerator_unit'] ?? null;
-                                $unitLabel = $unit ? $this->getMedicationUnit($unit) : '';
-
-                                $maxDailyDosage = collect($drug['packages'])
-                                    ->flatMap(static fn (array $package) => $package['program_medications'])
-                                    ->whereNotNull('max_daily_dosage')
-                                    ->value('max_daily_dosage');
-                            @endphp
-
                             <p class="font-semibold">
                                 {{ __('dictionaries.drug_list.daily_dosage') }}:
                                 <span>{{ $drug['daily_dosage'] }} {{ $unitLabel }}</span>
                             </p>
+                        @endif
 
-                            @if ($maxDailyDosage)
-                                <p class="font-semibold">
-                                    {{ __('dictionaries.drug_list.max_daily_dosage') }}:
-                                    <span>{{ $maxDailyDosage }} {{ $unitLabel }}</span>
-                                </p>
-                            @endif
+                        @if ($maxDailyDosage)
+                            <p class="font-semibold">
+                                {{ __('dictionaries.drug_list.max_daily_dosage') }}:
+                                <span>{{ $maxDailyDosage }} {{ $unitLabel }}</span>
+                            </p>
                         @endif
 
                         @if ($drug['packages'])
@@ -216,19 +216,19 @@
                                     {{ __('dictionaries.drug_list.package.package_quantity') }}:
                                     <span>{{ $package['package_qty'] }} {{ $this->getMedicationUnit($package['container_dosage']['numerator_unit']) }}</span>
                                 </p>
-                                <p>
-                                    {{ __('dictionaries.drug_list.package.max_request_quantity') }}:
-                                    <span>{{ $package['max_request_dosage'] }} {{ $this->getMedicationUnit($package['container_dosage']['numerator_unit']) }}</span>
-                                </p>
+                                @if ($package['max_request_dosage'])
+                                    <p>
+                                        {{ __('dictionaries.drug_list.package.max_request_quantity') }}:
+                                        <span>{{ $package['max_request_dosage'] }} {{ $this->getMedicationUnit($package['container_dosage']['numerator_unit']) }}</span>
+                                    </p>
+                                @endif
                             @endforeach
                         @endif
                     </div>
                 </fieldset>
             @endforeach
 
-            <div class="pagination">
-                {{ $drugs->links() }}
-            </div>
+            <div class="pagination">{{ $drugs->links() }}</div>
         </section>
     @endif
 

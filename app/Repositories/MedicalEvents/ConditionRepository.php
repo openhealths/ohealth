@@ -33,6 +33,7 @@ class ConditionRepository extends BaseRepository
                 $reportOrigin = null;
                 $asserter = null;
                 $severity = null;
+                $stageSummary = null;
 
                 $asserterData = data_get($datum, 'asserter.0') ?? data_get($datum, 'asserter');
 
@@ -54,6 +55,10 @@ class ConditionRepository extends BaseRepository
                     $severity = Repository::codeableConcept()->store($datum['severity']);
                 }
 
+                if (isset($datum['stage']['summary'])) {
+                    $stageSummary = Repository::codeableConcept()->store($datum['stage']['summary']);
+                }
+
                 $condition = $this->model->updateOrCreate(
                     ['uuid' => $datum['id']],
                     [
@@ -66,10 +71,19 @@ class ConditionRepository extends BaseRepository
                         'clinical_status' => $datum['clinicalStatus'],
                         'verification_status' => $datum['verificationStatus'],
                         'severity_id' => $severity?->id,
+                        'stage_summary_id' => $stageSummary?->id,
                         'onset_date' => $datum['onsetDate'],
                         'asserted_date' => $datum['assertedDate'] ?? null
                     ]
                 );
+
+                if (!$condition->wasRecentlyCreated) {
+                    $condition->bodySites()->detach();
+                }
+
+                foreach ($datum['bodySites'] ?? [] as $bodySite) {
+                    $condition->bodySites()->attach(Repository::codeableConcept()->store($bodySite)->id);
+                }
 
                 if (!empty($datum['evidences'])) {
                     if (!$condition->wasRecentlyCreated) {

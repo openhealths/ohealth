@@ -75,11 +75,8 @@ class EncounterForm extends BaseForm
             'encounter.reasons.*.text' => ['nullable', 'string'],
             'encounter.diagnoses' => [
                 'required_unless:encounter.typeCode,intervention',
-                Rule::when(
-                    ($this->encounter['typeCode'] ?? '') !== 'intervention',
-                    new OnlyOnePrimaryDiagnosis($this->encounter['classCode'] ?? null, $conditions)
-                ),
-                'array'
+                'array',
+                new OnlyOnePrimaryDiagnosis($this->encounter['classCode'] ?? null, $conditions)
             ],
             'encounter.diagnoses.*.roleCode' => [
                 // The conditions live in their own form, so this cannot lean on required_with

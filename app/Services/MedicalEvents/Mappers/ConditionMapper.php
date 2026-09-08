@@ -54,7 +54,27 @@ class ConditionMapper implements FhirMapperContract
                 ->toCodeableConcept();
         }
 
-        // todo: add  bodySites.*.code check
+        $bodySites = collect($data['bodySites'] ?? [])
+            ->filter(static fn (array $bodySite): bool => !empty($bodySite['code']))
+            ->map(
+                static fn (array $bodySite): array => FhirResource::make()
+                    ->coding('eHealth/body_sites', $bodySite['code'])
+                    ->toCodeableConcept()
+            )
+            ->values()
+            ->toArray();
+
+        if (!empty($bodySites)) {
+            $result['bodySites'] = $bodySites;
+        }
+
+        if (!empty($data['stageCode'])) {
+            $result['stage'] = [
+                'summary' => FhirResource::make()
+                    ->coding('eHealth/condition_stages', $data['stageCode'])
+                    ->toCodeableConcept()
+            ];
+        }
 
         if (!empty($data['assertedDate']) && !empty($data['assertedTime'])) {
             $result['assertedDate'] = convertToEHealthISO8601($data['assertedDate'] . ' ' . $data['assertedTime']);
@@ -114,6 +134,11 @@ class ConditionMapper implements FhirMapperContract
                 ? CarbonImmutable::parse($data['assertedDate'])->format('H:i')
                 : null,
             'severityCode' => data_get($data, 'severity.coding.0.code', ''),
+            'bodySites' => array_map(
+                static fn (array $bodySite): array => ['code' => data_get($bodySite, 'coding.0.code', '')],
+                data_get($data, 'bodySites', [])
+            ),
+            'stageCode' => data_get($data, 'stage.summary.coding.0.code', ''),
             'asserterText' => data_get($data, 'asserter.0.identifier.type.text', data_get($data, 'asserter.identifier.type.text', '')),
             'reportOriginCode' => data_get($data, 'reportOrigin.coding.0.code', ''),
             'evidenceCodes' => array_map(

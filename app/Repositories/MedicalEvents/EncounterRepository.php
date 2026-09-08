@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repositories\MedicalEvents;
 
+use App\Enums\DetectedIssue\Status as DetectedIssueStatus;
+use App\Enums\Device\Status as DeviceStatus;
+use App\Enums\DeviceAssociation\Status as DeviceAssociationStatus;
 use App\Enums\Person\ClinicalImpressionStatus;
 use App\Enums\Person\ConditionVerificationStatus;
 use App\Enums\Person\DiagnosticReportStatus;
@@ -13,6 +16,9 @@ use App\Enums\Person\ObservationStatus;
 use App\Enums\Person\ProcedureStatus;
 use App\Models\MedicalEvents\Sql\ClinicalImpression;
 use App\Models\MedicalEvents\Sql\Condition;
+use App\Models\MedicalEvents\Sql\DetectedIssue;
+use App\Models\MedicalEvents\Sql\Device;
+use App\Models\MedicalEvents\Sql\DeviceAssociation;
 use App\Models\MedicalEvents\Sql\DiagnosticReport;
 use App\Models\MedicalEvents\Sql\Encounter;
 use App\Models\MedicalEvents\Sql\Encounter as EncounterSql;
@@ -188,8 +194,86 @@ class EncounterRepository extends BaseRepository
         'immunizations' => [Immunization::class, 'status', ImmunizationStatus::ENTERED_IN_ERROR],
         'diagnosticReports' => [DiagnosticReport::class, 'status', DiagnosticReportStatus::ENTERED_IN_ERROR],
         'procedures' => [Procedure::class, 'status', ProcedureStatus::ENTERED_IN_ERROR],
-        'clinicalImpressions' => [ClinicalImpression::class, 'status', ClinicalImpressionStatus::ENTERED_IN_ERROR]
+        'clinicalImpressions' => [ClinicalImpression::class, 'status', ClinicalImpressionStatus::ENTERED_IN_ERROR],
+        'devices' => [Device::class, 'status', DeviceStatus::ENTERED_IN_ERROR],
+        'deviceAssociations' => [DeviceAssociation::class, 'status', DeviceAssociationStatus::ENTERED_IN_ERROR],
+        'detectedIssues' => [DetectedIssue::class, 'status', DetectedIssueStatus::ENTERED_IN_ERROR]
     ];
+
+    /**
+     * Package sections eHealth only accepts as entered in error together: a device cannot be marked while an
+     * association or a detected issue of the same encounter stays active, and neither of those two can be
+     * marked while a device of that encounter stays active.
+     */
+    private const array DEVICE_GROUP_SECTIONS = ['devices', 'deviceAssociations', 'detectedIssues'];
+
+    /**
+     * The relation each kind of record of the package holds the identifier of its encounter in.
+     */
+    private const array ENCOUNTER_RELATIONS = [
+        'observations' => 'context',
+        'immunizations' => 'context',
+        'diagnosticReports' => 'encounter',
+        'procedures' => 'encounter',
+        'clinicalImpressions' => 'encounter',
+        'devices' => 'context',
+        'deviceAssociations' => 'context',
+        'detectedIssues' => 'encounter'
+    ];
+
+    /**
+     * Get the eHealth ID of the encounter a record of the package was created in, or `null` when the record is not
+     * stored locally, which is the case for one found through a search in eHealth and never synchronised.
+     *
+     * @param  string  $section  Package section the record belongs to, e.g. `observations`
+     * @param  string  $recordId  eHealth ID of the record
+     * @param  Person|Preperson  $patient
+     * @return string|null
+     */
+    public function encounterIdOfRecord(string $section, string $recordId, Person|Preperson $patient): ?string
+    {
+        $relation = self::ENCOUNTER_RELATIONS[$section] ?? null;
+
+        if ($relation === null) {
+            return null;
+        }
+
+        [$model] = self::SEPARATELY_CANCELLED_STATUSES[$section];
+
+        return $model::forPatient($patient)
+            ->with($relation)
+            ->whereUuid($recordId)
+            ->first()
+            ?->{$relation}
+            ?->value;
+    }
+
+    /**
+     * Widen a pick of records to the whole device group as soon as it touches any of it, so that a partial
+     * group cannot reach eHealth no matter which page the pick was made on. The records the encounter still
+     * holds are read here rather than taken from the caller, which may have only part of the package at hand.
+     *
+     * @param  string  $encounterId  eHealth ID of the encounter the records belong to
+     * @param  array  $recordIds  eHealth IDs of the picked records, keyed by package section
+     * @return array
+     */
+    public function withWholeDeviceGroup(string $encounterId, array $recordIds): array
+    {
+        if (array_intersect_key($recordIds, array_flip(self::DEVICE_GROUP_SECTIONS)) === []) {
+            return $recordIds;
+        }
+
+        foreach (self::DEVICE_GROUP_SECTIONS as $section) {
+            [$model, $statusField, $status] = self::SEPARATELY_CANCELLED_STATUSES[$section];
+
+            $recordIds[$section] = $model::forEncounter($encounterId)
+                ->where($statusField, '!=', $status->value)
+                ->pluck('uuid')
+                ->all();
+        }
+
+        return array_filter($recordIds);
+    }
 
     /**
      * Mark the given records of the encounter package as entered in error, leaving the encounter and every

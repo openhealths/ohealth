@@ -8,6 +8,9 @@
     id="device-association-section"
     x-data="{
         deviceAssociations: $wire.entangle('deviceAssociationForm.deviceAssociations'),
+        selectedRecords: $wire.entangle('selectedRecords.deviceAssociations'),
+        cancelledRecords: $wire.cancelledRecords.deviceAssociations,
+        canCancelRecords: {{ ($canCancelRecords ?? false) ? 'true' : 'false' }},
         patientDevices: $wire.patientDevices,
         statusesDictionary: $wire.dictionaries['device_association_statuses'],
         bodySitesDictionary: $wire.dictionaries['eHealth/body_structures'],
@@ -33,13 +36,33 @@
         },
     }"
 >
+    @if (($canCancelRecords ?? false) && !empty($this->deviceAssociationForm->deviceAssociations))
+        <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            {{ __('encounters.messages.cancel_device_group_note') }}
+        </p>
+    @endif
+
     <div class="space-y-4">
         <template x-for="(deviceAssociation, index) in deviceAssociations" :key="index">
             <div class="record-inner-card">
                 <div class="record-inner-header">
                     <div class="record-inner-checkbox-col">
-                        <input type="checkbox" class="default-checkbox h-5 w-5" />
+                        <input
+                            type="checkbox"
+                            class="default-checkbox h-5 w-5"
+                            :value="deviceAssociation.uuid"
+                            x-model="selectedRecords"
+                            :disabled="! canCancelRecords ||
+                            ! deviceAssociation.uuid ||
+                            cancelledRecords.includes(deviceAssociation.uuid)"
+                        />
                     </div>
+
+                    <template x-if="cancelledRecords.includes(deviceAssociation.uuid)">
+                        <span class="record-inner-badge-error">
+                            {{ __('device-associations.status.entered_in_error') }}
+                        </span>
+                    </template>
 
                     <div class="record-inner-column flex-1">
                         <div class="record-inner-label">{{ __('devices.name') }}</div>

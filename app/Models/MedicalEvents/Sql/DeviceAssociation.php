@@ -25,6 +25,7 @@ class DeviceAssociation extends Model
         'preperson_id',
         'device_id',
         'status',
+        'explanatory_letter',
         'body_site_id',
         'association_date',
         'recorded',

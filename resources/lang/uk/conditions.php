@@ -64,6 +64,8 @@ return [
     // Custom messages for validation rules
     'validation' => [
         'code_system_class_forbidden' => "Для класу взаємодії 'Амбулаторна медична допомога' та 'Стаціонарна медична допомога' дозволена лише система eHealth/ICD10_AM/condition_codes",
+        'single_primary_diagnosis' => 'У взаємодії має бути рівно один основний діагноз',
+        'primary_diagnosis_code_system' => 'Основний діагноз має бути визначений у системі :system',
         'verification_status_not_in' => 'Діагноз, який додано до взаємодії, не може бути позначений внесеним помилково',
         'psychiatry_evidence_required' => 'Для коду діагнозу :code необхідно вказати стан як доказ',
         'psychiatry_evidence_code_forbidden' => 'Стан не може бути використаний як доказ для коду діагнозу :code',
