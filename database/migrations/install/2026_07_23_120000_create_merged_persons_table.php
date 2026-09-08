@@ -20,8 +20,16 @@ return new class extends Migration
             $table->foreignId('person_id')
                 ->comment('Identified patient the person was merged into')
                 ->constrained('persons');
-            $table->foreignId('merge_person_id')
-                ->comment('Preperson that was merged into the identified patient')
+            $table->uuid('merged_uuid')
+                ->index()
+                ->comment('eHealth identifier of the person or preperson merged into the identified patient');
+            $table->foreignId('merged_person_id')
+                ->nullable()
+                ->comment('Identified person merged into the patient, when their record is known locally')
+                ->constrained('persons');
+            $table->foreignId('merged_preperson_id')
+                ->nullable()
+                ->comment('Preperson merged into the patient, when their record is known locally')
                 ->constrained('prepersons');
             $table->enum('status', MergedPersonStatus::values());
             $table->dateTime('ehealth_inserted_at');

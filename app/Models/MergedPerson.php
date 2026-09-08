@@ -19,7 +19,9 @@ class MergedPerson extends Model
     protected $fillable = [
         'uuid',
         'person_id',
-        'merge_person_id',
+        'merged_uuid',
+        'merged_person_id',
+        'merged_preperson_id',
         'status',
         'ehealth_inserted_at',
         'ehealth_updated_at'
@@ -44,12 +46,22 @@ class MergedPerson extends Model
     }
 
     /**
-     * The preperson that was merged into the identified patient.
+     * The identified person that was merged into the patient, when their record is known locally.
      *
      * @return BelongsTo
      */
-    public function mergePerson(): BelongsTo
+    public function mergedPerson(): BelongsTo
     {
-        return $this->belongsTo(Preperson::class, 'merge_person_id');
+        return $this->belongsTo(Person::class, 'merged_person_id');
+    }
+
+    /**
+     * The preperson that was merged into the patient, when their record is known locally.
+     *
+     * @return BelongsTo
+     */
+    public function mergedPreperson(): BelongsTo
+    {
+        return $this->belongsTo(Preperson::class, 'merged_preperson_id');
     }
 }

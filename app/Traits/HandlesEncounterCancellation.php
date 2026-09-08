@@ -174,7 +174,6 @@ trait HandlesEncounterCancellation
                     $validated['cancellationReason'],
                     $validated['explanatoryLetter']
                 );
-            //            dd($package);
         } catch (Throwable $exception) {
             $this->handleDatabaseErrors(
                 $exception,

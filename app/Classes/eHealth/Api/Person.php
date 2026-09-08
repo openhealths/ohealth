@@ -16,6 +16,7 @@ use App\Enums\Person\RelationType;
 use App\Exceptions\EHealth\EHealthConnectionException;
 use App\Exceptions\EHealth\EHealthResponseException;
 use App\Exceptions\EHealth\EHealthValidationException;
+use App\Models\Person\Person as PersonModel;
 use App\Models\Preperson;
 use App\Rules\InDictionary;
 use App\Rules\TaxId;
@@ -535,9 +536,9 @@ class Person extends Request
     }
 
     /**
-     * Map the validated merged persons into database rows for the merged_persons table, resolving the merged
-     * prepersons to their local ids and stamping the identified patient they belong to. Records whose merged
-     * preperson is not present locally (e.g. part of the merge chain from another legal entity) are skipped.
+     * Map the validated merged persons into database rows for the merged_persons table, stamping the identified
+     * patient they belong to. The response only carries the eHealth identifier of the merged person, so it is
+     * kept as is and resolved to the local person or preperson it stands for whenever that record already exists.
      *
      * @param  array  $mergedPersons
      * @param  int  $personId
@@ -545,16 +546,22 @@ class Person extends Request
      */
     protected function mapMergedPersons(array $mergedPersons, int $personId): array
     {
-        $prepersonIds = Preperson::whereIn('uuid', array_column($mergedPersons, 'merge_person_id'))
-            ->pluck('id', 'uuid');
+        $mergedUuids = array_column($mergedPersons, 'merge_person_id');
+        $localPersonIds = PersonModel::whereIn('uuid', $mergedUuids)->pluck('id', 'uuid');
+        $prepersonIds = Preperson::whereIn('uuid', $mergedUuids)->pluck('id', 'uuid');
 
         return collect($mergedPersons)
-            ->filter(static fn (array $mergedPerson): bool => $prepersonIds->has($mergedPerson['merge_person_id']))
-            ->map(static function (array $mergedPerson) use ($personId, $prepersonIds): array {
-                $mergedPerson['person_id'] = $personId;
-                $mergedPerson['merge_person_id'] = $prepersonIds[$mergedPerson['merge_person_id']];
+            ->map(static function (array $mergedPerson) use ($personId, $localPersonIds, $prepersonIds): array {
+                $mergedUuid = $mergedPerson['merge_person_id'];
+                unset($mergedPerson['merge_person_id']);
 
-                return $mergedPerson;
+                return [
+                    ...$mergedPerson,
+                    'person_id' => $personId,
+                    'merged_uuid' => $mergedUuid,
+                    'merged_person_id' => $localPersonIds[$mergedUuid] ?? null,
+                    'merged_preperson_id' => $prepersonIds[$mergedUuid] ?? null
+                ];
             })
             ->values()
             ->toArray();
