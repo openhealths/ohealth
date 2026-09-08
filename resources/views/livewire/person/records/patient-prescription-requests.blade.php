@@ -1,4 +1,4 @@
-<x-layouts.patient :personId="$personId" :patientFullName="$patientFullName">
+<x-layouts.patient :personId="$personId" :patientFullName="$patientFullName" activeTab="prescription-requests">
     <x-slot name="headerActions">
         <button type="button" class="button-primary-outline px-5 py-2 text-sm whitespace-nowrap">
             Доступ до даних
@@ -13,29 +13,30 @@
         <div class="mt-6 w-full" x-data="{ showAdditionalParams: $wire.entangle('showAdditionalParams') }">
             <div class="mb-4 flex items-center gap-1 font-semibold text-gray-900 dark:text-gray-100">
                 @icon('search-outline', 'w-4.5 h-4.5')
-                <p>Пошук рецептів</p>
+                <p>Пошук заявок на рецепти</p>
             </div>
 
             <div class="form-row-3 mb-6">
                 <div class="form-group group">
-                    <input id="filterRequestNumber" type="text" class="input peer" wire:model="filterRequestNumber" placeholder=" " autocomplete="off" />
-                    <label class="label" for="filterRequestNumber">Номер рецепта</label>
-                </div>
-                <div class="form-group group">
                     <select id="filterStatus" wire:model="filterStatus" class="input-select peer w-full">
                         <option value="">Усі</option>
-                        <option value="NEW">Новий (заявка)</option>
-                        <option value="draft">Чернетка</option>
-                        <option value="active">Активний</option>
-                        <option value="completed">Виконаний</option>
-                        <option value="rejected">Відхилений</option>
-                        <option value="entered-in-error">Внесено помилково</option>
+                        <option value="NEW">Нова</option>
                     </select>
                     <label class="label" for="filterStatus">Статус</label>
                 </div>
                 <div class="form-group group">
-                    <input id="filterMedication" type="text" class="input peer" wire:model="filterMedication" placeholder=" " autocomplete="off" />
-                    <label class="label" for="filterMedication">Препарат</label>
+                    <select id="filterDoctor" wire:model="filterDoctor" class="input-select peer w-full">
+                        <option value="">Усі</option>
+                        <option value="Shevchenko">Шевченко Т.Г.</option>
+                    </select>
+                    <label class="label" for="filterDoctor">Лікар</label>
+                </div>
+                <div class="form-group group">
+                    <select id="filterLegalEntity" wire:model="filterLegalEntity" class="input-select peer w-full">
+                        <option value="">Усі</option>
+                        <option value="hospital4">Лікарня №4</option>
+                    </select>
+                    <label class="label" for="filterLegalEntity">СГУСОЗ</label>
                 </div>
             </div>
 
@@ -58,71 +59,31 @@
                     <div class="form-group group">
                         <input id="filterInteractionId" type="text" class="input peer" wire:model="filterInteractionId" placeholder=" " autocomplete="off" />
                         <label class="label" for="filterInteractionId">ID взаємодії</label>
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" wire:click="$set('filterInteractionId', '')">✕</button>
                     </div>
                     <div class="form-group group">
                         <input id="filterCarePlanId" type="text" class="input peer" wire:model="filterCarePlanId" placeholder=" " autocomplete="off" />
                         <label class="label" for="filterCarePlanId">ID плану лікування</label>
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" wire:click="$set('filterCarePlanId', '')">✕</button>
                     </div>
                     <div class="form-group group">
-                        <input id="filterDoctor" type="text" class="input peer" wire:model="filterDoctor" placeholder=" " autocomplete="off" />
-                        <label class="label" for="filterDoctor">Лікар</label>
-                    </div>
-                </div>
-                
-                <div class="form-row-3 mb-6">
-                    <div class="form-group group">
-                        <input id="filterEpisodeId" type="text" class="input peer" wire:model="filterEpisodeId" placeholder=" " autocomplete="off" />
-                        <label class="label" for="filterEpisodeId">ID епізоду</label>
-                    </div>
-                    <div class="form-group group">
-                        <input id="filterLegalEntity" type="text" class="input peer" wire:model="filterLegalEntity" placeholder=" " autocomplete="off" />
-                        <label class="label" for="filterLegalEntity">ЄДРПОУ / Заклад</label>
-                    </div>
-                    <div class="form-group group">
-                        <input id="filterMedicalProgram" type="text" class="input peer" wire:model="filterMedicalProgram" placeholder=" " autocomplete="off" />
-                        <label class="label" for="filterMedicalProgram">Медична програма</label>
-                    </div>
-                </div>
-
-                <div class="form-row-3 mb-6">
-                    <div class="form-group group">
-                        <div class="datepicker-wrapper">
-                            <input id="filterStartedAtRange" type="text" class="daterangepicker-uk with-leading-icon input peer w-full" placeholder=" " autocomplete="off" wire:model="filterStartedAtFrom" />
-                            <label class="wrapped-label" for="filterStartedAtRange">Початок лікування</label>
-                        </div>
-                    </div>
-                    <div class="form-group group">
-                        <div class="datepicker-wrapper">
-                            <input id="filterEndedAtRange" type="text" class="daterangepicker-uk with-leading-icon input peer w-full" placeholder=" " autocomplete="off" wire:model="filterEndedAtFrom" />
-                            <label class="wrapped-label" for="filterEndedAtRange">Завершення лікування</label>
-                        </div>
-                    </div>
-                    <div class="form-group group">
-                        <div class="datepicker-wrapper">
-                            <input id="filterCreatedAtRange" type="text" class="daterangepicker-uk with-leading-icon input peer w-full" placeholder=" " autocomplete="off" wire:model="filterCreatedAtFrom" />
-                            <label class="wrapped-label" for="filterCreatedAtRange">Дата створення</label>
-                        </div>
+                        <input id="filterAppointmentId" type="text" class="input peer" wire:model="filterAppointmentId" placeholder=" " autocomplete="off" />
+                        <label class="label" for="filterAppointmentId">ID призначення</label>
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" wire:click="$set('filterAppointmentId', '')">✕</button>
                     </div>
                 </div>
                 
                 <div class="form-row-3 mb-9">
                     <div class="form-group group">
-                        <div class="datepicker-wrapper">
-                            <input id="filterDispenseStartRange" type="text" class="daterangepicker-uk with-leading-icon input peer w-full" placeholder=" " autocomplete="off" wire:model="filterDispenseAvailableFrom" />
-                            <label class="wrapped-label" for="filterDispenseStartRange">Початок дост. погашення</label>
-                        </div>
-                    </div>
-                    <div class="form-group group">
-                        <div class="datepicker-wrapper">
-                            <input id="filterDispenseEndRange" type="text" class="daterangepicker-uk with-leading-icon input peer w-full" placeholder=" " autocomplete="off" wire:model="filterDispenseAvailableTo" />
-                            <label class="wrapped-label" for="filterDispenseEndRange">Завершення дост. погашення</label>
-                        </div>
+                        <input id="filterEpisodeId" type="text" class="input peer" wire:model="filterEpisodeId" placeholder=" " autocomplete="off" />
+                        <label class="label" for="filterEpisodeId">ID епізоду</label>
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" wire:click="$set('filterEpisodeId', '')">✕</button>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                @forelse ($medicationRequests as $request)
+                @forelse ($prescriptionRequests as $request)
                     <div class="record-inner-card" wire:key="mr-{{ $request['id'] ?? $request['uuid'] }}">
                         <div class="record-inner-header">
                             <div class="record-inner-checkbox-col">
@@ -186,26 +147,18 @@
                                             :id="$id('dropdown-button')"
                                             class="absolute right-0 z-50 mt-2 w-56 rounded-md border border-gray-200 bg-white py-1 shadow-md dark:border-gray-600 dark:bg-gray-700"
                                         >
-                                            <button class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600">
-                                                @icon('eye', 'w-5 h-5 text-gray-700 dark:text-gray-300')
+                                            <a href="{{ route($prepersonId !== null ? 'prepersons.prescription-requests.view' : 'persons.prescription-requests.view', [legalEntity(), $prepersonId !== null ? 'preperson' : 'person' => $prepersonId ?? $personId, 'requestId' => data_get($request, 'id', 'fake-1')]) }}" wire:navigate @click="close($refs.button)" class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600">
+                                                @icon('eye', 'w-5 h-5 text-gray-600 dark:text-gray-300')
                                                 Переглянути деталі
-                                            </button>
-                                            <button class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600">
-                                                @icon('message-circle', 'w-5 h-5 text-gray-700 dark:text-gray-300')
-                                                Надіслати СМС
-                                            </button>
-                                            <button class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600">
-                                                @icon('refresh', 'w-5 h-5 text-gray-700 dark:text-gray-300')
-                                                Перевірити погашення
-                                            </button>
-                                            <button class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600">
-                                                @icon('printer', 'w-5 h-5 text-gray-700 dark:text-gray-300')
-                                                Надрукувати пам'ятку
+                                            </a>
+                                            <button @click="close($refs.button)" type="button" class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600">
+                                                @icon('check-circle', 'w-5 h-5 text-gray-600 dark:text-gray-300')
+                                                Підписати заявку
                                             </button>
                                             <div class="border-t border-gray-100 dark:border-gray-600 my-1"></div>
-                                            <button class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-red-500 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30">
+                                            <button @click="close($refs.button)" type="button" class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-red-500 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30">
                                                 @icon('cancel', 'w-5 h-5 text-red-500 dark:text-red-400')
-                                                Відмінити рецепт
+                                                Відмінити заявку
                                             </button>
                                         </div>
                                     </div>
@@ -217,65 +170,54 @@
                             <div class="record-inner-grid-container">
                                 <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">Кількість</div>
+                                        <div class="record-inner-label">КІЛЬКІСТЬ</div>
                                         <div class="record-inner-value">{{ $request['medicationQty'] ?? '—' }}</div>
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">Програма</div>
+                                        <div class="record-inner-label">ПРОГРАМА</div>
                                         <div class="record-inner-value">{{ $request['programName'] ?? '—' }}</div>
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">Лікування</div>
+                                        <div class="record-inner-label">ЛІКУВАННЯ</div>
                                         <div class="record-inner-value">{{ $request['periodLabel'] ?? '—' }}</div>
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">Лікар</div>
+                                        <div class="record-inner-label">ЛІКАР</div>
                                         <div class="record-inner-value">{{ $request['doctorName'] ?? '—' }}</div>
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">Створено</div>
-                                        <div class="record-inner-value">{{ \Carbon\Carbon::parse($request['createdAt'] ?? now())->format('d.m.Y') }}</div>
+                                        <div class="record-inner-label">СГУСОЗ</div>
+                                        <div class="record-inner-value">{{ $request['legalEntityName'] ?? '—' }}</div>
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">Доступний до отримання</div>
+                                        <div class="record-inner-label">СТВОРЕНО</div>
+                                        <div class="record-inner-value">{{ $request['createdAt'] ?? '—' }}</div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">ДОСТУПНИЙ ДО ОТРИМАННЯ</div>
                                         <div class="record-inner-value">{{ $request['dispensePeriodLabel'] ?? $request['periodLabel'] ?? '—' }}</div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">ІД ПРИЗНАЧЕННЯ</div>
+                                        <div class="record-inner-value truncate" title="{{ $request['appointmentId'] ?? '—' }}">{{ $request['appointmentId'] ?? '—' }}</div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="record-inner-id-col">
                                 <div class="min-w-0 mb-3">
-                                    <div class="record-inner-label">ID взаємодії</div>
+                                    <div class="record-inner-label">ІД ВЗАЄМОДІЇ</div>
                                     <div class="record-inner-id-value">{{ $request['encounterId'] ?? '—' }}</div>
                                 </div>
                                 <div class="min-w-0">
-                                    <div class="record-inner-label">Базується на</div>
-                                    <div class="record-inner-id-value">{{ $request['basisLabel'] ?? '—' }}</div>
+                                    <div class="record-inner-label">БАЗУЄТЬСЯ НА</div>
+                                    <div class="record-inner-id-value">{{ $request['basisLabel'] ?? '—' }}<br>{{ $request['basisId'] ?? '—' }}</div>
                                 </div>
                             </div>
                         </div>
-                        
-                        @if(($request['status'] ?? '') === 'completed' || ($request['status'] ?? '') === 'rejected')
-                        <div class="record-inner-body border-t border-gray-200 dark:border-gray-700">
-                            <div class="record-inner-grid-container">
-                                <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
-                                    <div class="min-w-0">
-                                        <div class="record-inner-label">Дата погашення</div>
-                                        <div class="record-inner-value">02.05.2026</div>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <div class="record-inner-label">Статус погашення</div>
-                                        <div class="record-inner-value">
-                                            <span class="badge-green">Погашено</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
                     </div>
                 @empty
-                    <x-nothing-found :description="'Рецептів за обраними фільтрами не знайдено.'" />
+                    <x-nothing-found :description="'Заявок на рецепти за обраними фільтрами не знайдено.'" />
                 @endforelse
             </div>
         </div>
