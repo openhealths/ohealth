@@ -31,9 +31,9 @@ class CompleteSync extends EHealthJob
 
         if ($syncEntity !== null) {
             $this->legalEntity->setEntityStatus(JobStatus::COMPLETED, $syncEntity);
-        }
 
-        $this->sendEntityNotification($syncEntity, 'completed');
+            $this->sendEntityNotification($syncEntity, 'completed');
+        }
     }
 
     // Get data from EHealth API (here it mostly dummy method)

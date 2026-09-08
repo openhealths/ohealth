@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Listeners\eHealth;
 
+use Throwable;
+use Illuminate\Bus\Batch;
+use App\Models\LegalEntity;
 use App\Events\EHealthUserLogin;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Jobs\EmployeeRequestsSyncAll;
 use App\Notifications\SyncNotification;
-use Illuminate\Bus\Batch;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-use Throwable;
 
 class EmployeeRequestActualize
 {
@@ -57,17 +58,15 @@ class EmployeeRequestActualize
                 ->withOption('legal_entity_id', $legalEntity->id)
                 ->withOption('token', $encryptedToken)
                 ->withOption('user', $user)
-                ->then(function () use ($user) {
-                    $user->notify(new SyncNotification('employee_request_full_sync', 'completed'));
-                })
+                ->withOption('sync_entity', LegalEntity::ENTITY_EMPLOYEE_REQUEST_FULL)
                 ->catch(function (Batch $batch, Throwable $e) use ($user) {
                     Log::error(self::LOG_PREFIX . " Batch failed: " . $e->getMessage());
-                    $user->notify(new SyncNotification('employee_request_full_sync', 'failed'));
+                    $user->notify(new SyncNotification('employee_request_full', 'failed'));
                 })
                 ->onQueue('sync')
                 ->dispatch();
 
-            $user->notify(new SyncNotification('employee_request_full_sync', 'started'));
+            $user->notify(new SyncNotification('employee_request_full', 'started'));
 
         } catch (Throwable $e) {
             Log::error(self::LOG_PREFIX . " Failed to dispatch batch: " . $e->getMessage());

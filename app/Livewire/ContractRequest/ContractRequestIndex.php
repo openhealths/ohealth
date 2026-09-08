@@ -85,7 +85,7 @@ class ContractRequestIndex extends Component
         }
 
         $user = Auth::user();
-        $user?->notify(new SyncNotification('contract_request', 'started'));
+
         $this->dispatch('flashMessage', ['message' => 'Starting synchronization...', 'type' => 'success']);
 
         $token = session()?->get(config('ehealth.api.oauth.bearer_token'));
@@ -133,11 +133,13 @@ class ContractRequestIndex extends Component
         }
 
         if ($batchJobs !== []) {
+            $user?->notify(new SyncNotification('contract_request', 'started'));
+
             Bus::batch($batchJobs)
                 ->withOption('legal_entity_id', $currentLegalEntity->id)
                 ->withOption('token', $encryptedToken)
                 ->withOption('user', $user)
-                ->then(fn (Batch $batch) => $user->notify(new SyncNotification('contract_request', 'completed')))
+                ->withOption('sync_entity', LegalEntity::ENTITY_CONTRACT_REQUEST)
                 ->catch(function (Batch $batch, \Throwable $e) use ($user) {
                     Log::error('ContractRequest batch failed.', ['err' => $e->getMessage()]);
                     $user->notify(new SyncNotification('contract_request', 'failed'));
@@ -152,11 +154,13 @@ class ContractRequestIndex extends Component
             $detailsJob = $this->getContractRequestDetailsStartJob($currentLegalEntity, null);
 
             if ($detailsJob !== null) {
+                $user?->notify(new SyncNotification('contract_request', 'started'));
+
                 Bus::batch([$detailsJob])
                     ->withOption('legal_entity_id', $currentLegalEntity->id)
                     ->withOption('token', $encryptedToken)
                     ->withOption('user', $user)
-                    ->then(fn (Batch $batch) => $user->notify(new SyncNotification('contract_request', 'completed')))
+                    ->withOption('sync_entity', LegalEntity::ENTITY_CONTRACT_REQUEST)
                     ->catch(function (Batch $batch, \Throwable $e) use ($user) {
                         Log::error('ContractRequest details batch failed.', ['err' => $e->getMessage()]);
                         $user->notify(new SyncNotification('contract_request', 'failed'));

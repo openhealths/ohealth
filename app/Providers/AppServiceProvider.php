@@ -85,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('ehealth-employee-get', function (object $job) {
             echo "Rate limiter set for user: " . $job->user->id . PHP_EOL; // TODO: remove it after testing
 
-            return Limit::perMinute(config('ehealth.rate_limit.employee_request'))->by($job->user->id);
+            return Limit::perMinute(config('ehealth.rate_limit.employee'))->by($job->user->id);
         });
 
         RateLimiter::for('ehealth-division-get', function (object $job) {
@@ -119,7 +119,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('ehealth-employee-request-get', function (object $job) {
-            return Limit::perMinute(19)->by($job->user->id);
+            return Limit::perMinute(config('ehealth.rate_limit.employee_request'))->by($job->user->id);
         });
 
         RateLimiter::for('ehealth-declaration-get', function (object $job) {

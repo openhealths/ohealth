@@ -17,8 +17,9 @@ class SyncNotification extends Notification
         'legal_entity' => 'Синхронізація даних медичного закладу',
         'employee' => 'Синхронізація працівників',
         'employee_request' => 'Синхронізація заявок',
+        'employee_request_full' => 'Планова актуалізація заявок',
         'division' => 'Синхронізація місць надання послуг',
-        'healthcare_service' => 'Синхронізація послуг',
+        'hcs' => 'Синхронізація послуг',
         'equipment' => 'Синхронізація обладнання',
         'employee_role' => 'Синхронізація ролей',
         'patient' => 'Синхронізація пацієнтів',
@@ -35,28 +36,8 @@ class SyncNotification extends Notification
         'condition' => 'Синхронізація станів',
         'diagnostic_report' => 'Синхронізація діагностичних звітів',
         'procedure' => 'Синхронізація процедур',
-        'device' => 'Синхронізація медичних виробів',
         'party_verification' => 'Синхронізація верифікацій працівників',
-        'division_' => 'Синхронізація місць надання послуг',
-        'hcs_' => 'Синхронізація послуг',
-        'employee_' => 'Синхронізація працівників',
-        'employee_role_' => 'Синхронізація ролей',
-        'employee_request_' => 'Синхронізація заявок',
-        'license_' => 'Синхронізація ліцензій',
-        'contract_' => 'Синхронізація договорів',
-        'contract_request_' => 'Синхронізація заявок на договори',
-        'declaration_' => 'Синхронізація декларацій',
-        'declaration_request_' => 'Синхронізація заявок на декларації',
-        'equipment_' => 'Синхронізація обладнання',
-        'episode_' => 'Синхронізація епізодів',
-        'encounter_' => 'Синхронізація взаємодій',
-        'clinical_impression_' => 'Синхронізація клінічних оцінок',
-        'immunization_' => 'Синхронізація вакцинацій',
-        'observation_' => 'Синхронізація обстежень',
-        'condition_' => 'Синхронізація станів',
-        'diagnostic_report_' => 'Синхронізація діагностичних звітів',
-        'procedure_' => 'Синхронізація процедур',
-        'device_' => 'Синхронізація медичних виробів'
+        'device' => 'Синхронізація медичних виробів'
     ];
 
     /** @var array Sync action statuses mapping with Ukrainian descriptions */
@@ -118,7 +99,7 @@ class SyncNotification extends Notification
      */
     protected function formatMessage(): string
     {
-        $entity = data_get(self::SYNC_ENTITIES, $this->type, 'Синхронізація даних');
+        $entity = data_get(self::SYNC_ENTITIES, rtrim($this->type, '_'), 'Синхронізація даних невідомого типу');
         $action = data_get(self::SYNC_ACTIONS, $this->action, '');
 
         return "{$entity} {$action}.";

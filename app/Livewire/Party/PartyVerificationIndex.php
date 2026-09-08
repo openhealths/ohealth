@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Throwable;
+use App\Notifications\SyncNotification;
 
 class PartyVerificationIndex extends Component
 {
@@ -152,6 +153,8 @@ class PartyVerificationIndex extends Component
                 ->dispatch();
 
             $this->notifyFlash(__('party_verification.messages.sync_page_done'));
+
+            Auth::user()->notify(new SyncNotification('party_verification', 'started'));
 
             return;
         }

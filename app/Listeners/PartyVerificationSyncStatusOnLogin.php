@@ -83,9 +83,6 @@ class PartyVerificationSyncStatusOnLogin
                 ->withOption('token', Crypt::encryptString($token))
                 ->withOption('user', $user)
                 ->withOption('sync_entity', LegalEntity::ENTITY_PARTY_VERIFICATION)
-                ->then(function (Batch $batch) use ($user) {
-                    $user->notify(new SyncNotification('party_verification', 'completed'));
-                })
                 ->catch(function (Batch $batch, Throwable $e) use ($user) {
                     $user->notify(new SyncNotification('party_verification', 'failed'));
                     Log::error('Batch [Party Verification Status Sync] failed.', ['error' => $e->getMessage()]);
