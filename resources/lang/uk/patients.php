@@ -235,6 +235,7 @@ return [
 
     // Section labels for other domains
     'prescriptions' => 'Рецепти',
+    'prescription_requests' => 'Заявки на рецепти',
     'referrals' => 'Направлення',
     'medical_reports' => 'Медичні висновки',
     'care_plans' => 'Плани лікування',

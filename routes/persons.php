@@ -97,6 +97,10 @@ Route::prefix('persons')->whereNumber(['person', 'personRequest', 'personId', 'e
                 Route::get('/{person}/care-plans', PatientCarePlans::class)->name('care-plans');
                 Route::get('/{person}/medication-requests', PatientMedicationRequests::class)
                     ->name('medication-requests');
+                Route::get('/{person}/prescription-requests', \App\Livewire\Person\Records\PatientPrescriptionRequests::class)
+                    ->name('prescription-requests');
+                Route::get('/{person}/prescription-requests/{requestId}', \App\Livewire\Person\Records\PatientPrescriptionRequestView::class)
+                    ->name('prescription-requests.view');
                 Route::get('/{person}/referrals', PatientReferrals::class)->name('referrals');
                 Route::get('/{person}/observations', PatientObservations::class)->name('observations');
                 Route::get('/{person}/immunizations', PatientImmunizations::class)->name('immunizations');
@@ -197,6 +201,12 @@ Route::prefix('prepersons')
             ->can('update', 'episode')
             ->whereNumber('episode')
             ->name('episodes.edit');
+        Route::get('/{preperson}/prescription-requests', \App\Livewire\Person\Records\PatientPrescriptionRequests::class)
+            ->can('view', 'preperson')
+            ->name('prescription-requests');
+        Route::get('/{preperson}/prescription-requests/{requestId}', \App\Livewire\Person\Records\PatientPrescriptionRequestView::class)
+            ->can('view', 'preperson')
+            ->name('prescription-requests.view');
         Route::get('/{preperson}/observations', PatientObservations::class)
             ->can('view', 'preperson')
             ->name('observations');
