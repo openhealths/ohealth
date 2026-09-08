@@ -161,4 +161,34 @@ class LegalEntityRepository
 
         Log::info(__('** OWNER CHANGED **', [], 'en'), ['old_owner_id' => $oldOwner->id, 'legal_entity_id' => $legalEntity->id]);
     }
+
+    public function syncConnections(array $connections, ?LegalEntity $legalEntity = null): void
+    {
+        $legalEntity ??= legalEntity();
+
+        $connectionsData = [];
+
+        foreach ($connections as $connection) {
+            $connectionsData[] = [
+                'legal_entity_id' => $legalEntity->id,
+                'uuid' => $connection['uuid'],
+                'client_uuid' => $connection['client_uuid'],
+                'consumer_uuid' => $connection['consumer_uuid'],
+                'redirect_uri' => $connection['redirect_uri'],
+                'secret' => $connection['secret'] ?? null,
+                "ehealth_inserted_at" => $connection['ehealth_inserted_at'],
+                "ehealth_updated_at" => $connection['ehealth_updated_at'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        if (!empty($connectionsData)) {
+            legalEntity()->connections()->upsert(
+                $connectionsData,
+                ['uuid', 'legal_entity_id'], // unique keys
+                ['client_uuid', 'consumer_uuid', 'redirect_uri', 'secret', 'ehealth_inserted_at', 'ehealth_updated_at'] // fields to update if record exists
+            );
+        }
+    }
 }
