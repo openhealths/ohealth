@@ -1,5 +1,6 @@
 @php
     use App\Enums\Device\Status;
+    use App\Models\MedicalEvents\Sql\DeviceProperty;
 @endphp
 
 <x-layouts.patient
@@ -261,8 +262,10 @@
             <div class="space-y-4">
                 @forelse ($this->paginatedDevices as $device)
                     @php
-                        // The local record keeps its names under the `names` relation, the API returns them as `name`
+                        // The local record keeps these under their relation names, the API returns them in singular
                         $deviceNames = data_get($device, 'names') ?: data_get($device, 'name', []);
+                        $deviceProperties = data_get($device, 'properties') ?: data_get($device, 'property', []);
+                        $deviceIdentifiers = data_get($device, 'identifiers') ?: data_get($device, 'identifier', []);
                         $status = Status::from(data_get($device, 'status'));
                     @endphp
                     <div class="record-inner-card" wire:key="device-{{ data_get($device, 'uuid') }}">
@@ -332,17 +335,29 @@
                                         :id="$id('dropdown-button')"
                                         class="absolute right-0 z-50 mt-2 w-56 rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-700"
                                     >
-                                        <a
-                                            href="{{
-                                                $prepersonId
-                                                    ? route('prepersons.devices.view', [legalEntity(), 'preperson' => $prepersonId, 'deviceId' => data_get($device, 'uuid')])
-                                                    : route('persons.devices.view', [legalEntity(), 'person' => $personId, 'deviceId' => data_get($device, 'uuid')])
-                                            }}"
-                                            class="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600"
-                                        >
-                                            @icon('eye', 'w-5 h-5 text-gray-500')
-                                            {{ __('patients.view_details') }}
-                                        </a>
+                                        @if (data_get($device, 'id'))
+                                            <a
+                                                href="{{
+                                                    $prepersonId
+                                                    ? route('prepersons.devices.view', [legalEntity(), 'preperson' => $prepersonId, 'device' => data_get($device, 'id')])
+                                                    : route('persons.devices.view', [legalEntity(), 'person' => $personId, 'device' => data_get($device, 'id')])
+                                                }}"
+                                                class="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600"
+                                            >
+                                                @icon('eye', 'w-5 h-5 text-gray-500')
+                                                {{ __('patients.view_details') }}
+                                            </a>
+                                        @else
+                                            {{-- Found through the eHealth search: the record is stored on the way to its page --}}
+                                            <button
+                                                type="button"
+                                                wire:click="view('{{ data_get($device, 'uuid') }}')"
+                                                class="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-600"
+                                            >
+                                                @icon('eye', 'w-5 h-5 text-gray-500')
+                                                {{ __('patients.view_details') }}
+                                            </button>
+                                        @endif
 
                                         <button
                                             type="button"
@@ -367,17 +382,13 @@
                                         </div>
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">
-                                            {{ __('devices.model_number') }}
-                                        </div>
+                                        <div class="record-inner-label">{{ __('devices.model_number') }}</div>
                                         <div class="record-inner-value">
                                             {{ data_get($device, 'modelNumber') ?? '-' }}
                                         </div>
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="record-inner-label">
-                                            {{ __('devices.manufacturer') }}
-                                        </div>
+                                        <div class="record-inner-label">{{ __('devices.manufacturer') }}</div>
                                         <div class="record-inner-value wrap-break-word">
                                             {{ data_get($device, 'manufacturer') ?? '-' }}
                                         </div>
@@ -422,6 +433,70 @@
                                         <div class="record-inner-label">{{ __('patients.created') }}</div>
                                         <div class="record-inner-value">
                                             {{ data_get($device, 'ehealthInsertedAt') ?? '-' }}
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">{{ __('patients.updated') }}</div>
+                                        <div class="record-inner-value">
+                                            {{ data_get($device, 'ehealthUpdatedAt') ?? '-' }}
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">{{ __('devices.primary_source') }}</div>
+                                        <div class="record-inner-value">
+                                            {{ data_get($device, 'primarySource') ? __('forms.yes') : __('forms.no') }}
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">
+                                            {{ __('devices.entered_in_error_reason') }}
+                                        </div>
+                                        <div class="record-inner-value wrap-break-word">
+                                            {{ $this->dictionaryLabel($device, 'statusReason') }}
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">{{ __('devices.definition') }}</div>
+                                        <div class="record-inner-value wrap-break-word">
+                                            {{ data_get($device, 'definition.identifier.value') ?? '-' }}
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">{{ __('devices.parent') }}</div>
+                                        <div class="record-inner-value wrap-break-word">
+                                            {{ data_get($device, 'parent.identifier.value') ?? '-' }}
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">{{ __('devices.property') }}</div>
+                                        <div class="record-inner-value wrap-break-word">
+                                            @forelse ($deviceProperties as $property)
+                                                <div>
+                                                    {{ $this->dictionaryLabel($property, 'code') }}: {{ DeviceProperty::displayValue($property) }}
+                                                </div>
+                                            @empty
+                                                -
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">
+                                            {{ __('devices.external_system_identifier') }}
+                                        </div>
+                                        <div class="record-inner-value wrap-break-word">
+                                            @forelse ($deviceIdentifiers as $identifier)
+                                                <div>
+                                                    {{ data_get($identifier, 'identifier.value') ?? data_get($identifier, 'value') }}
+                                                </div>
+                                            @empty
+                                                -
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="record-inner-label">{{ __('devices.notes') }}</div>
+                                        <div class="record-inner-value wrap-break-word">
+                                            {{ data_get($device, 'note') ?? '-' }}
                                         </div>
                                     </div>
                                 </div>

@@ -28,13 +28,13 @@
         <div class="mt-6 w-full" x-data="{ showAdditionalParams: false }">
             <div class="mb-4 flex items-center gap-1 font-semibold text-gray-900 dark:text-gray-100">
                 @icon('search-outline', 'w-4.5 h-4.5')
-                <p>{{ __('patients.device_associations_search') }}</p>
+                <p>{{ __('device-associations.search') }}</p>
             </div>
 
             <div class="form-row-3 mb-6">
                 <div class="form-group group">
                     <input type="text" class="input peer" wire:model.defer="filterDeviceId" placeholder=" " />
-                    <label class="label">{{ __('patients.medical_device_id') }}</label>
+                    <label class="label">{{ __('devices.device_id') }}</label>
                 </div>
                 <div class="form-group group">
                     <input type="text" class="input peer" wire:model.defer="filterEncounterId" placeholder=" " />
@@ -115,13 +115,13 @@
                     </div>
                     <div class="form-group group">
                         <input type="text" class="input peer" wire:model.defer="filterOrganization" placeholder=" " />
-                        <label class="label">{{ __('devices.sgusoz') }}</label>
+                        <label class="label">{{ __('devices.legal_entity') }}</label>
                     </div>
                     <div class="form-group group">
                         <select class="input-select peer w-full" wire:model.defer="filterAnatomicalSite">
                             <option value="">Голова</option>
                         </select>
-                        <label class="label">{{ __('patients.anatomical_site') }}</label>
+                        <label class="label">{{ __('device-associations.body_site') }}</label>
                     </div>
                 </div>
 
@@ -141,7 +141,7 @@
                                 placeholder=" "
                                 autocomplete="off"
                             />
-                            <label class="wrapped-label">{{ __('patients.association_date') }}</label>
+                            <label class="wrapped-label">{{ __('device-associations.association_date_short') }}</label>
                         </div>
                     </div>
                     <div class="form-group group">
@@ -153,7 +153,7 @@
                                 placeholder=" "
                                 autocomplete="off"
                             />
-                            <label class="wrapped-label">{{ __('patients.record_creation_date') }}</label>
+                            <label class="wrapped-label">{{ __('devices.record_creation_date') }}</label>
                         </div>
                     </div>
                 </div>
@@ -251,17 +251,17 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.anatomical_site') }}
+                                                {{ __('device-associations.body_site') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $device['anatomical_site'] }}
                                             </div>
                                         </div>
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('devices.sgusoz') }}
+                                                {{ __('devices.legal_entity') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $device['organization'] }}
                                             </div>
                                         </div>
@@ -269,9 +269,9 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.medical_device_id') }}
+                                                {{ __('devices.device_id') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $device['device_id'] }}
                                             </div>
                                         </div>
@@ -279,7 +279,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('forms.employee') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $device['practitioner'] }}
                                             </div>
                                         </div>
@@ -287,17 +287,15 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.association_date') }}
+                                                {{ __('device-associations.association_date_short') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
-                                                {{ $device['date'] }}
-                                            </div>
+                                            <div class="record-inner-value font-semibold">{{ $device['date'] }}</div>
                                         </div>
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.record_creation_date') }}
+                                                {{ __('devices.record_creation_date') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $device['created_at'] }}
                                             </div>
                                         </div>
@@ -308,7 +306,7 @@
                             <div class="record-inner-id-col">
                                 <div class="min-w-0">
                                     <div class="record-inner-label text-[10px] uppercase">
-                                        {{ __('patients.association_id') }}
+                                        {{ __('device-associations.id') }}
                                     </div>
                                     <div class="record-inner-id-value">{{ $device['association_id'] }}</div>
                                 </div>

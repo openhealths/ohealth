@@ -78,9 +78,11 @@ class DeviceIndex extends BasePatientComponent
     public string $syncStatus = '';
 
     protected array $dictionaryNames = [
+        'POSITION',
         'device_definition_classification_type',
         'device_name_type',
         'device_properties',
+        'device_status_reasons',
         'eHealth/report_origins',
         'eHealth/resources',
         'external_system'
@@ -181,6 +183,66 @@ class DeviceIndex extends BasePatientComponent
         $this->resetPage();
     }
 
+    /**
+     * Open the page of a device found through the eHealth search, storing it first when it is not in the database yet.
+     * A device that is already stored is opened as it is, without going to eHealth again.
+     *
+     * @param  string  $deviceId
+     * @return void
+     */
+    public function view(string $deviceId): void
+    {
+        $device = Device::forPatient($this->patient())->whereUuid($deviceId)->first()
+            ?? $this->storeSearchedDevice($deviceId);
+
+        if ($device === null) {
+            return;
+        }
+
+        if ($this->prepersonId !== null) {
+            $this->redirectRoute(
+                'prepersons.devices.view',
+                [legalEntity(), 'preperson' => $this->prepersonId, 'device' => $device->id],
+                navigate: true
+            );
+
+            return;
+        }
+
+        $this->redirectRoute(
+            'persons.devices.view',
+            [legalEntity(), 'person' => $this->personId, 'device' => $device->id],
+            navigate: true
+        );
+    }
+
+    /**
+     * Store a device found through the eHealth search, so that it has a page to open.
+     *
+     * @param  string  $deviceId
+     * @return Device|null
+     */
+    protected function storeSearchedDevice(string $deviceId): ?Device
+    {
+        try {
+            $response = EHealth::device()->getById($this->uuid, $deviceId);
+        } catch (EHealthException|EHealthConnectionException $exception) {
+            $exception->handle('Error while loading the device');
+
+            return null;
+        }
+
+        try {
+            Repository::device()->sync($this->patient(), [$response->validate()]);
+        } catch (Throwable $exception) {
+            $this->handleDatabaseErrors($exception, 'Error while storing the device');
+
+            return null;
+        }
+
+        return Device::forPatient($this->patient())->whereUuid($deviceId)->first();
+    }
+
     public function resetFilters(): void
     {
         $this->reset([
@@ -214,7 +276,10 @@ class DeviceIndex extends BasePatientComponent
             ->recentlyUpdatedFirst()
             ->paginate(config('pagination.per_page'));
 
-        $paginator->setCollection(collect(Arr::toCamelCase($paginator->getCollection()->toArray())));
+        // The id is hidden on the model but the list links to the device page by it
+        $paginator->setCollection(
+            collect(Arr::toCamelCase($paginator->getCollection()->makeVisible('id')->toArray()))
+        );
 
         return $paginator;
     }
@@ -229,28 +294,24 @@ class DeviceIndex extends BasePatientComponent
         $perPage = config('pagination.per_page');
         $page = $this->getPage();
 
-        // Devices are only readable within the legal entity that recorded them, so the scoping param is always sent
-        $params = array_merge(
-            array_filter([
-                'name' => $this->filterName ?: null,
-                'type' => $this->filterType ?: null,
-                'status' => $this->filterStatus ?: null,
-                'encounter_id' => $this->filterEncounterId ?: null,
-                'episode_id' => $this->filterEpisodeId ?: null,
-                'definition' => $this->filterDefinition ?: null,
-                'model_number' => $this->filterModelNumber ?: null,
-                'manufacturer' => $this->filterManufacturer ?: null,
-                'serial_number' => $this->filterSerialNumber ?: null,
-                'recorder' => $this->filterRecorder ?: null,
-                'inserted_at_from' => $this->filterInsertedAtFrom ?: null,
-                'inserted_at_to' => $this->filterInsertedAtTo ?: null
-            ]),
-            [
-                'recorder_legal_entity_id' => legalEntity()->uuid,
-                'page' => $page,
-                'page_size' => $perPage
-            ]
-        );
+        // Devices are only readable within the legal entity that recorded them, so the search is scoped to it
+        $params = array_filter([
+            'name' => $this->filterName ?: null,
+            'type' => $this->filterType ?: null,
+            'status' => $this->filterStatus ?: null,
+            'encounter_id' => $this->filterEncounterId ?: null,
+            'episode_id' => $this->filterEpisodeId ?: null,
+            'definition' => $this->filterDefinition ?: null,
+            'model_number' => $this->filterModelNumber ?: null,
+            'manufacturer' => $this->filterManufacturer ?: null,
+            'serial_number' => $this->filterSerialNumber ?: null,
+            'recorder' => $this->filterRecorder ?: null,
+            'inserted_at_from' => $this->filterInsertedAtFrom ?: null,
+            'inserted_at_to' => $this->filterInsertedAtTo ?: null,
+            'recorder_legal_entity_id' => legalEntity()->uuid,
+            'page' => $page,
+            'page_size' => $perPage
+        ]);
 
         try {
             $response = EHealth::device()->getBySearchParams($this->uuid, $params);
@@ -274,12 +335,13 @@ class DeviceIndex extends BasePatientComponent
 
         $this->employees = Employee::whereLegalEntityId(legalEntity()->id)
             ->active()
-            ->select(['uuid', 'party_id'])
+            ->select(['uuid', 'party_id', 'position'])
             ->with('party:id,last_name,first_name,second_name')
             ->get()
-            ->map(static fn (Employee $employee): array => [
+            ->map(fn (Employee $employee): array => [
                 'uuid' => $employee->uuid,
-                'name' => $employee->fullName
+                'name' => $employee->fullName . ' - '
+                    . ($this->dictionaries['POSITION'][$employee->position] ?? $employee->position)
             ])
             ->toArray();
     }

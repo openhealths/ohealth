@@ -35,6 +35,7 @@ class SyncNotification extends Notification
         'condition' => 'Синхронізація станів',
         'diagnostic_report' => 'Синхронізація діагностичних звітів',
         'procedure' => 'Синхронізація процедур',
+        'device' => 'Синхронізація медичних виробів',
         'party_verification' => 'Синхронізація верифікацій працівників',
         'division_' => 'Синхронізація місць надання послуг',
         'hcs_' => 'Синхронізація послуг',
@@ -55,6 +56,7 @@ class SyncNotification extends Notification
         'condition_' => 'Синхронізація станів',
         'diagnostic_report_' => 'Синхронізація діагностичних звітів',
         'procedure_' => 'Синхронізація процедур',
+        'device_' => 'Синхронізація медичних виробів'
     ];
 
     /** @var array Sync action statuses mapping with Ukrainian descriptions */

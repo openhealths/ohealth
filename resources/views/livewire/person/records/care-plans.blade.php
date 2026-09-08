@@ -335,7 +335,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('forms.created') ?? 'Створено' }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->created_at?->format(config('app.date_format')) ?? '-' }}
                                         </div>
                                     </div>
@@ -343,7 +343,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('forms.start_date') ?? 'Початок' }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->period_start?->format(config('app.date_format')) ?? '-' }}
                                         </div>
                                     </div>
@@ -351,7 +351,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('forms.end_date') ?? 'Кінець' }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->period_end?->format(config('app.date_format')) ?? '-' }}
                                         </div>
                                     </div>
@@ -359,7 +359,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('care-plan.doctor') ?? 'Лікар' }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words uppercase">
+                                        <div class="record-inner-value font-semibold break-words uppercase">
                                             {{ $plan->author_name }}
                                         </div>
                                     </div>
@@ -367,7 +367,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('care-plan.terms_of_service') }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->care_provision_conditions }}
                                         </div>
                                     </div>
@@ -379,7 +379,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('care-plan.condition_diagnosis') }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->medical_condition }}
                                         </div>
                                     </div>
@@ -387,7 +387,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('care-plan.extended_description') }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->extended_description }}
                                         </div>
                                     </div>
@@ -395,7 +395,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('care-plan.supporting_information') }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->additional_info }}
                                         </div>
                                     </div>
@@ -403,7 +403,7 @@
                                         <div class="record-inner-label text-[10px] uppercase">
                                             {{ __('care-plan.notes') }}
                                         </div>
-                                        <div class="record-inner-value text-[14px] font-semibold break-words">
+                                        <div class="record-inner-value font-semibold break-words">
                                             {{ $plan->notes }}
                                         </div>
                                     </div>

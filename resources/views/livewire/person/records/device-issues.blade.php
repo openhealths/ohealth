@@ -6,10 +6,7 @@
 >
     <x-slot name="headerActions">
         <div class="flex flex-wrap items-center gap-2">
-            <button
-                type="button"
-                class="button-primary flex items-center gap-2 px-5 py-2 text-sm shadow-sm"
-            >
+            <button type="button" class="button-primary flex items-center gap-2 px-5 py-2 text-sm shadow-sm">
                 @icon('plus', 'w-4 h-4')
                 <span>{{ __('patients.starts_interacting') }}</span>
             </button>
@@ -35,13 +32,13 @@
         <div class="mt-6 w-full" x-data="{ showAdditionalParams: false }">
             <div class="mb-4 flex items-center gap-1 font-semibold text-gray-900 dark:text-gray-100">
                 @icon('search-outline', 'w-4.5 h-4.5')
-                <p>{{ __('patients.search_detected_medical_device_problems') }}</p>
+                <p>{{ __('detected-issues.search') }}</p>
             </div>
 
             <div class="form-row-3 mb-6">
                 <div class="form-group group">
                     <input type="text" class="input peer" wire:model.defer="filterIssueId" placeholder=" " />
-                    <label class="label">{{ __('patients.medical_device_id') }}</label>
+                    <label class="label">{{ __('detected-issues.device_id') }}</label>
                 </div>
                 <div class="form-group group">
                     <input type="text" class="input peer" wire:model.defer="filterEncounterId" placeholder=" " />
@@ -122,7 +119,7 @@
                     </div>
                     <div class="form-group group">
                         <input type="text" class="input peer" wire:model.defer="filterOrganization" placeholder=" " />
-                        <label class="label">{{ __('devices.sgusoz') }}</label>
+                        <label class="label">{{ __('detected-issues.legal_entity') }}</label>
                     </div>
                     <div class="form-group group">
                         <select class="input-select peer w-full" wire:model.defer="filterPractitioner">
@@ -177,7 +174,7 @@
                                 placeholder=" "
                                 autocomplete="off"
                             />
-                            <label class="wrapped-label">{{ __('patients.date_and_time_of_problem_detection') }}</label>
+                            <label class="wrapped-label">{{ __('detected-issues.identified_at_short') }}</label>
                         </div>
                     </div>
                     <div class="form-group group">
@@ -189,7 +186,7 @@
                                 placeholder=" "
                                 autocomplete="off"
                             />
-                            <label class="wrapped-label">{{ __('patients.record_creation_date') }}</label>
+                            <label class="wrapped-label">{{ __('detected-issues.record_created_at') }}</label>
                         </div>
                     </div>
                 </div>
@@ -204,7 +201,7 @@
                             </div>
 
                             <div class="record-inner-column flex-1">
-                                <div class="record-inner-label">{{ __('patients.medical_device_name') }}</div>
+                                <div class="record-inner-label">{{ __('detected-issues.device_name') }}</div>
                                 <div class="record-inner-value text-[16px] font-bold text-gray-900 dark:text-gray-100">
                                     {{ $issue['name'] }}
                                 </div>
@@ -287,17 +284,17 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.medical_device_id') }}
+                                                {{ __('detected-issues.device_id') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $issue['device_id'] }}
                                             </div>
                                         </div>
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('devices.sgusoz') }}
+                                                {{ __('detected-issues.legal_entity') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $issue['organization'] }}
                                             </div>
                                         </div>
@@ -305,17 +302,15 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.date_and_time_of_problem_detection') }}
+                                                {{ __('detected-issues.identified_at_short') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $issue['detected_at'] }}
                                             </div>
                                         </div>
                                         <div class="min-w-0">
-                                            <div class="record-inner-label text-[10px] uppercase">
-                                                Працівник
-                                            </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-label text-[10px] uppercase">Працівник</div>
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $issue['practitioner'] }}
                                             </div>
                                         </div>
@@ -324,22 +319,21 @@
                                         <div class="min-w-0"></div>
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.record_creation_date') }}
+                                                {{ __('detected-issues.record_created_at') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $issue['created_at'] }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="min-w-0 space-y-2.5">
-                                    </div>
+                                    <div class="min-w-0 space-y-2.5"></div>
                                 </div>
                             </div>
 
                             <div class="record-inner-id-col">
                                 <div class="min-w-0">
                                     <div class="record-inner-label text-[10px] uppercase">
-                                        {{ __('patients.issue_id') }}
+                                        {{ __('detected-issues.id') }}
                                     </div>
                                     <div class="record-inner-id-value">{{ $issue['issue_id'] }}</div>
                                 </div>

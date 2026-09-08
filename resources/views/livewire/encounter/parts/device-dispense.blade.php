@@ -141,13 +141,13 @@
                 @click.prevent="openDeviceDispenseDrawer = true"
                 class="item-add my-5 mt-5 flex cursor-pointer items-center gap-1.5 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             >
-                {{ __('patients.dispense_medical_device') }}
+                {{ __('device-dispenses.dispense') }}
             </button>
         @endunless
     </div>
 
     <x-dialog-drawer x-model="openDeviceDispenseDrawer" maxWidth="4/5" wire:ignore>
-        <x-slot name="title">{{ __('patients.new_medical_device_dispense') }}</x-slot>
+        <x-slot name="title">{{ __('device-dispenses.new') }}</x-slot>
 
         <form>
             <fieldset @disabled($isReadonly ?? false) @class(['pointer-event-none' => $isReadonly ?? false])>
@@ -157,7 +157,7 @@
                             <option value="" disabled selected hidden></option>
                             <option value="1" selected>12310-1332-13123-5541</option>
                         </select>
-                        <label class="label">{{ __('patients.medical_device_prescription_erequest') }}</label>
+                        <label class="label">{{ __('device-dispenses.prescription_erequest') }}</label>
                     </div>
                     <div class="form-group group">
                         <select class="input-select peer" required>
@@ -174,14 +174,14 @@
                             <option value="" disabled selected hidden></option>
                             <option value="1" selected>Шевченко Т.Г.</option>
                         </select>
-                        <label class="label">{{ __('patients.dispensing_employee') }}</label>
+                        <label class="label">{{ __('device-dispenses.employee') }}</label>
                     </div>
                     <div class="form-group group">
                         <select class="input-select peer" required>
                             <option value="" disabled selected hidden></option>
                             <option value="1" selected>Амбулаторія №2</option>
                         </select>
-                        <label class="label">{{ __('patients.dispensing_division') }}</label>
+                        <label class="label">{{ __('device-dispenses.division') }}</label>
                     </div>
                 </div>
 
@@ -194,7 +194,7 @@
                                 placeholder=" "
                                 value="02.04.2025"
                             />
-                            <label class="wrapped-label">{{ __('patients.date_and_time_of_dispense') }}</label>
+                            <label class="wrapped-label">{{ __('device-dispenses.date_and_time') }}</label>
                         </div>
                         <div class="relative -ml-px w-32">
                             <input type="text" class="input peer rounded-l-none pl-10" placeholder=" " value="12:00" />
@@ -203,7 +203,7 @@
                     </div>
                     <div class="form-group group relative">
                         <input type="text" class="input peer" placeholder=" " value="1" required />
-                        <label class="label">{{ __('patients.quantity_integer') }}</label>
+                        <label class="label">{{ __('device-dispenses.quantity_integer') }}</label>
                         @icon('close', 'svg-input right-2.5 text-gray-400 cursor-pointer')
                     </div>
                 </div>
@@ -214,7 +214,7 @@
                             <option value="" disabled selected hidden></option>
                             <option value="1" selected>Тип виробу</option>
                         </select>
-                        <label class="label">{{ __('patients.specify_type_or_model_of_medical_device') }}</label>
+                        <label class="label">{{ __('device-dispenses.specify_type_or_model') }}</label>
                     </div>
                     <div class="form-group group">
                         <select class="input-select peer" required>

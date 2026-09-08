@@ -59,6 +59,7 @@ return new class extends Migration
             $table->enum('condition_sync_status', JobStatus::values())->nullable();
             $table->enum('diagnostic_report_sync_status', JobStatus::values())->nullable();
             $table->enum('procedure_sync_status', JobStatus::values())->nullable();
+            $table->enum('device_sync_status', JobStatus::values())->nullable();
 
             $table->timestamp('inserted_at')->nullable();
             $table->date('ehealth_inserted_at')->nullable();

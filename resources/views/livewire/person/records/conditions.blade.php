@@ -331,19 +331,19 @@
                                 <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('forms.type') }}</div>
-                                        <div class="record-inner-value text-[14px]">
+                                        <div class="record-inner-value">
                                             {{ $this->dictionaryLabel($condition, 'reportOrigin') ?? '-' }}
                                         </div>
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('patients.doctor') }}</div>
-                                        <div class="record-inner-value text-[14px] wrap-break-word">
+                                        <div class="record-inner-value wrap-break-word">
                                             {{ data_get($condition, 'asserter.displayValue') ?? '-' }}
                                         </div>
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('patients.verification_status') }}</div>
-                                        <div class="record-inner-value text-[14px] uppercase">
+                                        <div class="record-inner-value uppercase">
                                             @php($verificationStatus = ConditionVerificationStatus::from(data_get($condition, 'verificationStatus')))
                                             <span @class([$verificationStatus->color()])>
                                                 {{ $verificationStatus->label() ?? '-' }}
@@ -352,13 +352,13 @@
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('conditions.label') }}</div>
-                                        <div class="record-inner-value text-[14px] wrap-break-word">
+                                        <div class="record-inner-value wrap-break-word">
                                             {{ $this->dictionaryLabel($condition, 'severity') ?? '-' }}
                                         </div>
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('patients.body_part') }}</div>
-                                        <div class="record-inner-value text-[14px] wrap-break-word">
+                                        <div class="record-inner-value wrap-break-word">
                                             @forelse (data_get($condition, 'bodySites', []) as $bodySite)
                                                 <div>{{ $this->dictionaryLabel($bodySite, 'coding.0') }}</div>
                                             @empty
@@ -368,13 +368,11 @@
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('forms.start_date') }}</div>
-                                        <div class="record-inner-value text-[14px]">
-                                            {{ data_get($condition, 'onsetDate') }}
-                                        </div>
+                                        <div class="record-inner-value">{{ data_get($condition, 'onsetDate') }}</div>
                                     </div>
                                     <div class="min-w-0">
                                         <div class="record-inner-label">{{ __('patients.created') }}</div>
-                                        <div class="record-inner-value text-[14px]">
+                                        <div class="record-inner-value">
                                             {{ data_get($condition, 'assertedDate') ?? '-' }}
                                         </div>
                                     </div>

@@ -1,15 +1,20 @@
-<x-layouts.patient :personId="$personId ?? null" :prepersonId="$prepersonId ?? null" :patientFullName="$patientFullName ?? ''" :activeTab="'device-dispenses'">
+<x-layouts.patient
+    :personId="$personId ?? null"
+    :prepersonId="$prepersonId ?? null"
+    :patientFullName="$patientFullName ?? ''"
+    :activeTab="'device-dispenses'"
+>
     <div class="breadcrumb-form shift-content px-4 pt-4 pb-10" x-data="{ showAdditionalParams: false }">
         <h2 class="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
             @icon('search', 'w-5 h-5')
-            <span>{{ __('patients.search_device_dispenses') }}</span>
+            <span>{{ __('device-dispenses.search') }}</span>
         </h2>
 
         <div class="mt-6 w-full">
             <div class="form-row-3 mb-6">
                 <div class="form-group group">
                     <input type="text" class="input peer" wire:model.defer="filterDeviceId" placeholder=" " />
-                    <label class="label">{{ __('patients.device_id') }}</label>
+                    <label class="label">{{ __('devices.device_id') }}</label>
                 </div>
                 <div class="form-group group">
                     <input type="text" class="input peer" wire:model.defer="filterEncounterId" placeholder=" " />
@@ -90,7 +95,7 @@
                     </div>
                     <div class="form-group group">
                         <input type="text" class="input peer" wire:model.defer="filterOrganization" placeholder=" " />
-                        <label class="label">{{ __('patients.sgusoz') }}</label>
+                        <label class="label">{{ __('devices.legal_entity') }}</label>
                     </div>
                     <div class="form-group group">
                         <select class="input-select peer w-full" wire:model.defer="filterPractitioner">
@@ -104,15 +109,20 @@
                 <div class="form-row-3 mb-6">
                     <div class="form-group group">
                         <input type="text" class="input peer" wire:model.defer="filterProcedureId" placeholder=" " />
-                        <label class="label">{{ __('patients.procedure_id') }}</label>
+                        <label class="label">{{ __('device-dispenses.procedure_id') }}</label>
                     </div>
                     <div class="form-group group">
                         <input type="text" class="input peer" wire:model.defer="filterCarePlanId" placeholder=" " />
-                        <label class="label">{{ __('patients.care_plan_id') }}</label>
+                        <label class="label">{{ __('device-dispenses.care_plan_id') }}</label>
                     </div>
                     <div class="form-group group">
-                        <input type="text" class="input peer" wire:model.defer="filterRelatedEpisodeId" placeholder=" " />
-                        <label class="label">{{ __('patients.related_prescription_episode_id') }}</label>
+                        <input
+                            type="text"
+                            class="input peer"
+                            wire:model.defer="filterRelatedEpisodeId"
+                            placeholder=" "
+                        />
+                        <label class="label">{{ __('device-dispenses.related_prescription_episode_id') }}</label>
                     </div>
                 </div>
 
@@ -160,7 +170,7 @@
                                 placeholder=" "
                                 autocomplete="off"
                             />
-                            <label class="wrapped-label">{{ __('patients.filter_dispense_date_range') }}</label>
+                            <label class="wrapped-label">{{ __('device-dispenses.filter_date_range') }}</label>
                         </div>
                     </div>
                     <div class="form-group group">
@@ -221,7 +231,7 @@
                             </div>
 
                             <div class="record-inner-column flex-1">
-                                <div class="record-inner-label">{{ __('patients.medical_device') }}</div>
+                                <div class="record-inner-label">{{ __('device-dispenses.medical_device') }}</div>
                                 <div class="record-inner-value text-[16px] font-bold text-gray-900 dark:text-gray-100">
                                     {{ $dispense['name'] }}
                                 </div>
@@ -295,7 +305,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="record-inner-body">
@@ -304,17 +313,17 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.date_and_time_of_dispense') }}
+                                                {{ __('device-dispenses.date_and_time') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $dispense['dispense_date'] }}
                                             </div>
                                         </div>
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.sgusoz') }}
+                                                {{ __('devices.legal_entity') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $dispense['organization'] }}
                                             </div>
                                         </div>
@@ -322,9 +331,9 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.procedure_id') }}
+                                                {{ __('device-dispenses.procedure_id') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $dispense['procedure_id'] }}
                                             </div>
                                         </div>
@@ -332,7 +341,7 @@
                                             <div class="record-inner-label text-[10px] uppercase">
                                                 {{ __('forms.employee') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $dispense['practitioner'] }}
                                             </div>
                                         </div>
@@ -340,17 +349,17 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.care_plan_id') }}
+                                                {{ __('device-dispenses.care_plan_id') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $dispense['care_plan_id'] }}
                                             </div>
                                         </div>
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.record_creation_date') }}
+                                                {{ __('devices.record_creation_date') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $dispense['created_at'] }}
                                             </div>
                                         </div>
@@ -358,9 +367,9 @@
                                     <div class="min-w-0 space-y-2.5">
                                         <div class="min-w-0">
                                             <div class="record-inner-label text-[10px] uppercase">
-                                                {{ __('patients.related_prescription_episode') }}
+                                                {{ __('device-dispenses.related_prescription_episode') }}
                                             </div>
-                                            <div class="record-inner-value text-[14px] font-semibold">
+                                            <div class="record-inner-value font-semibold">
                                                 {{ $dispense['related_episode_id'] }}
                                             </div>
                                         </div>
@@ -371,7 +380,7 @@
                             <div class="record-inner-id-col">
                                 <div class="min-w-0">
                                     <div class="record-inner-label text-[10px] uppercase">
-                                        {{ __('patients.dispense_id') }}
+                                        {{ __('device-dispenses.id') }}
                                     </div>
                                     <div class="record-inner-id-value">{{ $dispense['dispense_id'] }}</div>
                                 </div>

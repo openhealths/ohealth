@@ -852,7 +852,8 @@ class DeclarationIndex extends Component
                 'id' => $doctor->id,
                 'uuid' => $doctor->uuid,
                 'fullName' => trim(
-                    $doctor->party->fullName . ' - ' . ($this->dictionaries['POSITION'][$doctor->position])
+                    $doctor->party->fullName . ' - '
+                    . ($this->dictionaries['POSITION'][$doctor->position] ?? $doctor->position)
                 )
             ]);
     }

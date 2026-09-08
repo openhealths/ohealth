@@ -230,7 +230,7 @@
                         bind="filterDeviceId"
                         bindValue="uuid"
                         bindParam="uuid"
-                        :label="__('patients.devices')"
+                        :label="__('devices.plural')"
                     />
                 </div>
 

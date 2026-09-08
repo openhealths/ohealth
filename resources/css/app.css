@@ -495,7 +495,7 @@ input:-webkit-autofill ~ .label {
 }
 
 .modal-header {
-    @apply flex justify-between items-center pb-4 mb-4 sm:mb-5 rounded-t border-b border-b-gray-200 dark:border-gray-600 text-lg font-semibold text-gray-900 dark:text-white;
+    @apply flex justify-between items-center pb-4 mb-4 sm:mb-5 rounded-t-sm border-b border-b-gray-200 dark:border-gray-600 text-lg font-semibold text-gray-900 dark:text-white;
 }
 
 .label-modal {
@@ -743,7 +743,7 @@ input:-webkit-autofill {
     }
 
     .record-inner-value {
-        @apply text-[14px] font-medium text-gray-900 dark:text-white leading-snug
+        @apply text-sm font-medium text-gray-900 dark:text-white leading-snug;
     }
 
     .record-inner-body {
@@ -759,7 +759,7 @@ input:-webkit-autofill {
     }
 
     .record-inner-action-col {
-        @apply p-4 flex flex-col md:!items-center justify-center border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 w-full md:w-16 shrink-0 relative
+        @apply p-4 flex flex-col md:items-center! justify-center border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 w-full md:w-16 shrink-0 relative
     }
 
     .record-inner-action-btn {
@@ -767,9 +767,8 @@ input:-webkit-autofill {
     }
 
     .record-inner-grid-container {
-        @apply flex-1 p-4 md:pl-[72px] flex flex-col justify-center
+        @apply flex-1 p-4 md:pl-18 flex flex-col justify-center
     }
-
 
     .record-inner-subvalue {
         @apply text-[13px] font-medium text-gray-800 dark:text-gray-200
