@@ -31,6 +31,7 @@ use App\Models\MedicalEvents\Sql\Observation;
 use App\Models\MedicalEvents\Sql\Procedure;
 use App\Models\MergedPerson;
 use App\Models\Person\Person;
+use App\Models\Preperson;
 use App\Repositories\MedicalEvents\Repository;
 use App\Traits\BatchLegalEntityQueries;
 use App\Traits\HandlesSyncBatch;
@@ -107,11 +108,18 @@ class PatientSummary extends BasePatientComponent
     public array $medicationStatements;
 
     /**
-     * External ids of the merged prepersons attached to this person.
+     * Options of the selector that opens the records of the persons merged into this patient.
      *
      * @var array
      */
     public array $mergedPersons = [];
+
+    /**
+     * eHealth identifier of the merged person picked in the selector.
+     *
+     * @var string
+     */
+    public string $selectedMergedPerson = '';
 
     /**
      * Stores synchronization statuses for all entity types.
@@ -197,8 +205,13 @@ class PatientSummary extends BasePatientComponent
         };
     }
 
-    private function setPaginatedRecords(string $section, Builder $query, string $property, ?callable $afterLoad = null, array $visible = []): void
-    {
+    private function setPaginatedRecords(
+        string $section,
+        Builder $query,
+        string $property,
+        ?callable $afterLoad = null,
+        array $visible = []
+    ): void {
         $limit = $this->summaryLimits[$section] ?? self::SUMMARY_PAGE_SIZE;
 
         $this->hasMore[$section] = (clone $query)->count() > $limit;
@@ -222,11 +235,13 @@ class PatientSummary extends BasePatientComponent
         $this->syncStatuses = [
             self::ENTITY_TYPE_EPISODE => legalEntity()->getEntityStatus(LegalEntity::ENTITY_EPISODE),
             self::ENTITY_TYPE_ENCOUNTER => legalEntity()->getEntityStatus(LegalEntity::ENTITY_ENCOUNTER),
-            self::ENTITY_TYPE_CLINICAL_IMPRESSION => legalEntity()->getEntityStatus(LegalEntity::ENTITY_CLINICAL_IMPRESSION),
+            self::ENTITY_TYPE_CLINICAL_IMPRESSION => legalEntity()
+                ->getEntityStatus(LegalEntity::ENTITY_CLINICAL_IMPRESSION),
             self::ENTITY_TYPE_IMMUNIZATION => legalEntity()->getEntityStatus(LegalEntity::ENTITY_IMMUNIZATION),
             self::ENTITY_TYPE_OBSERVATION => legalEntity()->getEntityStatus(LegalEntity::ENTITY_OBSERVATION),
             self::ENTITY_TYPE_CONDITION => legalEntity()->getEntityStatus(LegalEntity::ENTITY_CONDITION),
-            self::ENTITY_TYPE_DIAGNOSTIC_REPORT => legalEntity()->getEntityStatus(LegalEntity::ENTITY_DIAGNOSTIC_REPORT),
+            self::ENTITY_TYPE_DIAGNOSTIC_REPORT => legalEntity()
+                ->getEntityStatus(LegalEntity::ENTITY_DIAGNOSTIC_REPORT),
         ];
 
         $this->loadMergedPersons();
@@ -582,7 +597,7 @@ class PatientSummary extends BasePatientComponent
         }
 
         try {
-            $response = EHealth::diagnosticReport()->getSummary($this->uuid, );
+            $response = EHealth::diagnosticReport()->getSummary($this->uuid);
         } catch (EHealthException|EHealthConnectionException $exception) {
             $exception->handle('Error while synchronizing diagnostic reports');
 
@@ -684,8 +699,9 @@ class PatientSummary extends BasePatientComponent
             'procedures'
         );
     }
+
     /**
-     * Fetch the prepersons merged into this person from eHealth.
+     * Fetch the persons and prepersons merged into this patient from eHealth.
      *
      * @return void
      */
@@ -722,7 +738,8 @@ class PatientSummary extends BasePatientComponent
     }
 
     /**
-     * Build the dropdown options for the merged prepersons attached to this person from local data.
+     * Build the dropdown options for the persons merged into this patient from local data.
+     * The response only carries identifiers, so a merged person stays unnamed until their record is opened for the first time.
      *
      * @return void
      */
@@ -734,11 +751,96 @@ class PatientSummary extends BasePatientComponent
 
         $this->mergedPersons = MergedPerson::wherePersonId($this->personId)
             ->whereStatus(MergedPersonStatus::MERGED)
-            ->whereNotNull('merge_person_id')
-            ->with('mergePerson:id,external_id')
+            ->with(['mergedPerson.names', 'mergedPreperson:id,external_id'])
             ->get()
-            ->pluck('mergePerson.externalId')
+            ->map(static function (MergedPerson $mergedPerson): array {
+                $name = match (true) {
+                    $mergedPerson->mergedPreperson !== null => __('preperson.merged_patient', [
+                        'number' => $mergedPerson->mergedPreperson->externalId
+                    ]),
+                    filled($mergedPerson->mergedPerson?->fullName) => $mergedPerson->mergedPerson->fullName,
+                    default => __('preperson.merged_patient_unknown')
+                };
+
+                return ['uuid' => $mergedPerson->mergedUuid, 'name' => $name];
+            })
             ->all();
+    }
+
+    /**
+     * Open the records of the merged person picked in the selector, fetching the ones the merge response only
+     * named by identifier along the way.
+     *
+     * @param  string  $mergedUuid
+     * @return void
+     */
+    public function updatedSelectedMergedPerson(string $mergedUuid): void
+    {
+        if ($mergedUuid === '') {
+            return;
+        }
+
+        $mergedPerson = MergedPerson::wherePersonId($this->personId)->whereMergedUuid($mergedUuid)->first();
+
+        if ($mergedPerson === null) {
+            return;
+        }
+
+        if ($mergedPerson->mergedPersonId !== null) {
+            $this->redirectRoute(
+                'persons.summary',
+                [legalEntity(), 'person' => $mergedPerson->mergedPersonId],
+                navigate: true
+            );
+
+            return;
+        }
+
+        $prepersonId = $mergedPerson->mergedPrepersonId ?? $this->pullMergedPreperson($mergedPerson);
+
+        if ($prepersonId === null) {
+            return;
+        }
+
+        $this->redirectRoute(
+            'prepersons.summary',
+            [legalEntity(), 'preperson' => $prepersonId],
+            navigate: true
+        );
+    }
+
+    /**
+     * Fetch the preperson a merged person stands for and keep their record locally. An identified person cannot be read
+     * by identifier alone, it takes an approval on them, so a merged person that is not a preperson this legal entity
+     * may read has no record of their own to open.
+     *
+     * @param  MergedPerson  $mergedPerson
+     * @return int|null
+     */
+    private function pullMergedPreperson(MergedPerson $mergedPerson): ?int
+    {
+        try {
+            $response = EHealth::preperson()->getById($mergedPerson->mergedUuid);
+            $prepersonData = $response->validate();
+        } catch (EHealthException|EHealthConnectionException $exception) {
+            $exception->handle(
+                'Error while fetching a merged preperson',
+                __('preperson.messages.merged_patient_unavailable')
+            );
+
+            return null;
+        }
+
+        try {
+            $preperson = Preperson::updateOrCreate(['uuid' => $mergedPerson->mergedUuid], $prepersonData);
+            $mergedPerson->update(['merged_preperson_id' => $preperson->id]);
+        } catch (Throwable $exception) {
+            $this->handleDatabaseErrors($exception, 'Error while storing a merged preperson');
+
+            return null;
+        }
+
+        return $preperson->id;
     }
 
     public function syncMedicationStatements(): void
@@ -756,7 +858,12 @@ class PatientSummary extends BasePatientComponent
     private function populateIcd10Descriptions(array $conditions): void
     {
         $icd10Codes = collect($conditions)
-            ->filter(fn (array $condition) => data_get($condition, 'code.coding.0.system') === 'eHealth/ICD10_AM/condition_codes')
+            ->filter(
+                fn (array $condition) => data_get(
+                    $condition,
+                    'code.coding.0.system'
+                ) === 'eHealth/ICD10_AM/condition_codes'
+            )
             ->map(fn (array $condition) => data_get($condition, 'code.coding.0.code'))
             ->filter()
             ->unique()

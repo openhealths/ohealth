@@ -8,7 +8,17 @@
         diagnoses: $wire.entangle('form.encounter.diagnoses'),
         encounter: $wire.entangle('form.encounter'),
         showPrimaryWarning: false,
+        showPrimaryChangeWarning: false,
         showDuplicateCodeWarning: false,
+
+        saveConditionLabel() {
+            if (this.showPrimaryChangeWarning) {
+                return '{{ __('forms.confirm') }}';
+            }
+
+            return this.newCondition ? '{{ __('conditions.add_diagnose') }}' : '{{ __('forms.save') }}';
+        },
+
         modalCondition: new Condition(),
         modalDiagnosis: new Diagnosis(),
         newCondition: false,
@@ -224,6 +234,7 @@
                                         modalCondition = new Condition(condition);
                                         modalDiagnosis = new Diagnosis(diagnoses[index]);
                                         newCondition = false;
+                                        showPrimaryChangeWarning = false;
                                         openConditionDrawer = true;
                                     "
                                     class="record-inner-action-btn cursor-pointer"
@@ -278,6 +289,7 @@
                                                 modalCondition = new Condition(condition);
                                                 modalDiagnosis = new Diagnosis(diagnoses[index]);
                                                 newCondition = false;
+                                                showPrimaryChangeWarning = false;
                                                 openConditionDrawer = true;
                                                 close($refs.button);
                                             "
@@ -347,6 +359,7 @@
                     newCondition = true; {{-- We are adding a new condition --}}
                     modalCondition = new Condition(null, encounter); {{-- Replace the data of the previous condition with a new one--}}
                     modalDiagnosis = new Diagnosis();
+                    showPrimaryChangeWarning = false;
                     openConditionDrawer = true;
                 "
             class="item-add my-5"
@@ -926,6 +939,7 @@
                         @click="
                             showPrimaryWarning = false;
                             showDuplicateCodeWarning = false;
+                            showPrimaryChangeWarning = false;
                             openEvidenceDrawer = false;
                             openConditionDrawer = false;
                         "
@@ -947,18 +961,30 @@
                                         showPrimaryWarning = true;
                                         return;
                                     }
+
+                                    const episodePrimaryCode = $wire.episodePrimaryDiagnosisCode;
+
+                                    if (
+                                        episodePrimaryCode &&
+                                        modalCondition.codeCode !== episodePrimaryCode &&
+                                        ! showPrimaryChangeWarning
+                                    ) {
+                                        showPrimaryChangeWarning = true;
+                                        return;
+                                    }
                                 }
 
-                                const newConditionCode = modalCondition.codeCode;
-                                const matchingCodesCount = conditions.filter((c, index) => {
-                                    if (newCondition === false && index === item) return false;
-                                    return c.codeCode === newConditionCode;
-                                }).length;
-
-                                if (matchingCodesCount >= 1) {
-                                    showDuplicateCodeWarning = true;
-                                    return;
-                                }
+                                // TODO: decide to keep or not
+                                // const newConditionCode = modalCondition.codeCode;
+                                // const matchingCodesCount = conditions.filter((c, index) => {
+                                //     if (newCondition === false && index === item) return false;
+                                //     return c.codeCode === newConditionCode;
+                                // }).length;
+                                //
+                                // if (matchingCodesCount >= 1) {
+                                //     showDuplicateCodeWarning = true;
+                                //     return;
+                                // }
 
                                 const condition = JSON.parse(JSON.stringify(modalCondition));
                                 const diagnosis = JSON.parse(JSON.stringify(modalDiagnosis));
@@ -973,6 +999,7 @@
 
                                 showPrimaryWarning = false;
                                 showDuplicateCodeWarning = false;
+                                showPrimaryChangeWarning = false;
                                 openEvidenceDrawer = false;
                                 openConditionDrawer = false;
                                 syncDiagnosisParticipants();
@@ -990,13 +1017,15 @@
                                 conditionDatesAreValid()
                             )"
                         >
-                            <span x-text="newCondition ? '{{ __('conditions.add_diagnose') }}' : '{{ __('forms.save') }}'">
-                            </span>
+                            <span x-text="saveConditionLabel()"></span>
                         </button>
                     @endunless
                 </div>
                 <div class="mt-2 text-left">
                     <template x-if="showPrimaryWarning">
+                        <p class="text-error">{{ __('conditions.validation.single_primary_diagnosis') }}</p>
+                    </template>
+                    <template x-if="showPrimaryChangeWarning">
                         <p class="text-error">{!! __('conditions.new_primary_diagnose') !!}</p>
                     </template>
                     <template x-if="showDuplicateCodeWarning">

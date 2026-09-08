@@ -24,6 +24,9 @@ return new class extends Migration
             $table->foreignId('preperson_id')->nullable()->constrained('prepersons');
             $table->foreignId('device_id')->constrained('identifiers');
             $table->enum('status', Status::values());
+            $table->string('explanatory_letter')
+                ->nullable()
+                ->comment('Reason the association was marked as entered in error');
             $table->foreignId('body_site_id')->nullable()->constrained('codeable_concepts');
             $table->date('association_date')->nullable();
             $table->timestamp('recorded');

@@ -136,12 +136,7 @@
                     name: {!! $escapeForAlpineAttribute($employeeFullName) !!},
                 },
 
-                participantSourceLabels: {
-                    diagnosis: {!! $escapeForAlpineAttribute(__('patients.diagnosis_performer')) !!},
-                    procedure: {!! $escapeForAlpineAttribute(__('procedures.performer')) !!},
-                    diagnosticReport: {!! $escapeForAlpineAttribute(__('diagnostic-reports.performer')) !!},
-                    participantEmployeeNames: {!! $escapeForAlpineAttribute($participantEmployeeNames) !!},
-                },
+                participantEmployeeNames: {!! $escapeForAlpineAttribute($participantEmployeeNames) !!},
 
                 participantName(participant) {
                     const uuid = participant?.uuid ?? '';
@@ -237,8 +232,14 @@
                 },
 
                 participantLabel(participant) {
+                    const sourceLabels = {
+                        diagnosis: {!! $escapeForAlpineAttribute(__('patients.diagnosis_performer')) !!},
+                        procedure: {!! $escapeForAlpineAttribute(__('procedures.performer')) !!},
+                        diagnosticReport: {!! $escapeForAlpineAttribute(__('diagnostic-reports.performer')) !!},
+                    };
+
                     const labels = (participant?.sources ?? [])
-                        .map(source => this.participantSourceLabels[source])
+                        .map(source => sourceLabels[source])
                         .filter(Boolean);
 
                     const baseLabel = {!! $escapeForAlpineAttribute(__('encounters.coauthor')) !!};

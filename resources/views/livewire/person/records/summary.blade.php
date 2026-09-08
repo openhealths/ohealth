@@ -34,16 +34,19 @@
         @if ($personId)
             <div class="form-row-3 mt-5 items-center">
                 <div class="form-group group relative">
-                    <select class="input-select peer w-full">
-                        <option value="" selected>{{ __('forms.empty') }}</option>
-                        @foreach ($mergedPersons as $externalId)
-                            <option value="{{ $loop->index }}">
-                                {{ __('preperson.merged_patient', ['number' => $externalId]) }}
-                            </option>
+                    <select
+                        wire:model.live="selectedMergedPerson"
+                        name="selectedMergedPerson"
+                        id="selectedMergedPerson"
+                        class="input-select peer w-full"
+                    >
+                        <option value="" selected>{{ __('forms.select') }}</option>
+                        @foreach ($mergedPersons as $mergedPerson)
+                            <option value="{{ $mergedPerson['uuid'] }}">{{ $mergedPerson['name'] }}</option>
                         @endforeach
                     </select>
 
-                    <label class="label"> {{ __('preperson.merged_persons') }} </label>
+                    <label for="selectedMergedPerson" class="label">{{ __('preperson.merged_persons') }}</label>
                 </div>
 
                 <div class="form-group group flex items-center">

@@ -14,7 +14,9 @@ use App\Models\LegalEntity;
 use App\Models\MedicalEvents\Sql\Immunization;
 use App\Repositories\MedicalEvents\Repository;
 use App\Rules\InDictionary;
+use App\Livewire\Encounter\Forms\EncounterCancellationForm;
 use App\Traits\BatchLegalEntityQueries;
+use App\Traits\HandlesEncounterCancellation;
 use App\Traits\HandlesSyncBatch;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Session;
@@ -26,8 +28,11 @@ use Throwable;
 class PatientImmunizations extends BasePatientComponent
 {
     use BatchLegalEntityQueries;
+    use HandlesEncounterCancellation;
     use HandlesSyncBatch;
     use WithPagination;
+
+    public EncounterCancellationForm $form;
 
     /**
      * Filter dropdown options the user can pick from to narrow the immunizations search.
@@ -60,6 +65,7 @@ class PatientImmunizations extends BasePatientComponent
     public string $syncStatus = '';
 
     protected array $dictionaryNames = [
+        'eHealth/cancellation_reasons',
         'eHealth/vaccine_codes',
         'eHealth/vaccination_routes',
         'eHealth/immunization_body_sites',
@@ -242,6 +248,23 @@ class PatientImmunizations extends BasePatientComponent
             'filterDateFrom' => ['nullable', 'date_format:' . config('app.date_format')],
             'filterDateTo' => ['nullable', 'date_format:' . config('app.date_format')]
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function encounterCancellationForm(): EncounterCancellationForm
+    {
+        return $this->form;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterEncounterCancelled(): void
+    {
+        $this->isSearching = false;
+        $this->resetPage();
     }
 
     public function render(): View

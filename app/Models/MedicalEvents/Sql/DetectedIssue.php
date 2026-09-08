@@ -23,6 +23,7 @@ class DetectedIssue extends Model
         'person_id',
         'preperson_id',
         'status',
+        'explanatory_letter',
         'subject_id',
         'encounter_id',
         'author_id',
@@ -121,7 +122,8 @@ class DetectedIssue extends Model
      * @return Builder
      */
     #[Scope]
-    protected function forPatient(Builder $query, Person|Preperson $patient): Builder {
+    protected function forPatient(Builder $query, Person|Preperson $patient): Builder
+    {
         return $patient instanceof Preperson ? $query->wherePrepersonId($patient->id) : $query->wherePersonId($patient->id);
     }
 
@@ -133,7 +135,8 @@ class DetectedIssue extends Model
      * @return Builder
      */
     #[Scope]
-    protected function forEncounter(Builder $query, string $encounterUuid): Builder {
+    protected function forEncounter(Builder $query, string $encounterUuid): Builder
+    {
         return $query->whereHas('encounter', static fn (Builder $identifier): Builder => $identifier->whereValue($encounterUuid));
     }
 }

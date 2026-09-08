@@ -304,6 +304,15 @@ class EncounterComponent extends Component
     public array $procedureEmployees = [];
 
     /**
+     * Code of the primary diagnosis the selected episode carries at the moment,
+     * so that the form can tell the user that a different one is about to replace it.
+     *
+     * @var string
+     */
+    #[Locked]
+    public string $episodePrimaryDiagnosisCode = '';
+
+    /**
      * eHealth IDs of the package records picked to be marked as entered in error, keyed by package section.
      * Only an encounter that has been signed has records to pick, so on creation these stay empty.
      *
@@ -327,7 +336,10 @@ class EncounterComponent extends Component
         'immunizations' => [],
         'diagnosticReports' => [],
         'procedures' => [],
-        'clinicalImpressions' => []
+        'clinicalImpressions' => [],
+        'devices' => [],
+        'deviceAssociations' => [],
+        'detectedIssues' => []
     ];
 
     /**
@@ -664,6 +676,7 @@ class EncounterComponent extends Component
     {
         $this->conditionForm->conditions = [];
         $this->form->encounter['diagnoses'] = [];
+        $this->episodePrimaryDiagnosisCode = '';
 
         if (empty($episodeId)) {
             return;
@@ -690,10 +703,13 @@ class EncounterComponent extends Component
 
         $detailsMap = MedicalEventsRepository::condition()->getDetailsMapForEvidences([$condition]);
 
-        $this->conditionForm->conditions = [Arr::except(
+        $episodeCondition = Arr::except(
             Fhir::condition()->fromFhir($condition, $detailsMap),
             ['uuid', 'assertedDate', 'assertedTime']
-        )];
+        );
+
+        $this->episodePrimaryDiagnosisCode = $episodeCondition['codeCode'] ?? '';
+        $this->conditionForm->conditions = [$episodeCondition];
 
         $this->form->encounter['diagnoses'] = [[
             'roleCode' => $diagnosis->role->coding->first()?->code,

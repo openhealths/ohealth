@@ -11,6 +11,7 @@ use App\Enums\JobStatus;
 use App\Exceptions\EHealth\EHealthConnectionException;
 use App\Exceptions\EHealth\EHealthException;
 use App\Jobs\DeviceSync;
+use App\Livewire\Encounter\Forms\EncounterCancellationForm;
 use App\Livewire\Person\Records\BasePatientComponent;
 use App\Models\Employee\Employee;
 use App\Models\LegalEntity;
@@ -18,6 +19,7 @@ use App\Models\MedicalEvents\Sql\Device;
 use App\Repositories\MedicalEvents\Repository;
 use App\Rules\InDictionary;
 use App\Traits\BatchLegalEntityQueries;
+use App\Traits\HandlesEncounterCancellation;
 use App\Traits\HandlesSyncBatch;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Session;
@@ -30,8 +32,11 @@ use Throwable;
 class DeviceIndex extends BasePatientComponent
 {
     use BatchLegalEntityQueries;
+    use HandlesEncounterCancellation;
     use HandlesSyncBatch;
     use WithPagination;
+
+    public EncounterCancellationForm $form;
 
     /**
      * Filter dropdown options the user can pick from to narrow the devices search.
@@ -79,6 +84,7 @@ class DeviceIndex extends BasePatientComponent
 
     protected array $dictionaryNames = [
         'POSITION',
+        'eHealth/cancellation_reasons',
         'device_definition_classification_type',
         'device_name_type',
         'device_properties',
@@ -362,6 +368,23 @@ class DeviceIndex extends BasePatientComponent
             'filterInsertedAtFrom' => ['nullable', 'date_format:' . config('app.date_format')],
             'filterInsertedAtTo' => ['nullable', 'date_format:' . config('app.date_format')]
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function encounterCancellationForm(): EncounterCancellationForm
+    {
+        return $this->form;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterEncounterCancelled(): void
+    {
+        $this->isSearching = false;
+        $this->resetPage();
     }
 
     public function render(): View

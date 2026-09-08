@@ -13,7 +13,9 @@ use App\Models\MedicalEvents\Sql\DiagnosticReport;
 use App\Models\MedicalEvents\Sql\Observation;
 use App\Repositories\MedicalEvents\Repository;
 use App\Rules\InDictionary;
+use App\Livewire\Encounter\Forms\EncounterCancellationForm;
 use App\Traits\BatchLegalEntityQueries;
+use App\Traits\HandlesEncounterCancellation;
 use App\Traits\HandlesSyncBatch;
 use Carbon\CarbonImmutable;
 use Illuminate\View\View;
@@ -28,8 +30,11 @@ use Throwable;
 class PatientObservations extends BasePatientComponent
 {
     use BatchLegalEntityQueries;
+    use HandlesEncounterCancellation;
     use HandlesSyncBatch;
     use WithPagination;
+
+    public EncounterCancellationForm $form;
 
     /**
      * Filter dropdown options the user can pick from to narrow the observations search.
@@ -72,6 +77,7 @@ class PatientObservations extends BasePatientComponent
     public string $syncStatus = '';
 
     protected array $dictionaryNames = [
+        'eHealth/cancellation_reasons',
         'eHealth/observation_categories',
         'eHealth/ICF/observation_categories',
         'eHealth/LOINC/observation_codes',
@@ -410,6 +416,23 @@ class PatientObservations extends BasePatientComponent
             'filterDeviceId' => ['nullable', 'uuid'],
             'filterSpecimenId' => ['nullable', 'uuid']
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function encounterCancellationForm(): EncounterCancellationForm
+    {
+        return $this->form;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterEncounterCancelled(): void
+    {
+        $this->isSearching = false;
+        $this->resetPage();
     }
 
     public function render(): View

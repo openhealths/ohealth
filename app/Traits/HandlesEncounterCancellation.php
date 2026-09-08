@@ -18,6 +18,7 @@ use App\Services\MedicalEvents\FhirResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
 use Throwable;
 
 /**
@@ -28,6 +29,22 @@ use Throwable;
 trait HandlesEncounterCancellation
 {
     public bool $showCancellationModal = false;
+
+    public bool $showSignatureModal = false;
+
+    public ?string $actionType = null;
+
+    /**
+     * Package section and eHealth ID of the single record being marked as entered in error, set when the
+     * cancellation was opened for one record rather than for the encounter as a whole.
+     *
+     * @var string
+     */
+    #[Locked]
+    public string $cancellingRecordSection = '';
+
+    #[Locked]
+    public string $cancellingRecordId = '';
 
     /**
      * The form holding the reason and the explanation of the cancellation.
@@ -51,7 +68,39 @@ trait HandlesEncounterCancellation
      */
     protected function selectedCancellationRecords(): array
     {
-        return [];
+        return $this->cancellingRecordId === ''
+            ? []
+            : [$this->cancellingRecordSection => [$this->cancellingRecordId]];
+    }
+
+    /**
+     * Ask for the reason a single record of an encounter package is being marked as entered in error. Most of
+     * these records have no method of their own in eHealth, so they travel as part of the package of the
+     * encounter they were recorded in, which is the one the cancellation is opened for.
+     *
+     * @param  string  $section  Package section the record belongs to, e.g. `observations`
+     * @param  string  $recordId  eHealth ID of the record
+     * @return void
+     */
+    public function openRecordCancellation(string $section, string $recordId): void
+    {
+        $encounterId = Repository::encounter()->encounterIdOfRecord($section, $recordId, $this->patient());
+
+        if ($encounterId === null) {
+            Session::flash('error', __('encounters.messages.record_not_found_in_db'));
+
+            return;
+        }
+
+        $this->openEncounterCancellation($encounterId);
+
+        // The encounter may turn out to be missing or out of reach, and then there is no cancellation to scope
+        if (!$this->showCancellationModal) {
+            return;
+        }
+
+        $this->cancellingRecordSection = $section;
+        $this->cancellingRecordId = $recordId;
     }
 
     /**
@@ -75,6 +124,10 @@ trait HandlesEncounterCancellation
         }
 
         $this->resetCancellationState();
+
+        // Opening the cancellation of an encounter drops the scope of whatever single record was opened before
+        $this->cancellingRecordSection = '';
+        $this->cancellingRecordId = '';
 
         $this->encounterCancellationForm()->cancellingId = $encounter->uuid;
         $this->showCancellationModal = true;
@@ -159,7 +212,10 @@ trait HandlesEncounterCancellation
             return;
         }
 
-        $selectedRecords = $this->selectedCancellationRecords();
+        $selectedRecords = Repository::encounter()->withWholeDeviceGroup(
+            $encounter->uuid,
+            $this->selectedCancellationRecords()
+        );
 
         try {
             $package = $selectedRecords === []
@@ -174,7 +230,6 @@ trait HandlesEncounterCancellation
                     $validated['cancellationReason'],
                     $validated['explanatoryLetter']
                 );
-            //            dd($package);
         } catch (Throwable $exception) {
             $this->handleDatabaseErrors(
                 $exception,

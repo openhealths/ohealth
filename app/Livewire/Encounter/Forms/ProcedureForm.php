@@ -52,7 +52,29 @@ class ProcedureForm extends Form
                     ProcedureStatus::NOT_DONE->value,
                 ])
             ],
-            'procedures.*.codeValue' => ['required_with:procedures', 'uuid', 'max:255'],
+            'procedures.*.codeValue' => [
+                'required_with:procedures',
+                'uuid',
+                'max:255',
+                function (string $attribute, mixed $value, Closure $fail): void {
+                    $index = (int) explode('.', $attribute)[1];
+
+                    $categoryCode = data_get($this->procedures, $index . '.categoryCode');
+
+                    $service = dictionary()
+                        ->services()
+                        ->flattened()
+                        ->firstWhere('id', $value);
+
+                    if ($service === null || data_get($service, 'category') !== $categoryCode) {
+                        $fail(
+                            __('validation.exists', [
+                                'attribute' => __('procedures.attributes.codeValue')
+                            ])
+                        );
+                    }
+                }
+            ],
             'procedures.*.categoryCode' => [
                 'required_with:procedures',
                 'string',

@@ -3,6 +3,9 @@
     id="detected-issue-section"
     x-data="{
         detectedIssues: $wire.entangle('detectedIssueForm.detectedIssues'),
+        selectedRecords: $wire.entangle('selectedRecords.detectedIssues'),
+        cancelledRecords: $wire.cancelledRecords.detectedIssues,
+        canCancelRecords: {{ ($canCancelRecords ?? false) ? 'true' : 'false' }},
         devices: $wire.entangle('deviceForm.devices'),
         patientDevices: $wire.patientDevices,
         previousDetectedIssues: $wire.entangle('previousDetectedIssues'),
@@ -143,13 +146,31 @@
         },
     }"
 >
+    @if (($canCancelRecords ?? false) && !empty($this->detectedIssueForm->detectedIssues))
+        <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            {{ __('encounters.messages.cancel_device_group_note') }}
+        </p>
+    @endif
+
     <div class="space-y-4">
         <template x-for="(detectedIssue, index) in detectedIssues" :key="detectedIssue.uuid || index">
             <div class="record-inner-card">
                 <div class="record-inner-header">
                     <div class="record-inner-checkbox-col">
-                        <input type="checkbox" class="default-checkbox h-5 w-5" />
+                        <input
+                            type="checkbox"
+                            class="default-checkbox h-5 w-5"
+                            :value="detectedIssue.uuid"
+                            x-model="selectedRecords"
+                            :disabled="! canCancelRecords ||
+                            ! detectedIssue.uuid ||
+                            cancelledRecords.includes(detectedIssue.uuid)"
+                        />
                     </div>
+
+                    <template x-if="cancelledRecords.includes(detectedIssue.uuid)">
+                        <span class="record-inner-badge-error"> {{ __('detected-issues.entered_in_error') }} </span>
+                    </template>
 
                     <div class="record-inner-column flex-1">
                         <div class="record-inner-label">{{ __('detected-issues.device_name') }}</div>

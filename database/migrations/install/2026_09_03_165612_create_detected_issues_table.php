@@ -32,6 +32,10 @@ return new class extends Migration
 
             $table->enum('status', Status::values());
 
+            $table->string('explanatory_letter')
+                ->nullable()
+                ->comment('Reason the detected issue was marked as entered in error');
+
             $table->foreignId('subject_id')
                 ->constrained('identifiers');
 

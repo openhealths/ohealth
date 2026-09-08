@@ -192,7 +192,6 @@ class EncounterCreate extends EncounterComponent
      */
     public function sign(): void
     {
-        //        dd(EHealth::job()->getDetails('6a99386b23f4bf0046aa4791')->getData());
         if (Auth::user()->cannot('create', Encounter::class)) {
             Session::flash('error', __('encounters.policy.create'));
             $this->showSignatureModal = false;

@@ -9,7 +9,9 @@ use App\Repositories\MedicalEvents\Repository;
 use App\Enums\Person\ClinicalImpressionStatus;
 use App\Exceptions\EHealth\EHealthException;
 use App\Rules\InDictionary;
+use App\Livewire\Encounter\Forms\EncounterCancellationForm;
 use App\Traits\BatchLegalEntityQueries;
+use App\Traits\HandlesEncounterCancellation;
 use App\Jobs\ClinicalImpressionSync;
 use App\Classes\eHealth\EHealth;
 use App\Traits\HandlesSyncBatch;
@@ -28,8 +30,11 @@ use Throwable;
 class PatientClinicalImpressions extends BasePatientComponent
 {
     use BatchLegalEntityQueries;
+    use HandlesEncounterCancellation;
     use HandlesSyncBatch;
     use WithPagination;
+
+    public EncounterCancellationForm $form;
 
     public array $filterCodeOptions = [];
 
@@ -54,6 +59,7 @@ class PatientClinicalImpressions extends BasePatientComponent
     public bool $showAdditionalParams = false;
 
     protected array $dictionaryNames = [
+        'eHealth/cancellation_reasons',
         'eHealth/clinical_impression_patient_categories',
         'eHealth/clinical_impression_statuses',
         'eHealth/encounter_classes',
@@ -242,6 +248,23 @@ class PatientClinicalImpressions extends BasePatientComponent
             'filterEffectiveDateFrom' => ['nullable', 'date_format:' . config('app.date_format')],
             'filterEffectiveDateTo' => ['nullable', 'date_format:' . config('app.date_format')],
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function encounterCancellationForm(): EncounterCancellationForm
+    {
+        return $this->form;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterEncounterCancelled(): void
+    {
+        $this->isSearching = false;
+        $this->resetPage();
     }
 
     public function render(): View

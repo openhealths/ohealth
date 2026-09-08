@@ -7,6 +7,9 @@
     id="devices-section"
     x-data="{
         devices: $wire.entangle('deviceForm.devices'),
+        selectedRecords: $wire.entangle('selectedRecords.devices'),
+        cancelledRecords: $wire.cancelledRecords.devices,
+        canCancelRecords: {{ ($canCancelRecords ?? false) ? 'true' : 'false' }},
         deviceTypesDictionary: $wire.dictionaries['device_definition_classification_type'],
         deviceDefinitions: $wire.dictionaries['custom/device_definitions'],
         modalDevice: new Device(),
@@ -54,13 +57,29 @@
         },
     }"
 >
+    @if (($canCancelRecords ?? false) && !empty($this->deviceForm->devices))
+        <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            {{ __('encounters.messages.cancel_device_group_note') }}
+        </p>
+    @endif
+
     <div class="space-y-4">
         <template x-for="(device, index) in devices" :key="index">
             <div class="record-inner-card">
                 <div class="record-inner-header">
                     <div class="record-inner-checkbox-col">
-                        <input type="checkbox" class="default-checkbox h-5 w-5" />
+                        <input
+                            type="checkbox"
+                            class="default-checkbox h-5 w-5"
+                            :value="device.uuid"
+                            x-model="selectedRecords"
+                            :disabled="! canCancelRecords || ! device.uuid || cancelledRecords.includes(device.uuid)"
+                        />
                     </div>
+
+                    <template x-if="cancelledRecords.includes(device.uuid)">
+                        <span class="record-inner-badge-error">{{ __('devices.status.entered_in_error') }}</span>
+                    </template>
 
                     <div class="record-inner-column flex-1">
                         <div class="record-inner-label">{{ __('devices.name') }}</div>
