@@ -4,6 +4,11 @@
     <div id="preloader"
          style="display: none;"
          class="fixed h-full top-0 opacity-[0.6] left-0 right-0 w-full z-[100] items-center block p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700"
+         onclick="event.stopPropagation()"
+         onmousedown="event.stopPropagation()"
+         onmouseup="event.stopPropagation()"
+         onpointerdown="event.stopPropagation()"
+         onpointerup="event.stopPropagation()"
     >
         <div role="status" class="fixed -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
